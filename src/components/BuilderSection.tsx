@@ -145,7 +145,7 @@ const BuilderSection = () => {
                     className={`relative z-10 transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'} ${
                       isCustomOption 
                         ? 'w-full h-full object-fill' 
-                        : 'w-[90%] h-auto object-contain'
+                        : 'w-[90%] h-auto object-contain scale-[1.25]'
                     }`}
                     onLoad={handleImageLoad}
                   />
