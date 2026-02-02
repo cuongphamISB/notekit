@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import bundleImage from "@/assets/bookcover-bundle.png";
 
 const HeroSection = () => {
   const scrollToBuilder = () => {
@@ -44,19 +45,15 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Side - Product Image Placeholder */}
+          {/* Right Side - Product Image */}
           <div className="relative">
             <div className="brutal-box p-4 bg-secondary rotate-chaos-1">
-              <div className="aspect-square bg-muted border-[3px] border-foreground flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="font-heading text-4xl mb-4">📓</div>
-                  <p className="font-body text-muted-foreground text-sm uppercase tracking-wide">
-                    Notebook Bundle
-                  </p>
-                  <p className="font-body text-xs text-muted-foreground mt-2">
-                    (Ảnh sản phẩm sẽ được thêm sau)
-                  </p>
-                </div>
+              <div className="aspect-square bg-muted border-[3px] border-foreground flex items-center justify-center overflow-hidden">
+                <img 
+                  src={bundleImage} 
+                  alt="NOTEKIT Notebook Bundle" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
 
