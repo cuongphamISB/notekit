@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Upload, Sparkles, Target, Grid3X3, Layers, Palette } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 import bookcoverMar from "@/assets/bookcover-mar.png";
 import bookcoverFin from "@/assets/bookcover-fin.png";
 import bookcoverAcc from "@/assets/bookcover-acc.png";
@@ -60,6 +61,7 @@ const BuilderSection = () => {
   const [selectedOption, setSelectedOption] = useState<number>(1);
   const [isSwitching, setIsSwitching] = useState(false);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
+  const { addToCart } = useCart();
 
   // Preload all images on mount
   useEffect(() => {
@@ -95,11 +97,11 @@ const BuilderSection = () => {
     if (isCustomOption) {
       window.open("https://forms.google.com", "_blank");
     } else {
-      alert("Đã thêm vào giỏ hàng! 🎉");
+      addToCart();
     }
   };
-  return <section id="builder" className="py-16 md:py-24 bg-pastel-cream/50">
-      <div className="container mx-auto px-4">
+  return <section id="builder" className="py-10 md:py-16 bg-pastel-cream/50">
+      <div className="container mx-auto px-4 max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl mb-4 rotate-playful-2 inline-block">
@@ -110,7 +112,7 @@ const BuilderSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Left - Product Preview */}
           <div className="order-2 lg:order-1">
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
@@ -145,7 +147,7 @@ const BuilderSection = () => {
                     className={`relative z-10 transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'} ${
                       isCustomOption 
                         ? 'w-full h-full object-fill' 
-                        : 'w-[90%] h-auto object-contain scale-[1.25]'
+                        : 'w-[90%] h-auto object-contain scale-[1.4]'
                     }`}
                     onLoad={handleImageLoad}
                   />

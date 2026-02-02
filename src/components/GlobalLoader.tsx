@@ -31,17 +31,17 @@ const GlobalLoader = () => {
       }`}
       style={{ backgroundColor: "#FDFBF7" }}
     >
-      {/* Bouncing Sticker */}
+      {/* Bouncing Sticker - GO BIG */}
       <div className="animate-bounce">
         <img
           src={stickerBunnyLoader}
           alt="Loading bunny"
-          className="w-40 h-40 object-contain drop-shadow-lg"
+          className="w-72 h-72 object-contain drop-shadow-lg"
         />
       </div>
 
-      {/* Handwritten text */}
-      <p className="font-heading text-xl md:text-2xl text-muted-foreground mt-4 animate-pulse">
+      {/* Handwritten text - bigger and fun */}
+      <p className="font-heading text-3xl md:text-4xl text-muted-foreground mt-6 animate-pulse">
         Đang lắp ráp...
       </p>
     </div>

@@ -11,9 +11,9 @@ const HeroSection = () => {
       });
     }
   };
-  return <section className="min-h-screen pt-24 pb-12 flex items-center relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+  return <section className="min-h-screen pt-20 pb-8 flex items-center relative overflow-hidden">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Left Side - Text Content */}
           <div className="space-y-6 lg:space-y-8 relative">
             {/* Sticker slot - top left of headline */}
