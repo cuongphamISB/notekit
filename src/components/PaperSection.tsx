@@ -32,8 +32,8 @@ const papers: PaperCard[] = [
   },
   {
     id: 3,
-    name: "KẺ CHẤM",
-    description: "Vẽ Mindmap tự do.",
+    name: "CHẤM (DOT GRID)",
+    description: "Layout linh hoạt. Dùng cho Journal hay vẽ biểu đồ.",
     icon: <CircleDot className="w-8 h-8" />,
     image: bookfillDot,
     accentColor: "bg-pastel-orange",
