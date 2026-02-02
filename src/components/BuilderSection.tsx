@@ -117,9 +117,9 @@ const BuilderSection = () => {
           <div className="order-2 lg:order-1">
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
               <div className="aspect-[4/5] bg-pastel-cream border-sketch flex items-center justify-center relative overflow-hidden">
-              {/* Decorative blob backdrop - hidden for Hệ Tự Do */}
+                {/* Decorative blob backdrop - hidden for Hệ Tự Do */}
                 {!isCustomOption && (
-                  <div className="absolute inset-8 opacity-60" style={{
+                  <div className="absolute inset-12 opacity-60" style={{
                     background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
                     borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
                     filter: 'blur(2px)'
@@ -130,7 +130,7 @@ const BuilderSection = () => {
                 {isSwitching && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-pastel-cream/80">
                     <img 
-                      src={stickerBunnyLoader} 
+                      src="/lovable-uploads/763155fb-4efa-4b81-b6c2-4fc62af5aa65.png" 
                       alt="Loading bunny" 
                       className="w-20 h-20 object-contain animate-bounce"
                     />
