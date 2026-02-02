@@ -6,7 +6,6 @@ import bookcoverAcc from "@/assets/bookcover-acc.png";
 import bookcoverIb from "@/assets/bookcover-ib.png";
 import bookcoverCustom from "@/assets/bookcover-custom.png";
 import stickerBow from "@/assets/sticker-bow.svg";
-
 interface NotebookOption {
   id: number;
   name: string;
@@ -16,57 +15,47 @@ interface NotebookOption {
   isCustom?: boolean;
   accentColor: string;
 }
-
-const options: NotebookOption[] = [
-  {
-    id: 1,
-    name: "HỆ SÁNG TẠO",
-    description: "Dành cho đầu nảy số nhanh. Vẽ vời, lên idea bao mượt.",
-    icon: <Sparkles className="w-6 h-6" />,
-    image: bookcoverMar,
-    accentColor: "bg-pastel-pink",
-  },
-  {
-    id: 2,
-    name: "HỆ CHIẾN",
-    description: "Dành cho dân cày cuốc. Tính tiền hay tính tương lai đều chuẩn.",
-    icon: <Target className="w-6 h-6" />,
-    image: bookcoverFin,
-    accentColor: "bg-pastel-blue",
-  },
-  {
-    id: 3,
-    name: "HỆ TỈ MỈ",
-    description: "Dành cho người ngăn nắp. Thẳng hàng ngay lối.",
-    icon: <Grid3X3 className="w-6 h-6" />,
-    image: bookcoverAcc,
-    accentColor: "bg-pastel-orange",
-  },
-  {
-    id: 4,
-    name: "HỆ ĐA NĂNG",
-    description: "Nhạc nào cũng nhảy. Cân mọi loại môn.",
-    icon: <Layers className="w-6 h-6" />,
-    image: bookcoverIb,
-    accentColor: "bg-pastel-pink",
-  },
-  {
-    id: 5,
-    name: "HỆ TỰ DO",
-    description: "Không thích đụng hàng? Tự thiết kế bìa riêng.",
-    icon: <Palette className="w-6 h-6" />,
-    image: bookcoverCustom,
-    isCustom: true,
-    accentColor: "bg-pastel-blue",
-  },
-];
-
+const options: NotebookOption[] = [{
+  id: 1,
+  name: "HỆ SÁNG TẠO",
+  description: "Dành cho đầu nảy số nhanh. Vẽ vời, lên idea bao mượt.",
+  icon: <Sparkles className="w-6 h-6" />,
+  image: bookcoverMar,
+  accentColor: "bg-pastel-pink"
+}, {
+  id: 2,
+  name: "HỆ CHIẾN",
+  description: "Dành cho dân cày cuốc. Tính tiền hay tính tương lai đều chuẩn.",
+  icon: <Target className="w-6 h-6" />,
+  image: bookcoverFin,
+  accentColor: "bg-pastel-blue"
+}, {
+  id: 3,
+  name: "HỆ TỈ MỈ",
+  description: "Dành cho người ngăn nắp. Thẳng hàng ngay lối.",
+  icon: <Grid3X3 className="w-6 h-6" />,
+  image: bookcoverAcc,
+  accentColor: "bg-pastel-orange"
+}, {
+  id: 4,
+  name: "HỆ ĐA NĂNG",
+  description: "Nhạc nào cũng nhảy. Cân mọi loại môn.",
+  icon: <Layers className="w-6 h-6" />,
+  image: bookcoverIb,
+  accentColor: "bg-pastel-pink"
+}, {
+  id: 5,
+  name: "HỆ TỰ DO",
+  description: "Không thích đụng hàng? Tự thiết kế bìa riêng.",
+  icon: <Palette className="w-6 h-6" />,
+  image: bookcoverCustom,
+  isCustom: true,
+  accentColor: "bg-pastel-blue"
+}];
 const BuilderSection = () => {
   const [selectedOption, setSelectedOption] = useState<number>(1);
-
-  const currentOption = options.find((opt) => opt.id === selectedOption);
+  const currentOption = options.find(opt => opt.id === selectedOption);
   const isCustomOption = currentOption?.isCustom;
-
   const handleCTAClick = () => {
     if (isCustomOption) {
       window.open("https://forms.google.com", "_blank");
@@ -75,9 +64,7 @@ const BuilderSection = () => {
       alert("Đã thêm vào giỏ hàng! 🎉");
     }
   };
-
-  return (
-    <section id="builder" className="py-16 md:py-24 bg-pastel-cream/50">
+  return <section id="builder" className="py-16 md:py-24 bg-pastel-cream/50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -95,23 +82,13 @@ const BuilderSection = () => {
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
               <div className="aspect-[4/5] bg-pastel-cream border-sketch flex items-center justify-center relative overflow-hidden">
                 {/* Decorative blob backdrop */}
-                <div 
-                  className="absolute inset-8 opacity-60"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
-                    borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-                    filter: 'blur(2px)',
-                  }}
-                />
+                <div className="absolute inset-8 opacity-60" style={{
+                background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
+                borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                filter: 'blur(2px)'
+              }} />
                 
-                {currentOption?.image ? (
-                  <img 
-                    src={currentOption.image} 
-                    alt={currentOption.name}
-                    className="w-full h-full object-contain transform scale-[1.4] relative z-10"
-                  />
-                ) : (
-                  <div className="text-center p-8 relative z-10">
+                {currentOption?.image ? <img src={currentOption.image} alt={currentOption.name} className="w-full h-full transform scale-[1.4] relative z-10 object-fill" /> : <div className="text-center p-8 relative z-10">
                     <div className="font-heading text-6xl mb-4">
                       {currentOption?.icon}
                     </div>
@@ -119,8 +96,7 @@ const BuilderSection = () => {
                     <p className="font-body text-muted-foreground text-sm">
                       (Tải ảnh của bạn lên)
                     </p>
-                  </div>
-                )}
+                  </div>}
 
                 {/* Selected badge */}
                 <div className="absolute top-4 right-4 sticker sticker-pink text-xs z-20">
@@ -138,22 +114,11 @@ const BuilderSection = () => {
                 </div>
 
                 <div className="relative">
-                  <button
-                    onClick={handleCTAClick}
-                    className={`w-full washi-btn text-lg flex items-center justify-center gap-3 ${
-                      isCustomOption
-                        ? "bg-pastel-blue"
-                        : "bg-pastel-pink"
-                    }`}
-                  >
-                    {isCustomOption ? (
-                      <>
+                  <button onClick={handleCTAClick} className={`w-full washi-btn text-lg flex items-center justify-center gap-3 ${isCustomOption ? "bg-pastel-blue" : "bg-pastel-pink"}`}>
+                    {isCustomOption ? <>
                         <Upload className="w-5 h-5" />
                         TẢI ẢNH LÊN (GOOGLE FORM)
-                      </>
-                    ) : (
-                      "THÊM VÀO GIỎ"
-                    )}
+                      </> : "THÊM VÀO GIỎ"}
                   </button>
                   {/* Sticker on button */}
                   <div className="sticker-slot -top-4 -right-4 w-10 h-10 hidden md:block">
@@ -166,24 +131,10 @@ const BuilderSection = () => {
 
           {/* Right - Options List */}
           <div className="order-1 lg:order-2 space-y-4">
-            {options.map((option, index) => (
-              <div
-                key={option.id}
-                onClick={() => setSelectedOption(option.id)}
-                className={`option-card flex items-start gap-4 ${
-                  selectedOption === option.id ? "selected" : ""
-                }`}
-                style={{
-                  transform: `rotate(${index % 2 === 0 ? "-0.5deg" : "0.5deg"})`,
-                }}
-              >
-                <div
-                  className={`scrapbook-box p-3 ${
-                    selectedOption === option.id
-                      ? "bg-card"
-                      : option.accentColor
-                  }`}
-                >
+            {options.map((option, index) => <div key={option.id} onClick={() => setSelectedOption(option.id)} className={`option-card flex items-start gap-4 ${selectedOption === option.id ? "selected" : ""}`} style={{
+            transform: `rotate(${index % 2 === 0 ? "-0.5deg" : "0.5deg"})`
+          }}>
+                <div className={`scrapbook-box p-3 ${selectedOption === option.id ? "bg-card" : option.accentColor}`}>
                   {option.icon}
                 </div>
                 <div className="flex-1">
@@ -194,17 +145,10 @@ const BuilderSection = () => {
                     {option.description}
                   </p>
                 </div>
-                <div
-                  className={`w-6 h-6 border-sketch flex items-center justify-center ${
-                    selectedOption === option.id ? "bg-pastel-pink" : "bg-card"
-                  }`}
-                >
-                  {selectedOption === option.id && (
-                    <span className="text-foreground text-xs">✓</span>
-                  )}
+                <div className={`w-6 h-6 border-sketch flex items-center justify-center ${selectedOption === option.id ? "bg-pastel-pink" : "bg-card"}`}>
+                  {selectedOption === option.id && <span className="text-foreground text-xs">✓</span>}
                 </div>
-              </div>
-            ))}
+              </div>)}
 
             {/* Handwritten note */}
             <div className="scrapbook-box p-4 bg-pastel-orange/80 mt-8 rotate-playful-4 relative">
@@ -216,8 +160,6 @@ const BuilderSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default BuilderSection;
