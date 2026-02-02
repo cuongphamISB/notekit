@@ -115,12 +115,14 @@ const BuilderSection = () => {
           <div className="order-2 lg:order-1">
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
               <div className="aspect-[4/5] bg-pastel-cream border-sketch flex items-center justify-center relative overflow-hidden">
-                {/* Decorative blob backdrop */}
-                <div className="absolute inset-8 opacity-60" style={{
-                background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
-                borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-                filter: 'blur(2px)'
-              }} />
+              {/* Decorative blob backdrop - hidden for Hệ Tự Do */}
+                {!isCustomOption && (
+                  <div className="absolute inset-8 opacity-60" style={{
+                    background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
+                    borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                    filter: 'blur(2px)'
+                  }} />
+                )}
                 
                 {/* Cute Doodle Loader */}
                 {isSwitching && (
@@ -140,7 +142,11 @@ const BuilderSection = () => {
                   <img 
                     src={currentOption.image} 
                     alt={currentOption.name} 
-                    className={`w-full h-full transform scale-[1.4] relative z-10 object-fill transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'}`}
+                    className={`relative z-10 transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'} ${
+                      isCustomOption 
+                        ? 'w-full h-full object-fill' 
+                        : 'w-[90%] h-auto object-contain'
+                    }`}
                     onLoad={handleImageLoad}
                   />
                 ) : (
