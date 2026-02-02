@@ -2,63 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NOTEKIT Design System - Neo-Brutalism + Chaotic Academia */
+/* NOTEKIT Design System - Playful Digital Scrapbook */
 
 @layer base {
   :root {
-    /* Core Colors - High Contrast Brutalist Palette */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    /* Core Colors - Soft Scrapbook Palette */
+    --background: 43 33% 97%;
+    --foreground: 30 10% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 30 10% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 30 10% 25%;
 
-    /* Neon Green Accent - #ccff00 */
-    --primary: 72 100% 50%;
-    --primary-foreground: 0 0% 0%;
+    /* Pastel Blue Accent - #AEC6CF */
+    --primary: 191 30% 75%;
+    --primary-foreground: 30 10% 20%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    /* Pastel Pink - #FFB7B2 */
+    --secondary: 5 100% 85%;
+    --secondary-foreground: 30 10% 25%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
+    /* Pastel Orange - #FFDAC1 */
+    --accent: 27 100% 88%;
+    --accent-foreground: 30 10% 20%;
 
-    --accent: 72 100% 50%;
-    --accent-foreground: 0 0% 0%;
+    --muted: 40 20% 94%;
+    --muted-foreground: 30 10% 45%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 72 100% 50%;
+    --border: 30 20% 70%;
+    --input: 30 20% 70%;
+    --ring: 191 30% 75%;
 
-    --radius: 0px;
+    --radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 
-    /* Neo-Brutalist Shadows */
-    --shadow-brutal: 4px 4px 0px 0px hsl(0 0% 0%);
-    --shadow-brutal-lg: 6px 6px 0px 0px hsl(0 0% 0%);
-    --shadow-brutal-xl: 8px 8px 0px 0px hsl(0 0% 0%);
-    --shadow-brutal-accent: 4px 4px 0px 0px hsl(72 100% 50%);
+    /* Scrapbook Shadows - Soft & Playful */
+    --shadow-soft: 3px 3px 0px 0px hsl(30 20% 80%);
+    --shadow-soft-lg: 5px 5px 0px 0px hsl(30 20% 75%);
+    --shadow-paper: 2px 2px 8px rgba(0, 0, 0, 0.08);
 
-    /* Border thickness */
-    --border-brutal: 3px solid hsl(0 0% 0%);
+    /* Border style */
+    --border-sketch: 2px solid hsl(30 20% 60%);
+    --border-sketch-dark: 2.5px solid hsl(30 10% 35%);
 
     /* Typography */
     --font-heading: 'Patrick Hand', cursive;
-    --font-body: 'Montserrat', sans-serif;
+    --font-body: 'Quicksand', 'Montserrat', sans-serif;
+
+    /* Pastel colors for utility */
+    --pastel-blue: 191 30% 75%;
+    --pastel-pink: 5 100% 85%;
+    --pastel-orange: 27 100% 88%;
+    --pastel-cream: 43 33% 97%;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-    --primary: 72 100% 50%;
-    --primary-foreground: 0 0% 0%;
+    --background: 30 10% 12%;
+    --foreground: 43 33% 97%;
+    --card: 30 10% 15%;
+    --card-foreground: 43 33% 97%;
+    --primary: 191 30% 75%;
+    --primary-foreground: 30 10% 20%;
   }
 }
 
@@ -76,6 +84,11 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Grid paper background */
+    background-image: 
+      radial-gradient(circle, hsl(30 20% 80% / 0.4) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -85,76 +98,105 @@
 }
 
 @layer components {
-  /* Brutalist Box - Core Building Block */
-  .brutal-box {
-    @apply bg-background;
-    border: var(--border-brutal);
-    box-shadow: var(--shadow-brutal);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  /* Scrapbook Box - Core Building Block */
+  .scrapbook-box {
+    @apply bg-card;
+    border: var(--border-sketch-dark);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .brutal-box:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-brutal-lg);
+  .scrapbook-box:hover {
+    transform: translate(-2px, -2px) rotate(-0.5deg);
+    box-shadow: var(--shadow-soft-lg);
   }
 
-  .brutal-box:active {
-    transform: translate(2px, 2px);
-    box-shadow: none;
-  }
-
-  /* Brutalist Button Variants */
-  .brutal-btn {
-    @apply px-6 py-3 font-bold uppercase tracking-wide;
-    font-family: var(--font-body);
-    border: var(--border-brutal);
-    box-shadow: var(--shadow-brutal);
-    transition: all 0.1s ease;
-  }
-
-  .brutal-btn:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-brutal-lg);
-  }
-
-  .brutal-btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: none;
-  }
-
-  .brutal-btn-primary {
-    @apply brutal-btn bg-primary text-primary-foreground;
-  }
-
-  .brutal-btn-outline {
-    @apply brutal-btn bg-background text-foreground;
-  }
-
-  /* Hand-drawn imperfect borders */
-  .hand-drawn {
+  /* Washi Tape Button Variants */
+  .washi-btn {
+    @apply px-6 py-3 font-bold tracking-wide;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 4px 25px 5px 20px / 25px 5px 20px 4px;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.2s ease;
     position: relative;
+    transform: rotate(-1deg);
   }
 
-  .hand-drawn::before {
+  .washi-btn::before {
     content: '';
     position: absolute;
-    inset: -2px;
-    border: 3px solid hsl(var(--foreground));
-    transform: rotate(-0.5deg);
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
     pointer-events: none;
   }
 
-  /* Sticker/Badge style */
-  .sticker {
-    @apply inline-block px-4 py-2 font-bold uppercase text-sm;
-    font-family: var(--font-heading);
-    background: hsl(var(--primary));
-    border: var(--border-brutal);
-    box-shadow: var(--shadow-brutal);
-    transform: rotate(-3deg);
+  .washi-btn:hover {
+    transform: translate(-2px, -2px) rotate(-2deg);
+    box-shadow: var(--shadow-soft-lg);
   }
 
-  /* Marker underline effect */
+  .washi-btn:active {
+    transform: translate(1px, 1px) rotate(0deg);
+    box-shadow: none;
+  }
+
+  .washi-btn-primary {
+    @apply washi-btn;
+    background: hsl(var(--pastel-pink));
+    color: hsl(30 10% 25%);
+  }
+
+  .washi-btn-secondary {
+    @apply washi-btn;
+    background: hsl(var(--pastel-blue));
+    color: hsl(30 10% 25%);
+  }
+
+  .washi-btn-accent {
+    @apply washi-btn;
+    background: hsl(var(--pastel-orange));
+    color: hsl(30 10% 25%);
+  }
+
+  .washi-btn-outline {
+    @apply washi-btn;
+    background: hsl(var(--background));
+    border: var(--border-sketch-dark);
+    color: hsl(30 10% 25%);
+  }
+
+  /* Hand-drawn sketchy borders */
+  .sketch-border {
+    position: relative;
+    border: var(--border-sketch-dark);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  }
+
+  /* Cute Sticker style */
+  .sticker {
+    @apply inline-block px-4 py-2 font-bold text-sm;
+    font-family: var(--font-heading);
+    background: hsl(var(--pastel-orange));
+    border: var(--border-sketch-dark);
+    border-radius: 30px 88px 30px 88px / 88px 30px 88px 30px;
+    box-shadow: var(--shadow-soft);
+    transform: rotate(-3deg);
+    color: hsl(30 10% 25%);
+  }
+
+  .sticker-pink {
+    background: hsl(var(--pastel-pink));
+  }
+
+  .sticker-blue {
+    background: hsl(var(--pastel-blue));
+  }
+
+  /* Marker underline effect - softer */
   .marker-underline {
     position: relative;
     display: inline;
@@ -165,42 +207,97 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
-    height: 8px;
-    background: hsl(var(--primary) / 0.6);
+    bottom: 2px;
+    height: 10px;
+    background: hsl(var(--pastel-pink) / 0.5);
     z-index: -1;
-    transform: skewX(-5deg);
+    transform: skewX(-3deg);
+    border-radius: 2px;
+  }
+
+  .marker-underline-blue::after {
+    background: hsl(var(--pastel-blue) / 0.5);
+  }
+
+  .marker-underline-orange::after {
+    background: hsl(var(--pastel-orange) / 0.6);
   }
 
   /* Option card selected state */
   .option-card {
-    @apply brutal-box cursor-pointer p-4;
-    transition: all 0.15s ease;
+    @apply scrapbook-box cursor-pointer p-4;
+    transition: all 0.2s ease;
   }
 
   .option-card.selected {
-    background: hsl(var(--primary));
-    box-shadow: var(--shadow-brutal-lg);
-    transform: translate(-2px, -2px);
+    background: hsl(var(--pastel-pink));
+    box-shadow: var(--shadow-soft-lg);
+    transform: translate(-2px, -2px) rotate(-1deg);
   }
 
   /* Paper card hover effect */
   .paper-card {
-    @apply brutal-box p-6;
-    transition: all 0.2s ease;
+    @apply scrapbook-box p-6;
+    transition: all 0.25s ease;
   }
 
   .paper-card:hover {
-    transform: translate(-4px, -4px) rotate(-1deg);
-    box-shadow: var(--shadow-brutal-xl);
+    transform: translate(-3px, -3px) rotate(-1.5deg);
+    box-shadow: var(--shadow-soft-lg);
   }
+
+  /* Sticker slots for decorative elements */
+  .sticker-slot {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    transition: transform 0.3s ease;
+  }
+
+  .sticker-slot:hover {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .sticker-slot img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+  }
+
+  /* Tape strip decoration */
+  .tape-strip {
+    position: relative;
+    background: hsl(var(--pastel-blue) / 0.7);
+    padding: 0.5rem 1.5rem;
+    transform: rotate(-2deg);
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .tape-strip::before,
+  .tape-strip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255,255,255,0.4) 50%, 
+      transparent 100%
+    );
+  }
+
+  .tape-strip::before { left: 0; }
+  .tape-strip::after { right: 0; }
 }
 
 @layer utilities {
-  /* Scrambled/chaotic positioning */
-  .rotate-chaos-1 { transform: rotate(-2deg); }
-  .rotate-chaos-2 { transform: rotate(1.5deg); }
-  .rotate-chaos-3 { transform: rotate(-1deg); }
+  /* Playful rotations */
+  .rotate-playful-1 { transform: rotate(-2deg); }
+  .rotate-playful-2 { transform: rotate(1.5deg); }
+  .rotate-playful-3 { transform: rotate(-1deg); }
+  .rotate-playful-4 { transform: rotate(2.5deg); }
   
   /* Text styles */
   .text-heading {
@@ -211,8 +308,20 @@
     font-family: var(--font-body);
   }
 
-  /* Neon glow on hover */
-  .neon-glow:hover {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.5), var(--shadow-brutal);
+  /* Pastel backgrounds */
+  .bg-pastel-pink { background: hsl(var(--pastel-pink)); }
+  .bg-pastel-blue { background: hsl(var(--pastel-blue)); }
+  .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
+  .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
+
+  /* Hover glow - softer */
+  .soft-glow:hover {
+    box-shadow: 0 0 15px hsl(var(--pastel-pink) / 0.4), var(--shadow-soft);
+  }
+
+  /* Sketch border utility */
+  .border-sketch {
+    border: var(--border-sketch-dark);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   }
 }

@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         heading: ['Patrick Hand', 'cursive'],
-        body: ['Montserrat', 'sans-serif'],
+        body: ['Quicksand', 'Montserrat', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,18 +51,25 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: "hsl(72 100% 50%)",
+        pastel: {
+          blue: "hsl(191 30% 75%)",
+          pink: "hsl(5 100% 85%)",
+          orange: "hsl(27 100% 88%)",
+          cream: "hsl(43 33% 97%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        sketch: "255px 15px 225px 15px / 15px 225px 15px 255px",
+        "sketch-alt": "15px 255px 15px 225px / 225px 15px 255px 15px",
+        pill: "30px 88px 30px 88px / 88px 30px 88px 30px",
       },
       boxShadow: {
-        brutal: "4px 4px 0px 0px hsl(0 0% 0%)",
-        "brutal-lg": "6px 6px 0px 0px hsl(0 0% 0%)",
-        "brutal-xl": "8px 8px 0px 0px hsl(0 0% 0%)",
-        "brutal-accent": "4px 4px 0px 0px hsl(72 100% 50%)",
+        soft: "3px 3px 0px 0px hsl(30 20% 80%)",
+        "soft-lg": "5px 5px 0px 0px hsl(30 20% 75%)",
+        paper: "2px 2px 8px rgba(0, 0, 0, 0.08)",
       },
       keyframes: {
         "accordion-down": {
@@ -77,22 +84,21 @@ export default {
           "0%, 100%": { transform: "rotate(-2deg)" },
           "50%": { transform: "rotate(2deg)" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0) rotate(-2deg)" },
+          "50%": { transform: "translateY(-8px) rotate(2deg)" },
+        },
         bounce: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
-        },
-        shake: {
-          "0%, 100%": { transform: "translateX(0)" },
-          "25%": { transform: "translateX(-3px)" },
-          "75%": { transform: "translateX(3px)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        wiggle: "wiggle 0.5s ease-in-out infinite",
+        wiggle: "wiggle 2s ease-in-out infinite",
+        float: "float 3s ease-in-out infinite",
         bounce: "bounce 0.5s ease-in-out infinite",
-        shake: "shake 0.3s ease-in-out",
       },
     },
   },
