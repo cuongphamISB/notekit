@@ -1,6 +1,9 @@
 import { ShoppingBag } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
+  const { cartCount } = useCart();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b-2 border-border">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -15,7 +18,7 @@ const Header = () => {
         <button className="washi-btn-secondary flex items-center gap-2 text-sm">
           <ShoppingBag className="w-5 h-5" />
           <span className="hidden sm:inline">GIỎ HÀNG</span>
-          <span className="scrapbook-box px-2 py-0.5 text-xs bg-pastel-orange">0</span>
+          <span className="scrapbook-box px-2 py-0.5 text-xs bg-pastel-orange">{cartCount}</span>
         </button>
       </div>
     </header>
