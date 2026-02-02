@@ -96,7 +96,7 @@ const BuilderSection = () => {
                   <img 
                     src={currentOption.image} 
                     alt={currentOption.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain transform scale-[1.4]"
                   />
                 ) : (
                   <div className="text-center p-8">
@@ -194,11 +194,12 @@ const BuilderSection = () => {
               </div>
             ))}
 
-            {/* Info box */}
-            <div className="scrapbook-box p-4 bg-pastel-orange mt-8 rotate-playful-1">
-              <p className="font-heading text-lg text-center">
-                💡 Tip: "HỆ TỰ DO" cho phép bạn tải ảnh riêng lên làm bìa!
+            {/* Handwritten note */}
+            <div className="scrapbook-box p-4 bg-pastel-orange/80 mt-8 rotate-playful-4 relative">
+              <p className="font-heading text-lg text-center italic">
+                ✏️ "Ảnh idol, mèo cưng hay người yêu cũ đều được."
               </p>
+              <span className="absolute -top-2 -left-2 text-xs font-heading text-muted-foreground rotate-[-8deg]">psst...</span>
             </div>
           </div>
         </div>

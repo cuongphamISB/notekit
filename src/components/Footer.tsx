@@ -26,11 +26,13 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Fun decorative element */}
-        <div className="mt-8 pt-6 border-t border-background/20 text-center">
-          <p className="font-body text-sm text-background/50">
-            Made with 💕 for Vietnamese students
-          </p>
+        {/* Vietnam Original badge */}
+        <div className="mt-8 pt-6 border-t border-background/20 flex justify-center">
+          <div className="border-2 border-dashed border-background/40 px-6 py-2 rounded-sm transform rotate-[-2deg]">
+            <p className="font-heading text-sm tracking-widest text-background/70 uppercase">
+              Vietnam Original 🇻🇳
+            </p>
+          </div>
         </div>
       </div>
     </footer>
