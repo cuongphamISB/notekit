@@ -61,13 +61,15 @@ const BuilderSection = () => {
   const [selectedOption, setSelectedOption] = useState<number>(1);
   const [isSwitching, setIsSwitching] = useState(false);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
-  const { addToCart } = useCart();
+  const {
+    addToCart
+  } = useCart();
 
   // Preload all images on mount
   useEffect(() => {
     const preloadImages = async () => {
-      const promises = allImages.map((src) => {
-        return new Promise<void>((resolve) => {
+      const promises = allImages.map(src => {
+        return new Promise<void>(resolve => {
           const img = new Image();
           img.onload = () => resolve();
           img.onerror = () => resolve();
@@ -79,20 +81,16 @@ const BuilderSection = () => {
     };
     preloadImages();
   }, []);
-
   const currentOption = options.find(opt => opt.id === selectedOption);
   const isCustomOption = currentOption?.isCustom;
-
   const handleOptionSelect = useCallback((optionId: number) => {
     if (optionId === selectedOption) return;
     setIsSwitching(true);
     setSelectedOption(optionId);
   }, [selectedOption]);
-
   const handleImageLoad = useCallback(() => {
     setIsSwitching(false);
   }, []);
-
   const handleCTAClick = () => {
     if (isCustomOption) {
       window.open("https://forms.google.com", "_blank");
@@ -118,41 +116,21 @@ const BuilderSection = () => {
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
               <div className="aspect-[4/5] bg-pastel-cream border-sketch flex items-center justify-center relative overflow-hidden">
                 {/* Decorative blob backdrop - hidden for Hệ Tự Do */}
-                {!isCustomOption && (
-                  <div className="absolute inset-12 opacity-60" style={{
-                    background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
-                    borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-                    filter: 'blur(2px)'
-                  }} />
-                )}
+                {!isCustomOption && <div className="absolute inset-12 opacity-60" style={{
+                background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
+                borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                filter: 'blur(2px)'
+              }} />}
                 
                 {/* Cute Doodle Loader */}
-                {isSwitching && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-pastel-cream/80">
-                    <img 
-                      src="/lovable-uploads/763155fb-4efa-4b81-b6c2-4fc62af5aa65.png" 
-                      alt="Loading bunny" 
-                      className="w-20 h-20 object-contain animate-bounce"
-                    />
+                {isSwitching && <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-pastel-cream/80">
+                    <img src="/lovable-uploads/763155fb-4efa-4b81-b6c2-4fc62af5aa65.png" alt="Loading bunny" className="w-20 h-20 object-contain animate-bounce" />
                     <p className="font-heading text-lg text-muted-foreground mt-3 animate-pulse">
                       Đang vẽ...
                     </p>
-                  </div>
-                )}
+                  </div>}
 
-                {currentOption?.image ? (
-                  <img 
-                    src={currentOption.image} 
-                    alt={currentOption.name} 
-                    className={`relative z-10 transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'} ${
-                      isCustomOption 
-                        ? 'w-full h-full object-fill' 
-                        : 'w-[90%] h-auto object-contain scale-[1.4]'
-                    }`}
-                    onLoad={handleImageLoad}
-                  />
-                ) : (
-                  <div className="text-center p-8 relative z-10">
+                {currentOption?.image ? <img src={currentOption.image} alt={currentOption.name} className={`relative z-10 transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'} ${isCustomOption ? 'w-full h-full object-fill' : 'w-[90%] h-auto object-contain scale-[1.4]'}`} onLoad={handleImageLoad} /> : <div className="text-center p-8 relative z-10">
                     <div className="font-heading text-6xl mb-4">
                       {currentOption?.icon}
                     </div>
@@ -160,8 +138,7 @@ const BuilderSection = () => {
                     <p className="font-body text-muted-foreground text-sm">
                       (Tải ảnh của bạn lên)
                     </p>
-                  </div>
-                )}
+                  </div>}
 
                 {/* Selected badge */}
                 <div className="absolute top-4 right-4 sticker sticker-pink text-xs z-20">
@@ -172,10 +149,8 @@ const BuilderSection = () => {
               {/* Price and CTA */}
               <div className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-heading text-3xl">149.000đ</span>
-                  <span className="font-body text-sm text-muted-foreground line-through">
-                    179.000đ
-                  </span>
+                  <span className="font-heading text-3xl">119.000đ</span>
+                  <span className="font-body text-sm text-muted-foreground line-through">159.000đ</span>
                 </div>
 
                 <div className="relative">
