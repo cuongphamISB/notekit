@@ -3,10 +3,12 @@ import HeroSection from "@/components/HeroSection";
 import BuilderSection from "@/components/BuilderSection";
 import PaperSection from "@/components/PaperSection";
 import Footer from "@/components/Footer";
+import GlobalLoader from "@/components/GlobalLoader";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <GlobalLoader />
       <Header />
       <main>
         <HeroSection />
