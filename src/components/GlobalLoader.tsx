@@ -24,7 +24,7 @@ const GlobalLoader = () => {
   }}>
       {/* Bouncing Sticker - GO BIG */}
       <div className="animate-bounce">
-        <img alt="Loading bunny" className="w-72 h-72 drop-shadow-lg object-fill" src="/lovable-uploads/763155fb-4efa-4b81-b6c2-4fc62af5aa65.png" />
+        <img alt="Loading bunny" className="w-72 h-72 drop-shadow-lg object-contain" src="/lovable-uploads/763155fb-4efa-4b81-b6c2-4fc62af5aa65.png" />
       </div>
 
       {/* Handwritten text - bigger and fun */}
