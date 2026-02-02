@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Upload, Sparkles, Target, Grid3X3, Layers, Palette } from "lucide-react";
+import bookcoverMar from "@/assets/bookcover-mar.png";
+import bookcoverFin from "@/assets/bookcover-fin.png";
+import bookcoverAcc from "@/assets/bookcover-acc.png";
+import bookcoverIb from "@/assets/bookcover-ib.png";
 
 interface NotebookOption {
   id: number;
   name: string;
   description: string;
   icon: React.ReactNode;
+  image?: string;
   isCustom?: boolean;
 }
 
@@ -15,24 +20,28 @@ const options: NotebookOption[] = [
     name: "HỆ SÁNG TẠO",
     description: "Dành cho đầu nảy số nhanh. Vẽ vời, lên idea bao mượt.",
     icon: <Sparkles className="w-6 h-6" />,
+    image: bookcoverMar,
   },
   {
     id: 2,
     name: "HỆ CHIẾN",
     description: "Dành cho dân cày cuốc. Tính tiền hay tính tương lai đều chuẩn.",
     icon: <Target className="w-6 h-6" />,
+    image: bookcoverFin,
   },
   {
     id: 3,
     name: "HỆ TỈ MỈ",
     description: "Dành cho người ngăn nắp. Thẳng hàng ngay lối.",
     icon: <Grid3X3 className="w-6 h-6" />,
+    image: bookcoverAcc,
   },
   {
     id: 4,
     name: "HỆ ĐA NĂNG",
     description: "Nhạc nào cũng nhảy. Cân mọi loại môn.",
     icon: <Layers className="w-6 h-6" />,
+    image: bookcoverIb,
   },
   {
     id: 5,
@@ -76,15 +85,23 @@ const BuilderSection = () => {
           <div className="order-2 lg:order-1">
             <div className="brutal-box p-6 bg-background sticky top-28">
               <div className="aspect-[4/5] bg-muted border-[3px] border-foreground flex items-center justify-center relative overflow-hidden">
-                <div className="text-center p-8">
-                  <div className="font-heading text-6xl mb-4">
-                    {currentOption?.icon}
+                {currentOption?.image ? (
+                  <img 
+                    src={currentOption.image} 
+                    alt={currentOption.name}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="text-center p-8">
+                    <div className="font-heading text-6xl mb-4">
+                      {currentOption?.icon}
+                    </div>
+                    <p className="font-heading text-2xl mb-2">{currentOption?.name}</p>
+                    <p className="font-body text-muted-foreground text-sm">
+                      (Tải ảnh của bạn lên)
+                    </p>
                   </div>
-                  <p className="font-heading text-2xl mb-2">{currentOption?.name}</p>
-                  <p className="font-body text-muted-foreground text-sm">
-                    (Preview sản phẩm)
-                  </p>
-                </div>
+                )}
 
                 {/* Selected badge */}
                 <div className="absolute top-4 right-4 sticker text-xs">

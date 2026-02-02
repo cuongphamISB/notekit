@@ -1,10 +1,14 @@
-import { Minus, Grid2X2, Circle } from "lucide-react";
+import { Minus, Grid2X2, CircleDot } from "lucide-react";
+import bookfillLined from "@/assets/bookfill-lined.png";
+import bookfillCaro from "@/assets/bookfill-caro.png";
+import bookfillDot from "@/assets/bookfill-dot.png";
 
 interface PaperCard {
   id: number;
   name: string;
   description: string;
   icon: React.ReactNode;
+  image: string;
 }
 
 const papers: PaperCard[] = [
@@ -13,18 +17,21 @@ const papers: PaperCard[] = [
     name: "KẺ NGANG",
     description: "Chép bài giảng siêu tốc.",
     icon: <Minus className="w-8 h-8" />,
+    image: bookfillLined,
   },
   {
     id: 2,
-    name: "CARO (GRID)",
+    name: "KẺ CARO",
     description: "Vẽ hình, kẻ bảng, Bullet Journal.",
     icon: <Grid2X2 className="w-8 h-8" />,
+    image: bookfillCaro,
   },
   {
     id: 3,
-    name: "GIẤY TRƠN",
+    name: "KẺ CHẤM",
     description: "Vẽ Mindmap tự do.",
-    icon: <Circle className="w-8 h-8" />,
+    icon: <CircleDot className="w-8 h-8" />,
+    image: bookfillDot,
   },
 ];
 
@@ -67,28 +74,14 @@ const PaperSection = () => {
                 {paper.description}
               </p>
 
-              {/* Pattern preview */}
-              <div className="mt-6 brutal-box p-4 bg-background">
-                <div className="h-24 border-[2px] border-foreground bg-background flex items-center justify-center overflow-hidden">
-                  {paper.id === 1 && (
-                    <div className="w-full space-y-3 px-4">
-                      {[...Array(4)].map((_, i) => (
-                        <div key={i} className="h-0.5 bg-muted-foreground/30 w-full" />
-                      ))}
-                    </div>
-                  )}
-                  {paper.id === 2 && (
-                    <div className="w-full h-full grid grid-cols-6 grid-rows-4">
-                      {[...Array(24)].map((_, i) => (
-                        <div key={i} className="border border-muted-foreground/30" />
-                      ))}
-                    </div>
-                  )}
-                  {paper.id === 3 && (
-                    <p className="font-heading text-muted-foreground/50 text-sm">
-                      Trống trơn, tự do sáng tạo
-                    </p>
-                  )}
+              {/* Paper image preview */}
+              <div className="mt-6 brutal-box p-2 bg-background">
+                <div className="h-32 border-[2px] border-foreground bg-background overflow-hidden">
+                  <img 
+                    src={paper.image} 
+                    alt={paper.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
