@@ -4,6 +4,7 @@ import bookcoverMar from "@/assets/bookcover-mar.png";
 import bookcoverFin from "@/assets/bookcover-fin.png";
 import bookcoverAcc from "@/assets/bookcover-acc.png";
 import bookcoverIb from "@/assets/bookcover-ib.png";
+import bookcoverCustom from "@/assets/bookcover-custom.png";
 import stickerBow from "@/assets/sticker-bow.svg";
 
 interface NotebookOption {
@@ -54,6 +55,7 @@ const options: NotebookOption[] = [
     name: "HỆ TỰ DO",
     description: "Không thích đụng hàng? Tự thiết kế bìa riêng.",
     icon: <Palette className="w-6 h-6" />,
+    image: bookcoverCustom,
     isCustom: true,
     accentColor: "bg-pastel-blue",
   },
@@ -92,14 +94,24 @@ const BuilderSection = () => {
           <div className="order-2 lg:order-1">
             <div className="scrapbook-box p-6 bg-card sticky top-28 relative">
               <div className="aspect-[4/5] bg-pastel-cream border-sketch flex items-center justify-center relative overflow-hidden">
+                {/* Decorative blob backdrop */}
+                <div 
+                  className="absolute inset-8 opacity-60"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffe4e1 0%, #e0f7fa 50%, #fff3e0 100%)',
+                    borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                    filter: 'blur(2px)',
+                  }}
+                />
+                
                 {currentOption?.image ? (
                   <img 
                     src={currentOption.image} 
                     alt={currentOption.name}
-                    className="w-full h-full object-contain transform scale-[1.4]"
+                    className="w-full h-full object-contain transform scale-[1.4] relative z-10"
                   />
                 ) : (
-                  <div className="text-center p-8">
+                  <div className="text-center p-8 relative z-10">
                     <div className="font-heading text-6xl mb-4">
                       {currentOption?.icon}
                     </div>
@@ -111,7 +123,7 @@ const BuilderSection = () => {
                 )}
 
                 {/* Selected badge */}
-                <div className="absolute top-4 right-4 sticker sticker-pink text-xs">
+                <div className="absolute top-4 right-4 sticker sticker-pink text-xs z-20">
                   ĐANG CHỌN ✓
                 </div>
               </div>

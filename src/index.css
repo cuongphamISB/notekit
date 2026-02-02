@@ -80,13 +80,13 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Dot grid paper background */
-    background-image: 
-      radial-gradient(circle, hsl(30 20% 75% / 0.35) 1.5px, transparent 1.5px);
+    /* Dot grid paper background - explicit colors for visibility */
+    background-color: #FDFBF7;
+    background-image: radial-gradient(#cccccc 2px, transparent 2px);
     background-size: 24px 24px;
     background-attachment: fixed;
   }
