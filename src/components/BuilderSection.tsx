@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Upload, Sparkles, Target, Grid3X3, Layers, Palette } from "lucide-react";
 import bookcoverMar from "@/assets/bookcover-mar.png";
 import bookcoverFin from "@/assets/bookcover-fin.png";
@@ -6,6 +6,10 @@ import bookcoverAcc from "@/assets/bookcover-acc.png";
 import bookcoverIb from "@/assets/bookcover-ib.png";
 import bookcoverCustom from "@/assets/bookcover-custom.png";
 import stickerBow from "@/assets/sticker-bow.svg";
+import stickerBunnyLoader from "@/assets/sticker-bunny-loader.png";
+
+// Preload all images on mount
+const allImages = [bookcoverMar, bookcoverFin, bookcoverAcc, bookcoverIb, bookcoverCustom];
 interface NotebookOption {
   id: number;
   name: string;
@@ -54,13 +58,43 @@ const options: NotebookOption[] = [{
 }];
 const BuilderSection = () => {
   const [selectedOption, setSelectedOption] = useState<number>(1);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+
+  // Preload all images on mount
+  useEffect(() => {
+    const preloadImages = async () => {
+      const promises = allImages.map((src) => {
+        return new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = src;
+        });
+      });
+      await Promise.all(promises);
+      setImagesPreloaded(true);
+    };
+    preloadImages();
+  }, []);
+
   const currentOption = options.find(opt => opt.id === selectedOption);
   const isCustomOption = currentOption?.isCustom;
+
+  const handleOptionSelect = useCallback((optionId: number) => {
+    if (optionId === selectedOption) return;
+    setIsSwitching(true);
+    setSelectedOption(optionId);
+  }, [selectedOption]);
+
+  const handleImageLoad = useCallback(() => {
+    setIsSwitching(false);
+  }, []);
+
   const handleCTAClick = () => {
     if (isCustomOption) {
       window.open("https://forms.google.com", "_blank");
     } else {
-      // Add to cart logic
       alert("Đã thêm vào giỏ hàng! 🎉");
     }
   };
@@ -88,7 +122,29 @@ const BuilderSection = () => {
                 filter: 'blur(2px)'
               }} />
                 
-                {currentOption?.image ? <img src={currentOption.image} alt={currentOption.name} className="w-full h-full transform scale-[1.4] relative z-10 object-fill" /> : <div className="text-center p-8 relative z-10">
+                {/* Cute Doodle Loader */}
+                {isSwitching && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-pastel-cream/80">
+                    <img 
+                      src={stickerBunnyLoader} 
+                      alt="Loading bunny" 
+                      className="w-20 h-20 object-contain animate-bounce"
+                    />
+                    <p className="font-heading text-lg text-muted-foreground mt-3 animate-pulse">
+                      Đang vẽ...
+                    </p>
+                  </div>
+                )}
+
+                {currentOption?.image ? (
+                  <img 
+                    src={currentOption.image} 
+                    alt={currentOption.name} 
+                    className={`w-full h-full transform scale-[1.4] relative z-10 object-fill transition-opacity duration-200 ${isSwitching ? 'opacity-0' : 'opacity-100'}`}
+                    onLoad={handleImageLoad}
+                  />
+                ) : (
+                  <div className="text-center p-8 relative z-10">
                     <div className="font-heading text-6xl mb-4">
                       {currentOption?.icon}
                     </div>
@@ -96,7 +152,8 @@ const BuilderSection = () => {
                     <p className="font-body text-muted-foreground text-sm">
                       (Tải ảnh của bạn lên)
                     </p>
-                  </div>}
+                  </div>
+                )}
 
                 {/* Selected badge */}
                 <div className="absolute top-4 right-4 sticker sticker-pink text-xs z-20">
@@ -131,7 +188,7 @@ const BuilderSection = () => {
 
           {/* Right - Options List */}
           <div className="order-1 lg:order-2 space-y-4">
-            {options.map((option, index) => <div key={option.id} onClick={() => setSelectedOption(option.id)} className={`option-card flex items-start gap-4 ${selectedOption === option.id ? "selected" : ""}`} style={{
+            {options.map((option, index) => <div key={option.id} onClick={() => handleOptionSelect(option.id)} className={`option-card flex items-start gap-4 ${selectedOption === option.id ? "selected" : ""}`} style={{
             transform: `rotate(${index % 2 === 0 ? "-0.5deg" : "0.5deg"})`
           }}>
                 <div className={`scrapbook-box p-3 ${selectedOption === option.id ? "bg-card" : option.accentColor}`}>
