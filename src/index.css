@@ -84,10 +84,10 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Dot grid paper background - explicit colors for visibility */
+    /* Dot grid paper background - user specified */
     background-color: #FDFBF7;
-    background-image: radial-gradient(#cccccc 2px, transparent 2px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
     background-attachment: fixed;
   }
 
