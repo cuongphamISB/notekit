@@ -2,17 +2,16 @@ import { ArrowRight } from "lucide-react";
 import bundleImage from "@/assets/bookcover-bundle.png";
 import stickerBunny from "@/assets/sticker-bunny.svg";
 import stickerBow from "@/assets/sticker-bow.svg";
-
 const HeroSection = () => {
   const scrollToBuilder = () => {
     const builderSection = document.getElementById("builder");
     if (builderSection) {
-      builderSection.scrollIntoView({ behavior: "smooth" });
+      builderSection.scrollIntoView({
+        behavior: "smooth"
+      });
     }
   };
-
-  return (
-    <section className="min-h-screen pt-24 pb-12 flex items-center relative overflow-hidden">
+  return <section className="min-h-screen pt-24 pb-12 flex items-center relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Side - Text Content */}
@@ -39,10 +38,7 @@ const HeroSection = () => {
 
             {/* CTA Button with sticker */}
             <div className="relative inline-block">
-              <button 
-                onClick={scrollToBuilder}
-                className="washi-btn-primary text-lg group flex items-center gap-3 soft-glow"
-              >
+              <button onClick={scrollToBuilder} className="washi-btn-primary text-lg group flex items-center gap-3 soft-glow">
                 LẮP SỔ NGAY
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -62,11 +58,7 @@ const HeroSection = () => {
           <div className="relative">
             <div className="scrapbook-box p-4 bg-pastel-cream rotate-playful-1">
               <div className="aspect-square bg-card border-sketch flex items-center justify-center overflow-hidden">
-                <img 
-                  src={bundleImage} 
-                  alt="NOTEKIT Notebook Bundle" 
-                  className="w-full h-full object-contain"
-                />
+                <img src={bundleImage} alt="NOTEKIT Notebook Bundle" className="w-full h-full object-contain" />
               </div>
             </div>
 
@@ -75,7 +67,7 @@ const HeroSection = () => {
               HOT! 🔥
             </div>
             <div className="absolute -bottom-4 -left-4 tape-strip hidden md:block">
-              <span className="font-heading text-sm">Made in VN 🇻🇳</span>
+              <span className="font-heading text-sm">Made with love       </span>
             </div>
 
             {/* Additional floating sticker */}
@@ -85,8 +77,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
