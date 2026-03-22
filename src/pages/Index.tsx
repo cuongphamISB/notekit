@@ -7,10 +7,10 @@ import { CartProvider } from "@/contexts/CartContext";
 const Index = () => {
   return (
     <CartProvider>
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent font-main">
         <GlobalLoader />
         <Header />
-        <main>
+        <main className="relative">
           <HeroSection />
         </main>
         <Footer />

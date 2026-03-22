@@ -4,33 +4,44 @@ const Header = () => {
   const { cartCount } = useCart();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-      <div className="mx-auto max-w-7xl px-6 md:px-10 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <a href="/">
-          <img
-            src="/LOGO.png"
-            alt="NOTEKIT"
-            className="h-[50px] w-auto object-contain"
-          />
-        </a>
-
-        {/* Right Nav — 2rem gap */}
-        <nav className="flex items-center gap-8">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img src="/trang chủ icon.png" alt="" className="w-5 h-5 object-contain" />
-            <span className="hidden md:inline text-sm">trang chủ</span>
+    <header className="fixed inset-x-0 top-0 z-[100] bg-transparent">
+      <div className="mx-auto flex h-[90px] w-full max-w-7xl items-center justify-between px-4 md:px-8 lg:px-10">
+        <div className="flex items-center gap-5 md:gap-6">
+          <a href="/" aria-label="Trang chủ">
+            <img
+              src="/LOGO.png"
+              alt="NOTEKIT"
+              className="h-[62px] w-auto object-contain md:h-[70px]"
+            />
           </a>
 
-          <button className="hover:opacity-80 transition-opacity">
-            <img src="/search icon 1.png" alt="Tìm kiếm" className="w-5 h-5 object-contain" />
+          <a
+            href="/"
+            className="flex items-center gap-2 rounded-full bg-[#0a1560] px-4 py-2 text-white shadow-paper transition-transform duration-200 hover:scale-[1.02]"
+          >
+            <span className="font-main text-[22px] leading-none tracking-wide">trang chủ</span>
+            <img src="/trang chủ icon.png" alt="" className="h-6 w-6 object-contain" />
+          </a>
+        </div>
+
+        <nav className="flex items-center gap-3 md:gap-4">
+          <button
+            type="button"
+            aria-label="Tìm kiếm"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 shadow-paper transition-transform duration-200 hover:scale-105"
+          >
+            <img src="/search icon 1.png" alt="" className="h-7 w-7 object-contain" />
           </button>
 
-          <button className="flex items-center gap-2 hover:opacity-80 transition-opacity relative">
-            <img src="/giỏ hàng icon.png" alt="Giỏ hàng" className="w-5 h-5 object-contain" />
-            <span className="hidden md:inline text-sm">giỏ hàng</span>
+          <button
+            type="button"
+            aria-label="Giỏ hàng"
+            className="relative flex items-center gap-2 rounded-full bg-[#0a1560] px-5 py-2.5 text-white shadow-paper transition-transform duration-200 hover:scale-[1.02]"
+          >
+            <span className="font-main text-[24px] leading-none tracking-wide">giỏ hàng</span>
+            <img src="/giỏ hàng icon.png" alt="" className="h-7 w-7 object-contain" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-4 bg-secondary text-secondary-foreground text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-[11px] font-bold text-secondary-foreground">
                 {cartCount}
               </span>
             )}

@@ -8,12 +8,31 @@ const slides = [
   "/man (ko nhãn)_result.webp",
 ];
 
-const decorativeStars = [
-  { src: "/sao xanh lam.png", style: { top: "8vh", right: "6vw", width: "3vw", minWidth: 20, maxWidth: 48 } },
-  { src: "/sao màu hồng.png", style: { top: "18vh", left: "4vw", width: "2.5vw", minWidth: 16, maxWidth: 40 } },
-  { src: "/sao vàng.png", style: { bottom: "22vh", right: "10vw", width: "2.8vw", minWidth: 18, maxWidth: 44 } },
-  { src: "/sao tím nhạt.png", style: { bottom: "35vh", left: "7vw", width: "2vw", minWidth: 14, maxWidth: 32 } },
-  { src: "/sao tím đậm.png", style: { top: "45vh", right: "3vw", width: "2.2vw", minWidth: 14, maxWidth: 36 } },
+const decorativeAssets = [
+  {
+    src: "/sao xanh lam.png",
+    alt: "Sao xanh lam",
+    className: "animate-float-gentle",
+    style: { top: "20vh", left: "7vw", width: "clamp(24px, 2.6vw, 48px)" },
+  },
+  {
+    src: "/sao vàng.png",
+    alt: "Sao vàng",
+    className: "animate-float-gentle",
+    style: { top: "14vh", left: "56vw", width: "clamp(24px, 2.8vw, 52px)" },
+  },
+  {
+    src: "/sao màu hồng.png",
+    alt: "Sao màu hồng",
+    className: "animate-bounce",
+    style: { top: "49vh", left: "52vw", width: "clamp(22px, 2.4vw, 44px)" },
+  },
+  {
+    src: "/sticker nhân vật.png",
+    alt: "Sticker nhân vật",
+    className: "animate-float-gentle",
+    style: { top: "41vh", left: "2.5vw", width: "clamp(100px, 11vw, 180px)" },
+  },
 ];
 
 const HeroSection = () => {
@@ -36,22 +55,20 @@ const HeroSection = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Derived values for parallax / mask
-  const contentTranslate = Math.min(scrollY * 0.5, 400);
+  const contentTranslate = Math.min(scrollY * 0.38, 280);
   const contentOpacity = Math.max(1 - scrollY / 500, 0);
-  const maskProgress = Math.min(scrollY / 300, 1); // 0 → 1
+  const maskProgress = Math.min(scrollY / 320, 1);
+
+  const goPrev = () => setCurrent((p) => (p - 1 + slides.length) % slides.length);
+  const goNext = () => setCurrent((p) => (p + 1) % slides.length);
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* ─── Scroll Mask Overlay ─── */}
-      {/* Four border panels that close inward as user scrolls, creating a "slot" effect */}
-      <div className="fixed inset-0 pointer-events-none z-40">
-        {/* Top panel */}
+      <div className="scroll-mask-overlay pointer-events-none fixed inset-0 z-40">
         <div
           className="absolute top-0 left-0 right-0"
           style={{
-            height: `${maskProgress * 30}vh`,
-            background: "linear-gradient(to bottom, #eef4f8 60%, transparent)",
+            height: `${maskProgress * 28}vh`,
             backgroundImage: `
               linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
@@ -60,12 +77,10 @@ const HeroSection = () => {
             backgroundSize: "10px 10px, 10px 10px, 100% 100%",
           }}
         />
-        {/* Bottom panel */}
         <div
           className="absolute bottom-0 left-0 right-0"
           style={{
-            height: `${maskProgress * 25}vh`,
-            background: "linear-gradient(to top, #eef4f8 60%, transparent)",
+            height: `${maskProgress * 26}vh`,
             backgroundImage: `
               linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
@@ -76,104 +91,102 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* ─── Decorative Stars (vw/vh sizing) ─── */}
-      {decorativeStars.map((star, i) => (
+      {decorativeAssets.map((asset, i) => (
         <div
           key={i}
-          className="sticker-slot hidden md:block"
-          style={{
-            ...star.style,
-            animation: `float-star ${3 + i * 0.5}s ease-in-out infinite`,
-            animationDelay: `${i * 0.4}s`,
-          }}
+          className={`sticker-slot hidden md:block ${asset.className}`}
+          style={asset.style}
         >
-          <img src={star.src} alt="" className="w-full h-auto" />
+          <img src={asset.src} alt={asset.alt} className="h-auto w-full object-contain" />
         </div>
       ))}
 
-      {/* ─── Sticker nhân vật — top right ─── */}
       <div
-        className="sticker-slot hidden md:block animate-bounce"
-        style={{ top: "10vh", right: "2vw", width: "8vw", minWidth: 60, maxWidth: 140 }}
-      >
-        <img src="/sticker nhân vật.png" alt="Sticker" className="w-full h-auto" />
-      </div>
-
-      {/* ─── Main Hero Content ─── */}
-      <div
-        className="relative z-20 mx-auto max-w-7xl px-6 md:px-10 pt-24 md:pt-28 pb-16"
+        className="relative z-20 mx-auto max-w-7xl px-5 pb-16 pt-[112px] md:px-8 md:pt-[126px] lg:px-10"
         style={{
           transform: `translateY(${contentTranslate}px)`,
           opacity: contentOpacity,
           willChange: "transform, opacity",
         }}
       >
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[calc(100vh-10rem)]">
-          {/* ── Left Column ── */}
-          <div className="flex flex-col items-start gap-4">
-            {/* Row 1: Two small icons */}
-            <div className="flex items-center gap-3">
-              <img src="/icon chọn 1.png" alt="" className="w-10 h-10 object-contain" />
-              <img src="/icon chọn 2.png" alt="" className="w-10 h-10 object-contain" />
+        <div className="grid min-h-[calc(100vh-130px)] items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="flex flex-col items-start gap-7 md:gap-8">
+            <div className="flex items-center gap-4">
+              <img src="/icon chọn 1.png" alt="" className="h-14 w-14 object-contain" />
+              <img src="/icon chọn 2.png" alt="" className="h-14 w-14 object-contain" />
             </div>
 
-            {/* Row 2: Slogan */}
             <img
               src="/slogan.png"
               alt="NOTEKIT Slogan"
-              className="w-full max-w-[500px] object-contain"
+              className="h-auto w-full max-w-[560px] shrink-0 object-contain"
             />
 
-            {/* Row 3: Mô tả sổ */}
             <img
               src="/mô tả sổ.png"
               alt="Mô tả sổ"
-              className="w-full max-w-[400px] object-contain mt-4"
+              className="h-auto w-full max-w-[470px] object-contain"
             />
 
-            {/* Row 4: CTA Button */}
             <button
+              type="button"
               onClick={() => {
                 const el = document.getElementById("builder");
                 el?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="mt-4 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+              className="cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
             >
               <img
                 src="/CTA button.png"
                 alt="Lắp sổ ngay"
-                className="h-14 md:h-16 w-auto object-contain"
+                className="h-[66px] w-auto object-contain md:h-[72px]"
               />
             </button>
           </div>
 
-          {/* ── Right Column: Carousel ── */}
-          <div className="flex items-center justify-center">
-            <div className="relative w-full max-w-md lg:max-w-lg">
-              {/* Carousel frame */}
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-white/50">
+          <div className="flex items-center justify-center lg:justify-end">
+            <div className="relative w-full max-w-[540px] px-10 md:px-12">
+              <button
+                type="button"
+                aria-label="Ảnh trước"
+                onClick={goPrev}
+                className="absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-paper transition-transform hover:scale-105"
+              >
+                <span aria-hidden>◀</span>
+              </button>
+
+              <div className="scrapbook-box shadow-paper relative mx-auto aspect-[4/3] w-full max-w-[490px] overflow-hidden rounded-[20px] bg-white">
                 {slides.map((src, i) => (
                   <img
                     key={i}
                     src={src}
                     alt={`Notebook ${i + 1}`}
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
+                    className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out ${
                       i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.04]"
                     }`}
                   />
                 ))}
               </div>
 
-              {/* Dots */}
-              <div className="flex items-center justify-center gap-2 mt-5">
+              <button
+                type="button"
+                aria-label="Ảnh tiếp theo"
+                onClick={goNext}
+                className="absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-paper transition-transform hover:scale-105"
+              >
+                <span aria-hidden>▶</span>
+              </button>
+
+              <div className="mt-5 flex items-center justify-center gap-2">
                 {slides.map((_, i) => (
                   <button
+                    type="button"
                     key={i}
                     onClick={() => setCurrent(i)}
                     className={`rounded-full transition-all duration-300 ${
                       i === current
-                        ? "w-7 h-2.5 bg-secondary"
-                        : "w-2.5 h-2.5 bg-foreground/20 hover:bg-foreground/40"
+                        ? "h-2.5 w-7 bg-[#0a1560]"
+                        : "h-2.5 w-2.5 bg-foreground/25 hover:bg-foreground/40"
                     }`}
                   />
                 ))}
@@ -182,14 +195,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
-      {/* Float-star animation */}
-      <style>{`
-        @keyframes float-star {
-          0%, 100% { transform: translateY(0) rotate(-2deg); }
-          50% { transform: translateY(-10px) rotate(3deg); }
-        }
-      `}</style>
     </section>
   );
 };
