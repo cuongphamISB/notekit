@@ -64,10 +64,16 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: hsl(var(--foreground));
-    /* /background.png is the notebook paper — blue lines + red margin */
+    /*
+     * SCALING ARCHITECTURE — core fix:
+     * background-size: 100% auto  → background always stretches to 100% of viewport
+     * width, preserving aspect ratio. This locks the red margin line at a fixed
+     * percentage of viewport width (≈18vw) regardless of screen size or aspect
+     * ratio, so HTML elements and the background stay in sync on every device.
+     */
     background-image: url('/background.png');
-    background-size: cover;
-    background-position: center top;
+    background-size: 100% auto;
+    background-position: top left;
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-color: var(--bg-fallback);
@@ -113,4 +119,29 @@
   .bg-pastel-blue  { background: hsl(var(--pastel-blue)); }
   .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
   .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
+
+  /* Star float variants — different durations & ranges for natural feel */
+  .animate-float-a {
+    animation: float-a 3.2s ease-in-out infinite;
+  }
+  .animate-float-b {
+    animation: float-b 4.1s ease-in-out infinite;
+  }
+  .animate-float-c {
+    animation: float-c 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translateY(0px) rotate(-3deg); }
+  50%       { transform: translateY(-12px) rotate(4deg); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translateY(0px) rotate(2deg) scale(1); }
+  50%       { transform: translateY(-8px) rotate(-5deg) scale(1.05); }
+}
+@keyframes float-c {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-7px) rotate(-6deg); }
+  66%       { transform: translateY(-4px) rotate(5deg); }
 }
