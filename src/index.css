@@ -44,6 +44,9 @@
     --pastel-pink: 5 100% 85%;
     --pastel-orange: 27 100% 88%;
     --pastel-cream: 43 33% 97%;
+
+    /* Fallback colour that matches /background.png edges */
+    --bg-fallback: #eef4f8;
   }
 }
 
@@ -61,14 +64,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: hsl(var(--foreground));
-    /* Pastel white-blue base + pink grid overlay */
-    background-color: #eef4f8 !important;
-    background-image:
-      /* Pink grid lines — 10x10 */
-      linear-gradient(rgba(255, 183, 178, 0.18) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 183, 178, 0.18) 1px, transparent 1px) !important;
-    background-size: 10px 10px !important;
-    background-attachment: fixed !important;
+    /* /background.png is the notebook paper — blue lines + red margin */
+    background-image: url('/background.png');
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: var(--bg-fallback);
   }
 
   h1, h2, h3, h4, h5, h6, p, span, a, button, input, label {
@@ -77,7 +79,7 @@
 }
 
 @layer components {
-  /* Sticker slot for absolute-positioned decorations */
+  /* Absolute-positioned sticker/decoration holder */
   .sticker-slot {
     position: absolute;
     pointer-events: none;
@@ -89,11 +91,26 @@
     height: auto;
     filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.12));
   }
+
+  /* Scrapbook card frame — solid border used by PaperSection / BuilderSection */
+  .scrapbook-box {
+    border: 2.5px solid hsl(30 15% 55%);
+    border-radius: 12px;
+    position: relative;
+  }
+
+  /* Carousel-specific frame — matches the bold notebook border in the mockup */
+  .carousel-frame {
+    border: 3px solid #0a1560;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
 }
 
 @layer utilities {
-  .bg-pastel-pink { background: hsl(var(--pastel-pink)); }
-  .bg-pastel-blue { background: hsl(var(--pastel-blue)); }
+  .bg-pastel-pink  { background: hsl(var(--pastel-pink)); }
+  .bg-pastel-blue  { background: hsl(var(--pastel-blue)); }
   .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
   .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
 }

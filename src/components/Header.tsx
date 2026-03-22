@@ -1,52 +1,79 @@
 import { useCart } from "@/contexts/CartContext";
 
+/**
+ * Header uses ONLY image assets for nav items — the PNG files are
+ * pre-rendered button graphics that include the pill shape, text, and icon.
+ * No text spans; no Shadcn wrappers; pure flexbox.
+ */
 const Header = () => {
   const { cartCount } = useCart();
 
   return (
     <header className="fixed inset-x-0 top-0 z-[100] bg-transparent">
-      <div className="mx-auto flex h-[90px] w-full max-w-7xl items-center justify-between px-4 md:px-8 lg:px-10">
-        <div className="flex items-center gap-5 md:gap-6">
-          <a href="/" aria-label="Trang chủ">
-            <img
-              src="/LOGO.png"
-              alt="NOTEKIT"
-              className="h-[62px] w-auto object-contain md:h-[70px]"
-            />
-          </a>
+      <div className="mx-auto flex h-[88px] max-w-[1440px] items-center px-4 md:px-6">
 
-          <a
-            href="/"
-            className="flex items-center gap-2 rounded-full bg-[#0a1560] px-4 py-2 text-white shadow-paper transition-transform duration-200 hover:scale-[1.02]"
-          >
-            <span className="font-main text-[22px] leading-none tracking-wide">trang chủ</span>
-            <img src="/trang chủ icon.png" alt="" className="h-6 w-6 object-contain" />
-          </a>
-        </div>
+        {/* ── LOGO — left of the margin line ── */}
+        <a href="/" className="shrink-0" aria-label="Trang chủ">
+          <img
+            src="/LOGO.png"
+            alt="NOTEKIT"
+            className="h-[64px] w-auto object-contain md:h-[76px]"
+          />
+        </a>
 
-        <nav className="flex items-center gap-3 md:gap-4">
+        {/* ── "Trang chủ" pill — image-only, adjacent to logo ── */}
+        <a
+          href="/"
+          className="ml-4 shrink-0 transition-transform duration-150 hover:scale-[1.02]"
+          aria-label="Trang chủ"
+        >
+          <img
+            src="/trang chủ icon.png"
+            alt="Trang chủ"
+            className="h-[52px] w-auto object-contain md:h-[58px]"
+          />
+        </a>
+
+        {/* ── Spacer ── */}
+        <div className="flex-1" />
+
+        {/* ── Right nav: search + giỏ hàng ── */}
+        <div className="flex items-center gap-3 md:gap-4">
+
+          {/* Search — completely transparent, no background, no border */}
           <button
             type="button"
             aria-label="Tìm kiếm"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 shadow-paper transition-transform duration-200 hover:scale-105"
+            className="bg-transparent p-0 transition-transform duration-150 hover:scale-105"
           >
-            <img src="/search icon 1.png" alt="" className="h-7 w-7 object-contain" />
+            <img
+              src="/search icon 1.png"
+              alt="Tìm kiếm"
+              className="h-[48px] w-[48px] object-contain md:h-[54px] md:w-[54px]"
+            />
           </button>
 
-          <button
-            type="button"
-            aria-label="Giỏ hàng"
-            className="relative flex items-center gap-2 rounded-full bg-[#0a1560] px-5 py-2.5 text-white shadow-paper transition-transform duration-200 hover:scale-[1.02]"
-          >
-            <span className="font-main text-[24px] leading-none tracking-wide">giỏ hàng</span>
-            <img src="/giỏ hàng icon.png" alt="" className="h-7 w-7 object-contain" />
+          {/* Giỏ hàng pill — image-only */}
+          <div className="relative">
+            <button
+              type="button"
+              aria-label="Giỏ hàng"
+              className="bg-transparent p-0 transition-transform duration-150 hover:scale-[1.02]"
+            >
+              <img
+                src="/giỏ hàng icon.png"
+                alt="Giỏ hàng"
+                className="h-[52px] w-auto object-contain md:h-[58px]"
+              />
+            </button>
             {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-[11px] font-bold text-secondary-foreground">
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                 {cartCount}
               </span>
             )}
-          </button>
-        </nav>
+          </div>
+        </div>
+
       </div>
     </header>
   );

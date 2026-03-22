@@ -8,176 +8,192 @@ const slides = [
   "/man (ko nhãn)_result.webp",
 ];
 
-const decorativeAssets = [
+/**
+ * Sticker/star positions are calibrated against the mockup:
+ *   – Blue cross-star  : upper-left of content, just right of the margin line
+ *   – Yellow star      : upper area above the carousel (right column)
+ *   – Pink cross-star  : mid-section between the two columns
+ *   – Character sticker: left margin zone, vertically centred in the hero
+ */
+const STICKERS = [
+  {
+    src: "/sticker nhân vật.png",
+    alt: "Character sticker",
+    animation: "animate-float-gentle",
+    style: { top: "36%", left: "2%", width: "clamp(88px, 9vw, 148px)" },
+    delay: "0s",
+  },
   {
     src: "/sao xanh lam.png",
-    alt: "Sao xanh lam",
-    className: "animate-float-gentle",
-    style: { top: "20vh", left: "7vw", width: "clamp(24px, 2.6vw, 48px)" },
+    alt: "Blue star",
+    animation: "animate-float-gentle",
+    style: { top: "22%", left: "21%", width: "clamp(18px, 2.2vw, 38px)" },
+    delay: "0.4s",
   },
   {
     src: "/sao vàng.png",
-    alt: "Sao vàng",
-    className: "animate-float-gentle",
-    style: { top: "14vh", left: "56vw", width: "clamp(24px, 2.8vw, 52px)" },
+    alt: "Yellow star",
+    animation: "animate-float-gentle",
+    style: { top: "13%", left: "57%", width: "clamp(20px, 2.4vw, 42px)" },
+    delay: "0.8s",
   },
   {
     src: "/sao màu hồng.png",
-    alt: "Sao màu hồng",
-    className: "animate-bounce",
-    style: { top: "49vh", left: "52vw", width: "clamp(22px, 2.4vw, 44px)" },
+    alt: "Pink star",
+    animation: "animate-bounce",
+    style: { top: "56%", left: "45%", width: "clamp(16px, 2vw, 34px)" },
+    delay: "0.3s",
   },
-  {
-    src: "/sticker nhân vật.png",
-    alt: "Sticker nhân vật",
-    className: "animate-float-gentle",
-    style: { top: "41vh", left: "2.5vw", width: "clamp(100px, 11vw, 180px)" },
-  },
-];
+] as const;
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
-  // Auto-advance carousel every 3s
+  /* Auto-advance every 3 s */
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrent((p) => (p + 1) % slides.length);
-    }, 3000);
+    intervalRef.current = setInterval(
+      () => setCurrent((p) => (p + 1) % slides.length),
+      3000
+    );
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  // Scroll tracking for mask effect
+  /* Scroll tracking for parallax / mask */
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const contentTranslate = Math.min(scrollY * 0.38, 280);
-  const contentOpacity = Math.max(1 - scrollY / 500, 0);
-  const maskProgress = Math.min(scrollY / 320, 1);
+  const contentTranslate = Math.min(scrollY * 0.35, 260);
+  const contentOpacity   = Math.max(1 - scrollY / 500, 0);
+  const maskProgress     = Math.min(scrollY / 320, 1);
 
   const goPrev = () => setCurrent((p) => (p - 1 + slides.length) % slides.length);
   const goNext = () => setCurrent((p) => (p + 1) % slides.length);
 
+  /* Mask panels replicate body background so content "slides behind" the page edges */
+  const maskPanel = (dir: "bottom" | "top") => ({
+    backgroundImage: `url('/background.png'), linear-gradient(to ${dir}, var(--bg-fallback, #eef4f8) 55%, transparent)`,
+    backgroundSize: "cover, 100% 100%",
+    backgroundPosition: "center top, 0 0",
+    backgroundAttachment: "fixed, scroll",
+    backgroundRepeat: "no-repeat, no-repeat",
+  });
+
   return (
     <section className="relative min-h-screen overflow-hidden">
-      <div className="scroll-mask-overlay pointer-events-none fixed inset-0 z-40">
+
+      {/* ── Scroll Mask: covers top + bottom as user scrolls ── */}
+      <div className="pointer-events-none fixed inset-0 z-40">
         <div
-          className="absolute top-0 left-0 right-0"
-          style={{
-            height: `${maskProgress * 28}vh`,
-            backgroundImage: `
-              linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
-              linear-gradient(to bottom, #eef4f8 60%, transparent)
-            `,
-            backgroundSize: "10px 10px, 10px 10px, 100% 100%",
-          }}
+          className="absolute left-0 right-0 top-0"
+          style={{ height: `${maskProgress * 28}vh`, ...maskPanel("bottom") }}
         />
         <div
           className="absolute bottom-0 left-0 right-0"
-          style={{
-            height: `${maskProgress * 26}vh`,
-            backgroundImage: `
-              linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
-              linear-gradient(to top, #eef4f8 60%, transparent)
-            `,
-            backgroundSize: "10px 10px, 10px 10px, 100% 100%",
-          }}
+          style={{ height: `${maskProgress * 26}vh`, ...maskPanel("top") }}
         />
       </div>
 
-      {decorativeAssets.map((asset, i) => (
+      {/* ── Decorative stickers & stars (absolute, hidden on mobile) ── */}
+      {STICKERS.map((s, i) => (
         <div
           key={i}
-          className={`sticker-slot hidden md:block ${asset.className}`}
-          style={asset.style}
+          className={`sticker-slot hidden md:block ${s.animation}`}
+          style={{ ...s.style, animationDelay: s.delay }}
         >
-          <img src={asset.src} alt={asset.alt} className="h-auto w-full object-contain" />
+          <img src={s.src} alt={s.alt} className="h-auto w-full object-contain" />
         </div>
       ))}
 
+      {/* ── Main hero content ── */}
       <div
-        className="relative z-20 mx-auto max-w-7xl px-5 pb-16 pt-[112px] md:px-8 md:pt-[126px] lg:px-10"
+        className="relative z-20 mx-auto max-w-[1440px] pb-20 pl-[20%] pr-4 pt-[100px] md:pr-8 md:pt-[112px] lg:pr-12"
         style={{
           transform: `translateY(${contentTranslate}px)`,
           opacity: contentOpacity,
           willChange: "transform, opacity",
         }}
       >
-        <div className="grid min-h-[calc(100vh-130px)] items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="flex flex-col items-start gap-7 md:gap-8">
-            <div className="flex items-center gap-4">
-              <img src="/icon chọn 1.png" alt="" className="h-14 w-14 object-contain" />
-              <img src="/icon chọn 2.png" alt="" className="h-14 w-14 object-contain" />
-            </div>
+        <div className="grid min-h-[calc(100vh-120px)] items-center gap-8 lg:grid-cols-2 lg:gap-12">
 
+          {/* ── Left column: Slogan → Description → CTA ── */}
+          <div className="flex flex-col items-start gap-5 md:gap-7">
             <img
               src="/slogan.png"
-              alt="NOTEKIT Slogan"
-              className="h-auto w-full max-w-[560px] shrink-0 object-contain"
+              alt="NOTE RA LÀ RÕ"
+              className="h-auto w-full max-w-[500px] shrink-0 object-contain"
+              draggable={false}
             />
 
             <img
               src="/mô tả sổ.png"
               alt="Mô tả sổ"
-              className="h-auto w-full max-w-[470px] object-contain"
+              className="h-auto w-full max-w-[420px] object-contain"
+              draggable={false}
             />
 
             <button
               type="button"
-              onClick={() => {
-                const el = document.getElementById("builder");
-                el?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+              onClick={() =>
+                document.getElementById("builder")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="cursor-pointer bg-transparent p-0 transition-transform duration-200 hover:scale-105 active:scale-95"
             >
               <img
                 src="/CTA button.png"
-                alt="Lắp sổ ngay"
-                className="h-[66px] w-auto object-contain md:h-[72px]"
+                alt="Tạo nên cuốn sổ của riêng bạn"
+                className="h-[62px] w-auto object-contain md:h-[70px]"
+                draggable={false}
               />
             </button>
           </div>
 
+          {/* ── Right column: Carousel ── */}
           <div className="flex items-center justify-center lg:justify-end">
-            <div className="relative w-full max-w-[540px] px-10 md:px-12">
+            {/* Outer wrapper: holds the frame + both arrow buttons */}
+            <div className="relative w-full max-w-[400px]">
+
+              {/* Left arrow */}
               <button
                 type="button"
                 aria-label="Ảnh trước"
                 onClick={goPrev}
-                className="absolute left-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-paper transition-transform hover:scale-105"
+                className="absolute -left-5 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-[2px_2px_8px_rgba(0,0,0,0.18)] transition-transform hover:scale-110"
               >
-                <span aria-hidden>◀</span>
+                <span aria-hidden className="text-sm leading-none">◀</span>
               </button>
 
-              <div className="scrapbook-box shadow-paper relative mx-auto aspect-[4/3] w-full max-w-[490px] overflow-hidden rounded-[20px] bg-white">
+              {/* Carousel frame — solid border, NO dashed scrapbook-box */}
+              <div className="carousel-frame aspect-[3/4] w-full bg-white shadow-[0_4px_24px_rgba(10,21,96,0.12)]">
                 {slides.map((src, i) => (
                   <img
                     key={i}
                     src={src}
-                    alt={`Notebook ${i + 1}`}
-                    className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out ${
+                    alt={`Notebook preview ${i + 1}`}
+                    className={`absolute inset-0 h-full w-full object-contain transition-all duration-700 ease-in-out ${
                       i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.04]"
                     }`}
+                    draggable={false}
                   />
                 ))}
               </div>
 
+              {/* Right arrow */}
               <button
                 type="button"
                 aria-label="Ảnh tiếp theo"
                 onClick={goNext}
-                className="absolute right-0 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-paper transition-transform hover:scale-105"
+                className="absolute -right-5 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0a1560] text-white shadow-[2px_2px_8px_rgba(0,0,0,0.18)] transition-transform hover:scale-110"
               >
-                <span aria-hidden>▶</span>
+                <span aria-hidden className="text-sm leading-none">▶</span>
               </button>
 
-              <div className="mt-5 flex items-center justify-center gap-2">
+              {/* Dot indicators */}
+              <div className="mt-4 flex items-center justify-center gap-2">
                 {slides.map((_, i) => (
                   <button
                     type="button"
@@ -186,13 +202,14 @@ const HeroSection = () => {
                     className={`rounded-full transition-all duration-300 ${
                       i === current
                         ? "h-2.5 w-7 bg-[#0a1560]"
-                        : "h-2.5 w-2.5 bg-foreground/25 hover:bg-foreground/40"
+                        : "h-2.5 w-2.5 bg-black/20 hover:bg-black/35"
                     }`}
                   />
                 ))}
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
