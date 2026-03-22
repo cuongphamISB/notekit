@@ -22,7 +22,7 @@ const Header = () => {
           <img
             src="/LOGO.png"
             alt="NOTEKIT"
-            className="header-logo-img w-full max-md:h-auto max-md:w-auto max-md:max-h-none object-contain"
+            className="header-logo-img object-contain"
           />
         </a>
 

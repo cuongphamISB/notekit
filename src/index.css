@@ -82,10 +82,12 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
     font-family: var(--font-main);
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: hsl(var(--foreground));
@@ -200,15 +202,8 @@
 
 @media (max-width: 699px) {
   .header-bar {
-    /* Line đỏ dọc + line xanh đáy — khớp body, logo nằm vùng mép trái */
+    /* Mobile: chỉ giữ line xanh đáy; bỏ line đỏ dọc trong header (line đỏ bắt đầu từ body bên dưới) */
     background-image:
-      linear-gradient(
-        90deg,
-        transparent calc(var(--red-line-x) - var(--rule-red-t)),
-        var(--line-red) calc(var(--red-line-x) - var(--rule-red-t)),
-        var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
-        transparent calc(var(--red-line-x) + var(--rule-red-t))
-      ),
       linear-gradient(
         to bottom,
         #ffffff 0%,
@@ -217,7 +212,7 @@
         var(--line-blue) 100%
       );
     background-repeat: no-repeat;
-    background-size: 100% 100%, 100% 100%;
+    background-size: 100% 100%;
   }
 }
 
@@ -257,7 +252,7 @@
     height: 100%;
   }
 
-  .header-inner > .shrink-0 {
+  .header-inner > .shrink-0:not(.header-logo-zone) {
     display: none;
   }
 
@@ -298,12 +293,12 @@
   width: var(--red-line-x);
   overflow: visible;
   justify-content: flex-end;
-  padding-left: 0;
+  padding-left: 30;
   padding-right: 0;
 }
 
 .header-logo-img {
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto;
   max-height: 92%;
@@ -311,7 +306,7 @@
   object-position: center center;
 }
 
-/* Mobile: căn giữa logo trên line đỏ — translate(-50%) chỉ đúng khi khối bọ logo có width = nội dung (max-content) */
+/* Mobile: căn giữa logo trong khoảng trống từ mép trái đến line đỏ */
 @media (max-width: 699px) {
   .header-inner {
     z-index: 1;
@@ -362,19 +357,13 @@
 @media (min-width: 700px) {
   .header-logo-zone {
     justify-content: center;
+    padding-right: 0;
   }
 
   .header-logo-img {
-    /* ~gấp đôi icon (theo chiều cao tối đa), không vượt --header-h; max-width tránh chồng lên icon phải */
-    width: auto;
-    max-width: min(34vw, 300px);
+    width: 90px;
+    max-width: calc(var(--red-line-x) - 1vw - 4px);
     height: var(--header-logo-max-h);
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
     object-fit: contain;
     object-position: center center;
   }
@@ -586,4 +575,166 @@
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COVER PICKER — Chọn bìa
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cover-picker {
+  position: relative;
+  width: 100%;
+  padding-top: clamp(36px, 4.5vw, 72px);
+  padding-bottom: clamp(40px, 5vw, 80px);
+}
+
+.cover-picker-title {
+  text-align: center;
+  font-family: var(--font-main);
+  font-size: clamp(38px, 5.5vw, 74px);
+  color: rgba(129, 135, 217, 1);
+  margin-bottom: clamp(20px, 3vw, 44px);
+  font-weight: normal;
+  line-height: 1.15;
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
+.cover-picker-layout {
+  position: relative;
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
+.cover-picker-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr;
+  gap: clamp(16px, 2.5vw, 40px);
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-picker-showcase {
+  position: relative;
+  border: 3px solid #0a1560;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  aspect-ratio: 3 / 4;
+  box-shadow: -6px 6px 0px 0px rgba(10, 21, 96, 0.85);
+}
+
+/* Blurred background layer — fills whitespace like hero carousel */
+.cover-showcase-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cover-showcase-bg.active {
+  opacity: 0.65;
+  z-index: 2;
+}
+
+/* Foreground product image */
+.cover-showcase-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 5%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  filter: drop-shadow(4px 8px 18px rgba(10, 21, 96, 0.28));
+  z-index: 0;
+}
+
+.cover-showcase-img.active {
+  opacity: 1;
+  z-index: 20;
+}
+
+/* ── Options column ── */
+
+.cover-picker-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(6px, 0.8vw, 12px);
+  position: relative;
+  z-index: 5;
+}
+
+.cover-option {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(8px, 1.1vw, 18px) clamp(14px, 2vw, 26px);
+  border: 2px solid rgba(175, 165, 155, 0.38);
+  border-radius: clamp(14px, 2.2vw, 26px);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+  text-align: left;
+  flex: none;
+}
+
+.cover-option:hover {
+  border-color: var(--opt-color);
+  transform: scale(1.02);
+}
+
+.cover-option.active {
+  background: var(--opt-bg);
+  border-color: var(--opt-color);
+}
+
+.cover-option-name {
+  font-family: var(--font-main);
+  font-size: clamp(24px, 3.5vw, 50px);
+  font-weight: 700;
+  color: var(--opt-color);
+  line-height: 1.15;
+}
+
+.cover-option-desc {
+  font-family: var(--font-main);
+  font-size: clamp(15px, 2vw, 28px);
+  color: var(--opt-color);
+  opacity: 0.85;
+  line-height: 1.15;
+  margin-top: 2px;
+}
+
+/* ── Stickers ── */
+
+.cover-sticker {
+  position: absolute;
+  top: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cover-sticker-left {
+  width: clamp(90px, 13vw, 210px);
+  left: calc(var(--red-line-x) / 2);
+  transform: translate(-50%, -50%);
+}
+
+.cover-sticker-right {
+  width: clamp(90px, 13vw, 210px);
+  right: 0;
+  transform: translate(25%, -50%);
 }
