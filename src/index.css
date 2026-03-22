@@ -14,8 +14,7 @@
 @layer base {
   :root {
     --background: 43 33% 97%;
-    /* Notebook paper line tile height — scales with vw but has a mobile floor */
-    --line-h: clamp(20px, 3.4vw, 70px);
+    --line-h: clamp(26px, 5vw, 90px);
     --foreground: 30 10% 25%;
     --card: 0 0% 100%;
     --card-foreground: 30 10% 25%;
@@ -47,8 +46,32 @@
     --pastel-orange: 27 100% 88%;
     --pastel-cream: 43 33% 97%;
 
-    /* Fallback colour that matches /background.png edges */
     --bg-fallback: #eef4f8;
+    --header-h: clamp(44px, 4.5vw, 80px);
+
+    --line-blue: rgba(184, 205, 228, 0.6);
+    --line-red:  rgba(240, 128, 64, 0.5);
+
+    --red-line-x: calc(13vw * 0.7);
+    --rule-red-t: 2px;
+    --rule-blue-t: 6px;
+
+    /* Căn icon header với mép phải vùng hero (cùng slide panel) */
+    --hero-pad-right: clamp(16px, 2.5vw, 48px);
+
+    /* Cùng tỉ lệ với icon trang chủ / search / giỏ — dùng cho logo desktop */
+    --header-icon-h: clamp(26px, 2.6vw, 46px);
+    /* Logo desktop: ~gấp đôi icon nhưng không vượt chiều cao hàng header */
+    --header-logo-max-h: min(calc(var(--header-icon-h) * 2), calc(var(--header-h) - 8px));
+  }
+
+  @media (max-width: 699px) {
+    :root {
+      --red-line-x: 6.5vw;
+      --rule-red-t: 1px;
+      --rule-blue-t: 3px;
+      --hero-pad-right: clamp(8px, 2vw, 20px);
+    }
   }
 }
 
@@ -66,35 +89,28 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: hsl(var(--foreground));
-    /*
-     * CSS-DRAWN NOTEBOOK PAPER — redrawn 1:1 from background.png so it scales
-     * correctly at every viewport width without any PNG aspect-ratio mismatch.
-     *
-     * background.png analysis:
-     *   • Image ~527 × 1046 px (portrait, ≈1:2 ratio)
-     *   • Orange margin line at x ≈ 68 px → 68/527 ≈ 12.9 % of width → 13 vw
-     *   • Horizontal lines spaced ≈ 18 px apart → 18/527 ≈ 3.4 vw per line
-     *
-     * Two layers:
-     *   1) Orange margin rule: full-height linear gradient at 13 vw
-     *   2) Ruled lines: 1 px rule at bottom of each --line-h tile, repeat-y
-     */
-    background-color: #f0f5fa;
+    background-color: #ffffff;
     background-image:
       linear-gradient(
         90deg,
-        transparent calc(13vw - 1px),
-        #f08040 calc(13vw - 1px),
-        #f08040 calc(13vw + 1px),
-        transparent calc(13vw + 1px)
+        transparent calc(var(--red-line-x) - var(--rule-red-t)),
+        var(--line-red) calc(var(--red-line-x) - var(--rule-red-t)),
+        var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
+        transparent calc(var(--red-line-x) + var(--rule-red-t))
       ),
       linear-gradient(
         180deg,
-        transparent calc(var(--line-h) - 1px),
-        #c0d4e8 calc(var(--line-h) - 1px)
+        transparent calc(var(--line-h) - var(--rule-blue-t)),
+        var(--line-blue) calc(var(--line-h) - var(--rule-blue-t))
       );
     background-size: 100% 100%, 100% var(--line-h);
     background-repeat: no-repeat, repeat;
+    /*
+     * Offset lớp line xanh: bắt đầu một ô lặp tại y = header-h (không dùng header-h - line-h + rule-blue-t).
+     * Trước đây sọc đầu của body nằm ngay dưới mép header → chồng với line xanh đáy header
+     * (2 × --rule-blue-t, trông dày gấp đôi các line khác). Offset này khớp khoảng cách lưới.
+     */
+    background-position: 0 0, 0 var(--header-h);
     background-attachment: scroll;
   }
 
@@ -104,11 +120,10 @@
 }
 
 @layer components {
-  /* Absolute-positioned sticker/decoration holder */
   .sticker-slot {
     position: absolute;
     pointer-events: none;
-    z-index: 10;
+    z-index: 3;
   }
 
   .sticker-slot img {
@@ -117,14 +132,12 @@
     filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.12));
   }
 
-  /* Scrapbook card frame — solid border used by PaperSection / BuilderSection */
   .scrapbook-box {
     border: 2.5px solid hsl(30 15% 55%);
     border-radius: 12px;
     position: relative;
   }
 
-  /* Carousel-specific frame — matches the bold notebook border in the mockup */
   .carousel-frame {
     border: 3px solid #0a1560;
     border-radius: 16px;
@@ -139,33 +152,247 @@
   .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
   .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
 
-  /* Star float variants — different durations & ranges for natural feel */
-  .animate-float-a {
-    animation: float-a 3.2s ease-in-out infinite;
-  }
-  .animate-float-b {
-    animation: float-b 4.1s ease-in-out infinite;
-  }
-  .animate-float-c {
-    animation: float-c 2.8s ease-in-out infinite;
+}
+
+@keyframes cta-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER — nền trắng đặc (freeze row, không blur / không gradient mờ)
+   Line xanh = cùng pattern với body (một lớp gradient, không cộng dồn ::before)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.header-bar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  overflow-x: visible;
+  overflow-y: visible;
+  isolation: isolate;
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent calc(var(--red-line-x) - var(--rule-red-t)),
+      var(--line-red) calc(var(--red-line-x) - var(--rule-red-t)),
+      var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
+      transparent calc(var(--red-line-x) + var(--rule-red-t))
+    ),
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #ffffff calc(100% - var(--rule-blue-t)),
+      var(--line-blue) calc(100% - var(--rule-blue-t)),
+      var(--line-blue) 100%
+    );
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 100% 100%;
+  transition: box-shadow 0.3s;
+}
+
+.header-bar[data-scrolled] {
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 699px) {
+  .header-bar {
+    /* Line đỏ dọc + line xanh đáy — khớp body, logo nằm vùng mép trái */
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent calc(var(--red-line-x) - var(--rule-red-t)),
+        var(--line-red) calc(var(--red-line-x) - var(--rule-red-t)),
+        var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
+        transparent calc(var(--red-line-x) + var(--rule-red-t))
+      ),
+      linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #ffffff calc(100% - var(--rule-blue-t)),
+        var(--line-blue) calc(100% - var(--rule-blue-t)),
+        var(--line-blue) 100%
+      );
+    background-repeat: no-repeat;
+    background-size: 100% 100%, 100% 100%;
   }
 }
 
-@keyframes float-a {
-  0%, 100% { transform: translateY(0px) rotate(-3deg); }
-  50%       { transform: translateY(-12px) rotate(4deg); }
-}
-@keyframes float-b {
-  0%, 100% { transform: translateY(0px) rotate(2deg) scale(1); }
-  50%       { transform: translateY(-8px) rotate(-5deg) scale(1.05); }
-}
-@keyframes float-c {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33%       { transform: translateY(-7px) rotate(-6deg); }
-  66%       { transform: translateY(-4px) rotate(5deg); }
+/* Không dùng ::before / ::after cho line xanh — tránh dày gấp đôi; không fade phía dưới */
+.header-bar::before,
+.header-bar::after {
+  display: none;
+  content: none;
 }
 
-/* ─── Responsive hero two-column grid ─────────────────────────────────────── */
+.header-home-link {
+  display: block;
+}
+
+@media (max-width: 699px) {
+  .header-home-link {
+    display: none;
+  }
+}
+
+.header-inner {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  padding-right: var(--hero-pad-right);
+}
+
+/* Mobile: padding đối xứng + logo căn giữa viewport (absolute), icon bên phải — không lệch do flex-1 */
+@media (max-width: 699px) {
+  .header-inner {
+    position: relative;
+    display: block;
+    padding-left: var(--hero-pad-right);
+    padding-right: var(--hero-pad-right);
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .header-inner > .shrink-0 {
+    display: none;
+  }
+
+  .header-inner > .flex-1 {
+    display: none;
+  }
+}
+
+@media (min-width: 700px) {
+  .header-inner {
+    position: static;
+    display: flex;
+    min-height: 0;
+  }
+
+  .header-inner > .shrink-0 {
+    display: block;
+  }
+
+  .header-inner > .flex-1 {
+    display: block;
+  }
+
+  .header-logo-zone {
+    position: static;
+    transform: none;
+    max-width: none;
+  }
+
+  .header-actions {
+    position: static;
+    transform: none;
+  }
+}
+
+.header-logo-zone {
+  min-width: 0;
+  width: var(--red-line-x);
+  overflow: visible;
+  justify-content: flex-end;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.header-logo-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 92%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+/* Mobile: căn giữa logo trên line đỏ — translate(-50%) chỉ đúng khi khối bọ logo có width = nội dung (max-content) */
+@media (max-width: 699px) {
+  .header-inner {
+    z-index: 1;
+  }
+
+  .header-logo-zone {
+    position: absolute;
+    left: calc(var(--red-line-x) / 2);
+    top: 50%;
+    z-index: 30;
+    width: max-content;
+    min-width: 0;
+    max-width: min(78vw, 260px);
+    height: auto;
+    max-height: calc(var(--header-h) - 4px);
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: visible;
+    pointer-events: auto;
+  }
+
+  .header-logo-img {
+    display: block;
+    width: auto;
+    max-width: min(78vw, 260px);
+    height: clamp(36px, 10.5vw, 54px);
+    max-height: min(calc(var(--header-h) - 8px), 56px);
+    margin-left: 0;
+    margin-right: 0;
+    object-fit: contain;
+    object-position: center center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-actions {
+    position: absolute;
+    right: max(env(safe-area-inset-right, 0px), var(--hero-pad-right));
+    top: 50%;
+    z-index: 20;
+    transform: translateY(-50%);
+  }
+}
+
+@media (min-width: 700px) {
+  .header-logo-zone {
+    justify-content: center;
+  }
+
+  .header-logo-img {
+    /* ~gấp đôi icon (theo chiều cao tối đa), không vượt --header-h; max-width tránh chồng lên icon phải */
+    width: auto;
+    max-width: min(34vw, 300px);
+    height: var(--header-logo-max-h);
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    object-fit: contain;
+    object-position: center center;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 20;
+  padding-top: calc(var(--header-h) + clamp(12px, 1.5vw, 24px));
+  padding-bottom: clamp(16px, 2vw, 40px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -176,8 +403,187 @@
 
 @media (min-width: 700px) {
   .hero-grid {
-    /* Left column fluid, right column = carousel (38 vw, capped at 750 px) */
-    grid-template-columns: 1fr clamp(200px, 38vw, 750px);
+    grid-template-columns: 1fr min(clamp(200px, 42vw, 700px), 80vh);
     align-items: center;
+    gap: clamp(12px, 2vw, 32px);
+  }
+}
+
+.hero-slogan { width: min(100%, clamp(288px, 58vw, 860px)); }
+.hero-desc   { width: min(100%, clamp(240px, 46vw, 670px)); }
+.hero-cta    { width: clamp(240px, 50vw, 720px); }
+
+.hero-left-col {
+  position: relative;
+  z-index: 25;
+  gap: clamp(12px, 1.6vw, 28px);
+  align-items: start;
+}
+
+.hero-star {
+  display: block;
+  z-index: 2;
+}
+
+.hero-star-margin {
+  z-index: 2;
+}
+
+/* Web sticker: -10%; không float */
+.hero-sticker-desktop {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+  z-index: 12;
+  left: calc(var(--red-line-x) / 2);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(95px, 12vw, 202px);
+}
+
+@media (min-width: 700px) {
+  .hero-sticker-desktop {
+    display: block;
+  }
+}
+
+/* Mobile: sticker góc dưới-trái khung slide, không tràn màn hình */
+.hero-sticker-mobile {
+  position: absolute;
+  pointer-events: none;
+  z-index: 35;
+  left: 0;
+  bottom: 0;
+  width: clamp(58px, 19vw, 100px);
+  transform: translate(-11%, 18%) scale(1.05);
+  transform-origin: left bottom;
+}
+
+@media (min-width: 700px) {
+  .hero-sticker-mobile {
+    display: none;
+  }
+}
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #0a1560;
+  color: white;
+  transform: translateY(-50%);
+  transition: transform 0.15s;
+  width: clamp(28px, 5vw, 44px);
+  height: clamp(28px, 5vw, 44px);
+  font-size: clamp(9px, 1.4vw, 16px);
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero-arrow:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.hero-arrow:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.hero-arrow-left {
+  left: 6px;
+}
+
+.hero-arrow-right {
+  right: 6px;
+}
+
+@media (min-width: 700px) {
+  .hero-arrow-left {
+    left: clamp(-28px, -2.5vw, -12px);
+  }
+  .hero-arrow-right {
+    right: clamp(-28px, -2.5vw, -12px);
+  }
+}
+
+.hero-carousel-col {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 25;
+}
+
+/* Float chỉ cho CTA — span bên trong, nút dịch phải trên mobile */
+.hero-cta-anim {
+  animation: cta-float 3s ease-in-out infinite;
+}
+
+/* Ảnh sản phẩm: object-contain + padding; phóng to ~4.5% so với khung (giảm 5% so với 1.1) */
+.hero-slide-fg {
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(1.045);
+  transform-origin: center center;
+}
+
+@media (max-width: 699px) {
+  .hero-cta-btn {
+    margin-left: auto;
+    margin-right: 0;
+    /* Dời sang trái ~10% so với bản 22% */
+    transform: translateX(12%);
+  }
+
+  .hero-cta-scale-mobile {
+    transform: scale(1.03);
+    transform-origin: center center;
+  }
+
+  .hero-content-wrapper {
+    padding-top: calc(var(--header-h) + clamp(16px, 3vw, 32px));
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+    padding-right: var(--hero-pad-right);
+    padding-bottom: 20px;
+  }
+
+  .hero-left-col {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .hero-grid {
+    justify-items: center;
+    gap: clamp(14px, 3vw, 28px);
+  }
+
+  .hero-slogan { width: min(100%, 92%); }
+  .hero-desc   { width: min(100%, 88%); }
+  .hero-cta    { width: min(100%, 78%); }
+
+  /* Rộng thêm ~15% so với bản 85%: ~98% × max-width 391px, căn giữa */
+  .hero-carousel-col {
+    width: 95%;
+    max-width: 391px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta-row {
+    width: 100%;
+    align-items: center;
+    padding-right: 0;
+    padding-left: 0;
   }
 }

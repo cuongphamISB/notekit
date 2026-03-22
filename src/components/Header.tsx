@@ -1,60 +1,53 @@
 import { useCart } from "@/contexts/CartContext";
+import { useEffect, useState } from "react";
 
-/**
- * Header calibrated to home.png mockup:
- *   • Height  ≈ 4.5 vw  (was 5.8 vw — was too tall at narrow viewports)
- *   • All icon heights scaled proportionally to the new header height
- *   • paddingLeft matches the content zone start (left side of the page)
- *
- * Layout: [Logo | Trang chủ] ──── spacer ──── [Search | Giỏ hàng]
- */
 const Header = () => {
   const { cartCount } = useCart();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header
-      className="fixed inset-x-0 top-0 z-[100] bg-transparent"
-      style={{ height: "clamp(44px, 4.5vw, 80px)" }}
-    >
-      <div
-        className="flex h-full w-full items-center"
-        style={{
-          paddingLeft:  "clamp(6px, 0.8vw, 14px)",
-          paddingRight: "clamp(8px, 1.5vw, 24px)",
-          paddingBottom: "clamp(4px, 0.4vw, 8px)",
-        }}
-      >
-        {/* ── LOGO ── */}
-        <a href="/" className="shrink-0" aria-label="Trang chủ">
+    <header className="header-bar" data-scrolled={scrolled || undefined}>
+      <div className="header-inner">
+        <a
+          href="/"
+          className="header-logo-zone flex h-full shrink-0 items-center justify-center px-0.5"
+          aria-label="Trang chủ"
+        >
           <img
             src="/LOGO.png"
             alt="NOTEKIT"
-            className="h-auto w-auto object-contain"
-            style={{ height: "clamp(28px, 3vw, 54px)" }}
+            className="header-logo-img w-full max-md:h-auto max-md:w-auto max-md:max-h-none object-contain"
           />
         </a>
 
-        {/* ── "Trang chủ" pill ── */}
+        <div className="shrink-0" style={{ width: "1vw" }} />
+
         <a
           href="/"
-          className="ml-[1vw] shrink-0 transition-transform duration-150 hover:scale-[1.03]"
+          className="header-home-link shrink-0 transition-transform duration-150 hover:scale-[1.03]"
           aria-label="Trang chủ"
         >
           <img
             src="/trang chủ icon.png"
             alt="Trang chủ"
             className="h-auto w-auto object-contain"
-            style={{ height: "clamp(26px, 2.6vw, 46px)" }}
+            style={{ height: "var(--header-icon-h)" }}
           />
         </a>
 
-        {/* ── Spacer ── */}
         <div className="flex-1" />
 
-        {/* ── Right nav: search + giỏ hàng ── */}
         <div
-          className="flex items-center"
-          style={{ gap: "clamp(6px, 1vw, 18px)" }}
+          className="header-actions flex items-center"
+          style={{
+            gap: "clamp(6px, 1vw, 18px)",
+          }}
         >
           <button
             type="button"
@@ -65,7 +58,7 @@ const Header = () => {
               src="/search icon 1.png"
               alt="Tìm kiếm"
               className="h-auto w-auto object-contain"
-              style={{ height: "clamp(26px, 2.5vw, 44px)" }}
+              style={{ height: "var(--header-icon-h)" }}
             />
           </button>
 

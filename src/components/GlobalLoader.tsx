@@ -1,15 +1,57 @@
 import { useState, useEffect } from "react";
+import { preloadCarouselSlides } from "@/lib/preloadSlides";
+
+const OTHER_PRELOAD = [
+  "/LOGO.png",
+  "/slogan.png",
+  "/mô tả sổ.png",
+  "/CTA button.png",
+  "/sticker nhân vật.png",
+  "/trang chủ icon.png",
+  "/search icon 1.png",
+  "/giỏ hàng icon.png",
+  "/sao xanh lam.png",
+  "/sao vàng.png",
+  "/sao màu hồng.png",
+];
+
+const preloadOther = () =>
+  Promise.all(
+    OTHER_PRELOAD.map(
+      (src) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = src;
+        })
+    )
+  ).then(() => undefined);
 
 const GlobalLoader = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setIsFading(true), 2000);
-    const hideTimer = setTimeout(() => setIsVisible(false), 2500);
+    let cancelled = false;
+
+    const minDelay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+    Promise.all([
+      preloadCarouselSlides(),
+      preloadOther(),
+      minDelay(600),
+    ])
+      .then(() => {
+        if (cancelled) return;
+        setIsFading(true);
+        setTimeout(() => {
+          if (!cancelled) setIsVisible(false);
+        }, 450);
+      });
+
     return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(hideTimer);
+      cancelled = true;
     };
   }, []);
 
@@ -29,7 +71,10 @@ const GlobalLoader = () => {
           src="/sticker nhân vật.png"
         />
       </div>
-      <p className="text-2xl md:text-3xl mt-6 animate-pulse" style={{ color: "hsl(30 10% 45%)" }}>
+      <p
+        className="text-2xl md:text-3xl mt-6 animate-pulse"
+        style={{ color: "hsl(30 10% 45%)" }}
+      >
         Đang lắp ráp...
       </p>
     </div>
