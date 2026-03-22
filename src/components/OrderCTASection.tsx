@@ -61,13 +61,16 @@ const OrderCTASection = () => {
           onClick={handleAdd}
           aria-label="Thêm bộ sổ đã chọn vào giỏ — cùng tạo ngay"
         >
-          <img
-            src={CTA_ORDER_IMAGE}
-            alt=""
-            decoding="async"
-            className="order-cta-img"
-            draggable={false}
-          />
+          {/* Cùng animation cta-float như CTA hero (CTA button.png) */}
+          <span className="hero-cta-anim inline-block">
+            <img
+              src={CTA_ORDER_IMAGE}
+              alt=""
+              decoding="async"
+              className="order-cta-img"
+              draggable={false}
+            />
+          </span>
         </button>
         <p className="order-cta-feedback" role="status" aria-live="polite">
           {feedbackDetail ? (
