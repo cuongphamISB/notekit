@@ -10,6 +10,7 @@ interface Product {
   coverImg: string;
   stickerLeft: string;
   stickerRight: string;
+  mobileScale?: number;
 }
 
 const PRODUCTS: Product[] = [
@@ -22,6 +23,7 @@ const PRODUCTS: Product[] = [
     coverImg: "/mkt (ko nhãn)_result.webp",
     stickerLeft: "/nam mkt.png",
     stickerRight: "/nữ mkt.png",
+    mobileScale: 1,
   },
   {
     id: "fin",
@@ -32,6 +34,7 @@ const PRODUCTS: Product[] = [
     coverImg: "/fin (ko nhãn)_result.webp",
     stickerLeft: "/nam fin.png",
     stickerRight: "/nữ fin.png",
+    mobileScale: 0.78,
   },
   {
     id: "ibu",
@@ -42,6 +45,7 @@ const PRODUCTS: Product[] = [
     coverImg: "/ibu (ko nhãn)_result.webp",
     stickerLeft: "/nam ibu.png",
     stickerRight: "/nữ ibu.png",
+    mobileScale: 1,
   },
   {
     id: "acc",
@@ -52,6 +56,7 @@ const PRODUCTS: Product[] = [
     coverImg: "/accounting (ko nhãn)_result.webp",
     stickerLeft: "/nam accounting.png",
     stickerRight: "/nữ accounting.png",
+    mobileScale: 1,
   },
   {
     id: "man",
@@ -62,6 +67,7 @@ const PRODUCTS: Product[] = [
     coverImg: "/man (ko nhãn)_result.webp",
     stickerLeft: "/nam man.png",
     stickerRight: "/nữ man.png",
+    mobileScale: 1,
   },
 ];
 
@@ -88,7 +94,7 @@ const CoverPickerSection = () => {
       <h2 className="cover-picker-title">chọn bìa</h2>
 
       <div className="cover-picker-layout">
-        <div className="cover-sticker cover-sticker-left" style={{ display: "grid" }}>
+        <div className="cover-sticker cover-sticker-left hidden md:grid">
           {PRODUCTS.map((p, i) => (
             <img
               key={p.stickerLeft}
@@ -100,7 +106,11 @@ const CoverPickerSection = () => {
                 "cover-sticker-img h-auto w-full object-contain",
                 i === selected && "active"
               )}
-              style={{ gridArea: "1/1", filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
+              style={{
+                gridArea: "1/1",
+                filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))",
+                "--sticker-scale": p.mobileScale ?? 1,
+              } as React.CSSProperties}
             />
           ))}
         </div>
@@ -108,6 +118,29 @@ const CoverPickerSection = () => {
         <div className="cover-picker-grid">
           {/* Showcase box with blur background effect */}
           <div className="cover-showcase-wrap">
+          {/* Mobile: 3 cột — sticker căn giữa khoảng mép ↔ frame; desktop: ẩn slot */}
+          <div className="cover-sticker-mobile-slot cover-sticker-mobile-slot--left md:hidden">
+            <div className="cover-sticker-mobile-col" style={{ display: "grid" }}>
+              {PRODUCTS.map((p, i) => (
+                <img
+                  key={`m-${p.stickerLeft}`}
+                  src={p.stickerLeft}
+                  alt=""
+                  aria-hidden
+                  loading="eager"
+                  className={cn(
+                    "cover-sticker-img h-auto w-full max-w-full object-contain",
+                    i === selected && "active"
+                  )}
+                  style={{
+                    gridArea: "1/1",
+                    filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))",
+                    "--sticker-scale": p.mobileScale ?? 1,
+                  } as React.CSSProperties}
+                />
+              ))}
+            </div>
+          </div>
           <div className="cover-picker-showcase">
             {/* Blurred backgrounds */}
             <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "inherit" }}>
@@ -141,6 +174,28 @@ const CoverPickerSection = () => {
               />
             ))}
           </div>
+          <div className="cover-sticker-mobile-slot cover-sticker-mobile-slot--right md:hidden">
+            <div className="cover-sticker-mobile-col" style={{ display: "grid" }}>
+              {PRODUCTS.map((p, i) => (
+                <img
+                  key={`m-${p.stickerRight}`}
+                  src={p.stickerRight}
+                  alt=""
+                  aria-hidden
+                  loading="eager"
+                  className={cn(
+                    "cover-sticker-img h-auto w-full max-w-full object-contain",
+                    i === selected && "active"
+                  )}
+                  style={{
+                    gridArea: "1/1",
+                    filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))",
+                    "--sticker-scale": p.mobileScale ?? 1,
+                  } as React.CSSProperties}
+                />
+              ))}
+            </div>
+          </div>
           </div>
 
           <div className="cover-picker-options">
@@ -172,7 +227,7 @@ const CoverPickerSection = () => {
           </div>
         </div>
 
-        <div className="cover-sticker cover-sticker-right" style={{ display: "grid" }}>
+        <div className="cover-sticker cover-sticker-right hidden md:grid">
           {PRODUCTS.map((p, i) => (
             <img
               key={p.stickerRight}
@@ -184,7 +239,11 @@ const CoverPickerSection = () => {
                 "cover-sticker-img h-auto w-full object-contain",
                 i === selected && "active"
               )}
-              style={{ gridArea: "1/1", filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
+              style={{
+                gridArea: "1/1",
+                filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))",
+                "--sticker-scale": p.mobileScale ?? 1,
+              } as React.CSSProperties}
             />
           ))}
         </div>
