@@ -2,58 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NOTEKIT Design System - Playful Digital Scrapbook */
+/* NOTEKIT Design System - Notebook Style Redesign */
+
+/* SVN-Achiko Custom Font */
+@font-face {
+  font-family: 'SVN-Achiko';
+  src: url('/SVN-Achiko.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @layer base {
   :root {
-    /* Core Colors - Soft Scrapbook Palette */
     --background: 43 33% 97%;
     --foreground: 30 10% 25%;
-
     --card: 0 0% 100%;
     --card-foreground: 30 10% 25%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 30 10% 25%;
-
-    /* Pastel Blue Accent - #AEC6CF */
     --primary: 191 30% 75%;
     --primary-foreground: 30 10% 20%;
-
-    /* Pastel Pink - #FFB7B2 */
     --secondary: 5 100% 85%;
     --secondary-foreground: 30 10% 25%;
-
-    /* Pastel Orange - #FFDAC1 */
     --accent: 27 100% 88%;
     --accent-foreground: 30 10% 20%;
-
     --muted: 40 20% 94%;
     --muted-foreground: 30 10% 45%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 30 20% 70%;
     --input: 30 20% 70%;
     --ring: 191 30% 75%;
-
     --radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 
-    /* Scrapbook Shadows - Soft & Playful */
     --shadow-soft: 3px 3px 0px 0px hsl(30 20% 80%);
     --shadow-soft-lg: 5px 5px 0px 0px hsl(30 20% 75%);
     --shadow-paper: 2px 2px 8px rgba(0, 0, 0, 0.08);
-
-    /* Border style */
     --border-sketch: 2px solid hsl(30 20% 60%);
     --border-sketch-dark: 2.5px solid hsl(30 10% 35%);
 
-    /* Typography */
-    --font-heading: 'Patrick Hand', cursive;
-    --font-body: 'Quicksand', 'Montserrat', sans-serif;
+    --font-heading: 'SVN-Achiko', 'Patrick Hand', cursive;
+    --font-body: 'SVN-Achiko', 'Quicksand', 'Montserrat', sans-serif;
 
-    /* Pastel colors for utility */
     --pastel-blue: 191 30% 75%;
     --pastel-pink: 5 100% 85%;
     --pastel-orange: 27 100% 88%;
@@ -84,10 +75,20 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Dot grid paper background - user specified */
-    background-color: #FDFBF7 !important;
-    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px) !important;
-    background-size: 20px 20px !important;
+    /* Notebook lined paper background */
+    background-color: #f8f9fc !important;
+    background-image:
+      /* Pink margin line */
+      linear-gradient(90deg, transparent 18%, rgba(255, 180, 180, 0.35) 18%, rgba(255, 180, 180, 0.35) 18.3%, transparent 18.3%),
+      /* Blue horizontal lines */
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(180, 210, 240, 0.4) 31px,
+        rgba(180, 210, 240, 0.4) 32px
+      ) !important;
+    background-size: 100% 32px !important;
     background-attachment: fixed !important;
   }
 
@@ -95,10 +96,13 @@
     font-family: var(--font-heading);
     letter-spacing: 0.02em;
   }
+
+  p, span, a, button, input, label, div {
+    font-family: var(--font-body);
+  }
 }
 
 @layer components {
-  /* Scrapbook Box - Core Building Block */
   .scrapbook-box {
     @apply bg-card;
     border: var(--border-sketch-dark);
@@ -112,7 +116,6 @@
     box-shadow: var(--shadow-soft-lg);
   }
 
-  /* Washi Tape Button Variants */
   .washi-btn {
     @apply px-6 py-3 font-bold tracking-wide;
     font-family: var(--font-heading);
@@ -169,14 +172,12 @@
     color: hsl(30 10% 25%);
   }
 
-  /* Hand-drawn sketchy borders */
   .sketch-border {
     position: relative;
     border: var(--border-sketch-dark);
     border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   }
 
-  /* Cute Sticker style */
   .sticker {
     @apply inline-block px-4 py-2 font-bold text-sm;
     font-family: var(--font-heading);
@@ -196,7 +197,6 @@
     background: hsl(var(--pastel-blue));
   }
 
-  /* Marker underline effect - softer */
   .marker-underline {
     position: relative;
     display: inline;
@@ -223,7 +223,6 @@
     background: hsl(var(--pastel-orange) / 0.6);
   }
 
-  /* Option card selected state */
   .option-card {
     @apply scrapbook-box cursor-pointer p-4;
     transition: all 0.2s ease;
@@ -235,7 +234,6 @@
     transform: translate(-2px, -2px) rotate(-1deg);
   }
 
-  /* Paper card hover effect */
   .paper-card {
     @apply scrapbook-box p-6;
     transition: all 0.25s ease;
@@ -246,7 +244,6 @@
     box-shadow: var(--shadow-soft-lg);
   }
 
-  /* Sticker slots for decorative elements */
   .sticker-slot {
     position: absolute;
     pointer-events: none;
@@ -264,7 +261,6 @@
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
   }
 
-  /* Tape strip decoration */
   .tape-strip {
     position: relative;
     background: hsl(var(--pastel-blue) / 0.7);
@@ -281,25 +277,47 @@
     top: 0;
     bottom: 0;
     width: 8px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(255,255,255,0.4) 50%, 
-      transparent 100%
-    );
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
   }
 
   .tape-strip::before { left: 0; }
   .tape-strip::after { right: 0; }
+
+  /* Scroll mask overlay */
+  .scroll-mask-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 30;
+    /* Notebook background that masks content scrolling behind */
+    background-color: #f8f9fc;
+    background-image:
+      linear-gradient(90deg, transparent 18%, rgba(255, 180, 180, 0.35) 18%, rgba(255, 180, 180, 0.35) 18.3%, transparent 18.3%),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(180, 210, 240, 0.4) 31px,
+        rgba(180, 210, 240, 0.4) 32px
+      );
+    background-size: 100% 32px;
+    /* Cut a viewport-sized hole in the center */
+    clip-path: polygon(
+      0% 0%, 100% 0%, 100% 100%, 0% 100%,
+      0% 0%, 5% 8%, 95% 8%, 95% 92%, 5% 92%, 5% 8%, 0% 0%
+    );
+  }
 }
 
 @layer utilities {
-  /* Playful rotations */
   .rotate-playful-1 { transform: rotate(-2deg); }
   .rotate-playful-2 { transform: rotate(1.5deg); }
   .rotate-playful-3 { transform: rotate(-1deg); }
   .rotate-playful-4 { transform: rotate(2.5deg); }
   
-  /* Text styles */
   .text-heading {
     font-family: var(--font-heading);
   }
@@ -308,20 +326,27 @@
     font-family: var(--font-body);
   }
 
-  /* Pastel backgrounds */
   .bg-pastel-pink { background: hsl(var(--pastel-pink)); }
   .bg-pastel-blue { background: hsl(var(--pastel-blue)); }
   .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
   .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
 
-  /* Hover glow - softer */
   .soft-glow:hover {
     box-shadow: 0 0 15px hsl(var(--pastel-pink) / 0.4), var(--shadow-soft);
   }
 
-  /* Sketch border utility */
   .border-sketch {
     border: var(--border-sketch-dark);
     border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  }
+
+  /* Float animation for stickers */
+  @keyframes float-gentle {
+    0%, 100% { transform: translateY(0) rotate(var(--float-rotate, -3deg)); }
+    50% { transform: translateY(-12px) rotate(var(--float-rotate-alt, 3deg)); }
+  }
+
+  .animate-float-gentle {
+    animation: float-gentle 4s ease-in-out infinite;
   }
 }

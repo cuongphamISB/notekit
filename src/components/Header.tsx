@@ -1,25 +1,44 @@
-import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
   const { cartCount } = useCart();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b-2 border-border">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
+      <div className="container mx-auto px-6 md:px-10 py-4 flex items-center justify-between max-w-7xl">
         {/* Logo */}
-        <div className="scrapbook-box px-4 py-2 bg-pastel-pink rotate-playful-3">
-          <span className="font-heading text-2xl md:text-3xl font-bold tracking-tight">
-            NOTEKIT
-          </span>
-        </div>
+        <a href="/" className="flex-shrink-0">
+          <img
+            src="/LOGO.png"
+            alt="NOTEKIT Logo"
+            className="h-10 md:h-14 w-auto object-contain"
+          />
+        </a>
 
-        {/* Cart Button */}
-        <button className="washi-btn-secondary flex items-center gap-2 text-sm">
-          <ShoppingBag className="w-5 h-5" />
-          <span className="hidden sm:inline">GIỎ HÀNG</span>
-          <span className="scrapbook-box px-2 py-0.5 text-xs bg-pastel-orange">{cartCount}</span>
-        </button>
+        {/* Right Nav */}
+        <nav className="flex items-center gap-4 md:gap-6">
+          {/* Trang chủ */}
+          <a href="/" className="flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+            <img src="/trang chủ icon.png" alt="" className="w-5 h-5 md:w-6 md:h-6 object-contain" />
+            <span className="hidden md:inline text-sm text-foreground">trang chủ</span>
+          </a>
+
+          {/* Search */}
+          <button className="opacity-80 hover:opacity-100 transition-opacity">
+            <img src="/search icon 1.png" alt="Tìm kiếm" className="w-5 h-5 md:w-6 md:h-6 object-contain" />
+          </button>
+
+          {/* Giỏ hàng */}
+          <button className="flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity relative">
+            <img src="/giỏ hàng icon.png" alt="Giỏ hàng" className="w-5 h-5 md:w-6 md:h-6 object-contain" />
+            <span className="hidden md:inline text-sm text-foreground">giỏ hàng</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-secondary text-secondary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                {cartCount}
+              </span>
+            )}
+          </button>
+        </nav>
       </div>
     </header>
   );
