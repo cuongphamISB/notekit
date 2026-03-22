@@ -9,36 +9,29 @@ const slides = [
 ];
 
 /**
- * SPATIAL RULES (locked to background.png at background-size: 100% auto):
+ * SPATIAL RULES (calibrated to background.png redrawn as CSS, and home.png mockup):
  *
- *  Red margin line  ≈ 18vw from left viewport edge.
- *    • Left of 18vw: Logo (header) + Character sticker only.
- *    • Right of 18vw: ALL main content (slogan, desc, CTA, carousel).
+ *  Red margin line  ≈ 13 vw from left viewport edge.
+ *    • Left  of 13 vw : Logo (header) + Character sticker only.
+ *    • Right of 13 vw : ALL main content.
  *
- *  Character sticker: positioned at ~2vw left, vertically centred with the
- *  carousel (right column). May slightly overlap the red line but not exceed
- *  the content area.
+ *  Content padding-left = 15 vw  (2 vw gap between line and content).
+ *  Carousel column     = clamp(200 px, 38 vw, 750 px)  — large, matching mockup.
+ *  Character sticker   = 11 vw wide, left: 1 vw, top-anchored below header.
  *
- *  Stars: scattered around the right-zone content, density matching mockup.
- *  Each star uses a different float animation (a/b/c) for natural randomness.
+ *  Responsive:
+ *    < 700 px (mobile)  → single column, no vertical centering, sticker hidden.
+ *    ≥ 700 px (desktop) → two-column grid via .hero-grid CSS class.
  */
 
-/** Stars calibrated to home.png mockup positions (left values include 18vw offset) */
 const STARS = [
-  // Upper-left of content zone (just right of margin, near slogan top)
-  { src: "/sao xanh lam.png",  alt: "Ngôi sao xanh",       top: "14%", left: "20%",  w: "clamp(20px,2.4vw,42px)", delay: "0s",   anim: "animate-float-a" },
-  // Upper area above carousel
-  { src: "/sao vàng.png",      alt: "Ngôi sao vàng",        top: "10%", left: "58%",  w: "clamp(24px,2.8vw,48px)", delay: "0.7s", anim: "animate-float-b" },
-  // Mid — between left column and carousel
-  { src: "/sao màu hồng.png",  alt: "Ngôi sao hồng",        top: "58%", left: "46%",  w: "clamp(18px,2.1vw,36px)", delay: "0.3s", anim: "animate-float-c" },
-  // Below slogan, near description
-  { src: "/sao xanh lam.png",  alt: "Ngôi sao xanh nhỏ",    top: "33%", left: "22%",  w: "clamp(12px,1.4vw,24px)", delay: "1.5s", anim: "animate-float-b" },
-  // Near CTA button
-  { src: "/sao vàng.png",      alt: "Ngôi sao vàng nhỏ",    top: "72%", left: "29%",  w: "clamp(14px,1.7vw,28px)", delay: "1.2s", anim: "animate-float-a" },
-  // Right side, below carousel
-  { src: "/sao màu hồng.png",  alt: "Ngôi sao hồng nhỏ",    top: "80%", left: "54%",  w: "clamp(16px,1.9vw,30px)", delay: "0.9s", anim: "animate-float-c" },
-  // Extra — top right corner area
-  { src: "/sao xanh lam.png",  alt: "Ngôi sao xanh góc phải",top:"8%",  left: "72%",  w: "clamp(14px,1.6vw,26px)", delay: "1.8s", anim: "animate-float-a" },
+  { src: "/sao xanh lam.png",  alt: "sao xanh",  top: "13%", left: "20%",  w: "clamp(18px,2.2vw,38px)", delay: "0s",   anim: "animate-float-a" },
+  { src: "/sao vàng.png",      alt: "sao vàng",   top: "9%",  left: "57%",  w: "clamp(22px,2.6vw,44px)", delay: "0.7s", anim: "animate-float-b" },
+  { src: "/sao màu hồng.png",  alt: "sao hồng",   top: "56%", left: "45%",  w: "clamp(16px,2vw,34px)",   delay: "0.3s", anim: "animate-float-c" },
+  { src: "/sao xanh lam.png",  alt: "sao xanh 2", top: "32%", left: "22%",  w: "clamp(10px,1.3vw,22px)", delay: "1.5s", anim: "animate-float-b" },
+  { src: "/sao vàng.png",      alt: "sao vàng 2", top: "70%", left: "28%",  w: "clamp(12px,1.6vw,26px)", delay: "1.2s", anim: "animate-float-a" },
+  { src: "/sao màu hồng.png",  alt: "sao hồng 2", top: "79%", left: "53%",  w: "clamp(14px,1.8vw,28px)", delay: "0.9s", anim: "animate-float-c" },
+  { src: "/sao xanh lam.png",  alt: "sao xanh 3", top: "7%",  left: "71%",  w: "clamp(12px,1.5vw,24px)", delay: "1.8s", anim: "animate-float-a" },
 ] as const;
 
 const HeroSection = () => {
@@ -59,30 +52,19 @@ const HeroSection = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const goPrev = () => {
-    resetTimer();
-    setCurrent((p) => (p - 1 + slides.length) % slides.length);
-  };
-  const goNext = () => {
-    resetTimer();
-    setCurrent((p) => (p + 1) % slides.length);
-  };
+  const goPrev = () => { resetTimer(); setCurrent((p) => (p - 1 + slides.length) % slides.length); };
+  const goNext = () => { resetTimer(); setCurrent((p) => (p + 1) % slides.length); };
 
   return (
     <section className="relative w-full min-h-screen">
 
-      {/* ══════════════════════════════════════════════
-          CHARACTER STICKER — left of the red margin
-          Vertically centred with the carousel column.
-          left: 2vw keeps it in the logo/left-margin zone.
-          ══════════════════════════════════════════════ */}
+      {/* ── CHARACTER STICKER — left of the 13 vw margin line ── */}
       <div
         className="sticker-slot hidden lg:block animate-float-gentle"
         style={{
-          top: "38%",
-          left: "2vw",
-          width: "clamp(80px, 8.5vw, 144px)",
-          animationDelay: "0s",
+          top:   "5.5vw",
+          left:  "1vw",
+          width: "clamp(80px, 11vw, 185px)",
         }}
       >
         <img
@@ -92,62 +74,44 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* ══════════════════════════════════════════════
-          DECORATIVE STARS — scattered in content zone
-          ══════════════════════════════════════════════ */}
+      {/* ── DECORATIVE STARS ── */}
       {STARS.map((s, i) => (
         <div
           key={i}
           className={`sticker-slot hidden md:block ${s.anim}`}
-          style={{
-            top: s.top,
-            left: s.left,
-            width: s.w,
-            animationDelay: s.delay,
-          }}
+          style={{ top: s.top, left: s.left, width: s.w, animationDelay: s.delay }}
         >
           <img src={s.src} alt={s.alt} className="h-auto w-full object-contain" />
         </div>
       ))}
 
-      {/* ══════════════════════════════════════════════
-          MAIN HERO CONTENT
-          Starts at 18vw (right of the red margin line).
-          Uses fluid vw-based spacing so proportions are
-          locked to background.png at every viewport width.
-          ══════════════════════════════════════════════ */}
+      {/* ── MAIN HERO CONTENT ──────────────────────────────────────────────────
+          Content starts at 15 vw (right of the 13 vw margin line + 2 vw gap).
+          No flex vertical-centering — content is top-anchored so it fills the
+          viewport from the top, matching home.png proportions at every device.
+          ──────────────────────────────────────────────────────────────────── */}
       <div
-        className="relative z-20 flex min-h-screen w-full items-center"
+        className="relative z-20 w-full"
         style={{
-          paddingTop:    "clamp(64px, 6.2vw, 110px)",   /* clears the header */
-          paddingBottom: "clamp(24px, 3vw,   56px)",
-          paddingLeft:   "18vw",                          /* right of red margin */
+          paddingTop:    "clamp(50px, 5.5vw, 96px)",  /* clears header */
+          paddingBottom: "clamp(40px, 4vw,   80px)",
+          paddingLeft:   "15vw",                        /* right of 13 vw margin line */
           paddingRight:  "clamp(16px, 2.5vw, 48px)",
         }}
       >
-        {/*
-         * Two-column grid:
-         *   Left  — slogan + description + CTA (flexible)
-         *   Right — carousel (fixed fluid width)
-         */}
-        <div
-          className="w-full grid items-center"
-          style={{
-            gridTemplateColumns: "1fr clamp(240px, 30vw, 430px)",
-            gap: "clamp(20px, 3vw, 56px)",
-          }}
-        >
+        {/* .hero-grid: single col on mobile, two cols (1fr + 38vw) on ≥ 700 px */}
+        <div className="hero-grid">
 
-          {/* ── Left column: Slogan ➔ Description ➔ CTA ── */}
+          {/* ── Left column: Slogan → Description → CTA ── */}
           <div
             className="flex flex-col items-start"
-            style={{ gap: "clamp(14px, 1.8vw, 32px)" }}
+            style={{ gap: "clamp(12px, 1.6vw, 28px)" }}
           >
             <img
               src="/slogan.png"
               alt="NOTE RA LÀ RÕ"
               className="h-auto object-contain"
-              style={{ width: "min(100%, clamp(260px, 38vw, 560px))" }}
+              style={{ width: "min(100%, clamp(200px, 42vw, 660px))" }}
               draggable={false}
             />
 
@@ -155,11 +119,10 @@ const HeroSection = () => {
               src="/mô tả sổ.png"
               alt="Mô tả sổ"
               className="h-auto object-contain"
-              style={{ width: "min(100%, clamp(210px, 30vw, 440px))" }}
+              style={{ width: "min(100%, clamp(170px, 33vw, 500px))" }}
               draggable={false}
             />
 
-            {/* CTA — especially prominent per spec */}
             <button
               type="button"
               onClick={() =>
@@ -171,7 +134,7 @@ const HeroSection = () => {
                 src="/CTA button.png"
                 alt="Tạo nên cuốn sổ của riêng bạn"
                 className="h-auto object-contain"
-                style={{ width: "clamp(220px, 32vw, 460px)" }}
+                style={{ width: "clamp(180px, 38vw, 560px)" }}
                 draggable={false}
               />
             </button>
@@ -180,7 +143,6 @@ const HeroSection = () => {
           {/* ── Right column: Carousel ── */}
           <div className="relative flex-shrink-0">
 
-            {/* ── Arrow: previous ── */}
             <button
               type="button"
               aria-label="Ảnh trước"
@@ -190,18 +152,8 @@ const HeroSection = () => {
               <span aria-hidden className="text-sm leading-none select-none">◀</span>
             </button>
 
-            {/* ══════════════════════════════════════════
-                CAROUSEL FRAME
-                Near-square aspect ratio (matches mockup).
-                Inner clip holds blurred backdrop.
-                Sharp image renders outside clip so its
-                drop-shadow is fully visible (3D lift effect).
-                ══════════════════════════════════════════ */}
-            <div
-              className="relative w-full"
-              style={{ aspectRatio: "1 / 1" }}
-            >
-              {/* Inner container: clips blurred backdrops + carries the border */}
+            {/* Square carousel frame */}
+            <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
               <div className="absolute inset-0 overflow-hidden rounded-2xl border-[3px] border-[#0a1560] bg-white">
                 {slides.map((src, i) => (
                   <img
@@ -218,7 +170,6 @@ const HeroSection = () => {
                 ))}
               </div>
 
-              {/* Sharp notebook images — sit above inner clip, drop-shadow visible */}
               {slides.map((src, i) => (
                 <img
                   key={`fg-${i}`}
@@ -228,15 +179,14 @@ const HeroSection = () => {
                     i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.04]"
                   }`}
                   style={{
-                    filter: "drop-shadow(4px 8px 18px rgba(10,21,96,0.28))",
-                    padding: "4%",       /* slight inset so drop-shadow is fully visible */
+                    filter:  "drop-shadow(4px 8px 18px rgba(10,21,96,0.28))",
+                    padding: "4%",
                   }}
                   draggable={false}
                 />
               ))}
             </div>
 
-            {/* ── Arrow: next ── */}
             <button
               type="button"
               aria-label="Ảnh tiếp theo"
@@ -246,7 +196,6 @@ const HeroSection = () => {
               <span aria-hidden className="text-sm leading-none select-none">▶</span>
             </button>
 
-            {/* ── Dot indicators ── */}
             <div className="mt-4 flex items-center justify-center gap-2">
               {slides.map((_, i) => (
                 <button

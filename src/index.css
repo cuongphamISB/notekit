@@ -14,6 +14,8 @@
 @layer base {
   :root {
     --background: 43 33% 97%;
+    /* Notebook paper line tile height — scales with vw but has a mobile floor */
+    --line-h: clamp(20px, 3.4vw, 70px);
     --foreground: 30 10% 25%;
     --card: 0 0% 100%;
     --card-foreground: 30 10% 25%;
@@ -65,18 +67,35 @@
     -moz-osx-font-smoothing: grayscale;
     color: hsl(var(--foreground));
     /*
-     * SCALING ARCHITECTURE — core fix:
-     * background-size: 100% auto  → background always stretches to 100% of viewport
-     * width, preserving aspect ratio. This locks the red margin line at a fixed
-     * percentage of viewport width (≈18vw) regardless of screen size or aspect
-     * ratio, so HTML elements and the background stay in sync on every device.
+     * CSS-DRAWN NOTEBOOK PAPER — redrawn 1:1 from background.png so it scales
+     * correctly at every viewport width without any PNG aspect-ratio mismatch.
+     *
+     * background.png analysis:
+     *   • Image ~527 × 1046 px (portrait, ≈1:2 ratio)
+     *   • Orange margin line at x ≈ 68 px → 68/527 ≈ 12.9 % of width → 13 vw
+     *   • Horizontal lines spaced ≈ 18 px apart → 18/527 ≈ 3.4 vw per line
+     *
+     * Two layers:
+     *   1) Orange margin rule: full-height linear gradient at 13 vw
+     *   2) Ruled lines: 1 px rule at bottom of each --line-h tile, repeat-y
      */
-    background-image: url('/background.png');
-    background-size: 100% auto;
-    background-position: top left;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-color: var(--bg-fallback);
+    background-color: #f0f5fa;
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent calc(13vw - 1px),
+        #f08040 calc(13vw - 1px),
+        #f08040 calc(13vw + 1px),
+        transparent calc(13vw + 1px)
+      ),
+      linear-gradient(
+        180deg,
+        transparent calc(var(--line-h) - 1px),
+        #c0d4e8 calc(var(--line-h) - 1px)
+      );
+    background-size: 100% 100%, 100% var(--line-h);
+    background-repeat: no-repeat, repeat;
+    background-attachment: scroll;
   }
 
   h1, h2, h3, h4, h5, h6, p, span, a, button, input, label {
@@ -144,4 +163,21 @@
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   33%       { transform: translateY(-7px) rotate(-6deg); }
   66%       { transform: translateY(-4px) rotate(5deg); }
+}
+
+/* ─── Responsive hero two-column grid ─────────────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: clamp(16px, 4vw, 52px);
+  width: 100%;
+}
+
+@media (min-width: 700px) {
+  .hero-grid {
+    /* Left column fluid, right column = carousel (38 vw, capped at 750 px) */
+    grid-template-columns: 1fr clamp(200px, 38vw, 750px);
+    align-items: center;
+  }
 }
