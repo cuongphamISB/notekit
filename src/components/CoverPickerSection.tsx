@@ -88,19 +88,26 @@ const CoverPickerSection = () => {
       <h2 className="cover-picker-title">chọn bìa</h2>
 
       <div className="cover-picker-layout">
-        <div className="cover-sticker cover-sticker-left">
-          <img
-            key={product.stickerLeft}
-            src={product.stickerLeft}
-            alt=""
-            aria-hidden
-            className="h-auto w-full object-contain"
-            style={{ filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
-          />
+        <div className="cover-sticker cover-sticker-left" style={{ display: "grid" }}>
+          {PRODUCTS.map((p, i) => (
+            <img
+              key={p.stickerLeft}
+              src={p.stickerLeft}
+              alt=""
+              aria-hidden
+              loading="eager"
+              className={cn(
+                "cover-sticker-img h-auto w-full object-contain",
+                i === selected && "active"
+              )}
+              style={{ gridArea: "1/1", filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
+            />
+          ))}
         </div>
 
         <div className="cover-picker-grid">
           {/* Showcase box with blur background effect */}
+          <div className="cover-showcase-wrap">
           <div className="cover-picker-showcase">
             {/* Blurred backgrounds */}
             <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "inherit" }}>
@@ -110,7 +117,7 @@ const CoverPickerSection = () => {
                   src={p.coverImg}
                   alt=""
                   aria-hidden
-                  decoding="async"
+                  loading="eager"
                   className={cn(
                     "cover-showcase-bg",
                     i === selected && "active"
@@ -125,7 +132,7 @@ const CoverPickerSection = () => {
                 key={`fg-${p.id}`}
                 src={p.coverImg}
                 alt={p.name}
-                decoding="async"
+                loading="eager"
                 className={cn(
                   "cover-showcase-img",
                   i === selected && "active"
@@ -133,6 +140,7 @@ const CoverPickerSection = () => {
                 draggable={false}
               />
             ))}
+          </div>
           </div>
 
           <div className="cover-picker-options">
@@ -154,20 +162,31 @@ const CoverPickerSection = () => {
               >
                 <span className="cover-option-name">{p.name}</span>
                 <span className="cover-option-desc">{p.desc}</span>
+                <span className="cover-option-tick">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="cover-sticker cover-sticker-right">
-          <img
-            key={product.stickerRight}
-            src={product.stickerRight}
-            alt=""
-            aria-hidden
-            className="h-auto w-full object-contain"
-            style={{ filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
-          />
+        <div className="cover-sticker cover-sticker-right" style={{ display: "grid" }}>
+          {PRODUCTS.map((p, i) => (
+            <img
+              key={p.stickerRight}
+              src={p.stickerRight}
+              alt=""
+              aria-hidden
+              loading="eager"
+              className={cn(
+                "cover-sticker-img h-auto w-full object-contain",
+                i === selected && "active"
+              )}
+              style={{ gridArea: "1/1", filter: "drop-shadow(2px 3px 8px rgba(0,0,0,0.14))" }}
+            />
+          ))}
         </div>
       </div>
     </section>

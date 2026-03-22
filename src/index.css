@@ -100,19 +100,16 @@
         var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
         transparent calc(var(--red-line-x) + var(--rule-red-t))
       ),
+      /* Line xanh B — ngay dưới header, cuộn cùng nội dung */
+      linear-gradient(var(--line-blue), var(--line-blue)),
       linear-gradient(
         180deg,
         transparent calc(var(--line-h) - var(--rule-blue-t)),
         var(--line-blue) calc(var(--line-h) - var(--rule-blue-t))
       );
-    background-size: 100% 100%, 100% var(--line-h);
-    background-repeat: no-repeat, repeat;
-    /*
-     * Offset lớp line xanh: bắt đầu một ô lặp tại y = header-h (không dùng header-h - line-h + rule-blue-t).
-     * Trước đây sọc đầu của body nằm ngay dưới mép header → chồng với line xanh đáy header
-     * (2 × --rule-blue-t, trông dày gấp đôi các line khác). Offset này khớp khoảng cách lưới.
-     */
-    background-position: 0 0, 0 var(--header-h);
+    background-size: 100% 100%, 100% var(--rule-blue-t), 100% var(--line-h);
+    background-repeat: no-repeat, no-repeat, repeat;
+    background-position: 0 0, 0 var(--header-h), 0 calc(var(--header-h) + var(--rule-blue-t));
     background-attachment: scroll;
   }
 
@@ -163,7 +160,7 @@
 
 /* ═══════════════════════════════════════════════════════════════════════════
    HEADER — nền trắng đặc (freeze row, không blur / không gradient mờ)
-   Line xanh = cùng pattern với body (một lớp gradient, không cộng dồn ::before)
+   Line xanh đã chuyển sang body background (không freeze cùng header)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .header-bar {
@@ -183,16 +180,9 @@
       var(--line-red) calc(var(--red-line-x) - var(--rule-red-t)),
       var(--line-red) calc(var(--red-line-x) + var(--rule-red-t)),
       transparent calc(var(--red-line-x) + var(--rule-red-t))
-    ),
-    linear-gradient(
-      to bottom,
-      #ffffff 0%,
-      #ffffff calc(100% - var(--rule-blue-t)),
-      var(--line-blue) calc(100% - var(--rule-blue-t)),
-      var(--line-blue) 100%
     );
   background-repeat: no-repeat;
-  background-size: 100% 100%, 100% 100%;
+  background-size: 100% 100%;
   transition: box-shadow 0.3s;
 }
 
@@ -202,17 +192,8 @@
 
 @media (max-width: 699px) {
   .header-bar {
-    /* Mobile: chỉ giữ line xanh đáy; bỏ line đỏ dọc trong header (line đỏ bắt đầu từ body bên dưới) */
-    background-image:
-      linear-gradient(
-        to bottom,
-        #ffffff 0%,
-        #ffffff calc(100% - var(--rule-blue-t)),
-        var(--line-blue) calc(100% - var(--rule-blue-t)),
-        var(--line-blue) 100%
-      );
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    /* Mobile: không có line đỏ dọc và không có line xanh (line xanh thuộc body) */
+    background-image: none;
   }
 }
 
@@ -293,8 +274,8 @@
   width: var(--red-line-x);
   overflow: visible;
   justify-content: flex-end;
-  padding-left: 30;
-  padding-right: 0;
+  padding-left: 0;
+  padding-right: 5px;
 }
 
 .header-logo-img {
@@ -314,7 +295,7 @@
 
   .header-logo-zone {
     position: absolute;
-    left: calc(var(--red-line-x) / 2);
+    left: 15px;
     top: 50%;
     z-index: 30;
     width: max-content;
@@ -322,8 +303,8 @@
     max-width: min(78vw, 260px);
     height: auto;
     max-height: calc(var(--header-h) - 4px);
-    transform: translate(-50%, -50%);
-    justify-content: center;
+    transform: translateY(-50%);
+    justify-content: flex-start;
     align-items: center;
     padding-left: 0;
     padding-right: 0;
@@ -356,14 +337,15 @@
 
 @media (min-width: 700px) {
   .header-logo-zone {
-    justify-content: center;
-    padding-right: 0;
+    justify-content: flex-end;
+    padding-right: 5px;
   }
 
   .header-logo-img {
-    width: 90px;
+    width: 100%;
+    min-width: 90px;
     max-width: calc(var(--red-line-x) - 1vw - 4px);
-    height: var(--header-logo-max-h);
+    height: fit-content;
     object-fit: contain;
     object-position: center center;
   }
@@ -516,6 +498,24 @@
   animation: cta-float 3s ease-in-out infinite;
 }
 
+/* Grainy shadow for hero slide panel (bottom-right) */
+.hero-slide-wrap {
+  position: relative;
+  z-index: 0;
+}
+
+.hero-slide-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: rgba(10, 21, 96, 0.55);
+  transform: translate(1.5%, 1.5%);
+  z-index: -1;
+  filter: url(#grainy) blur(0.8px);
+  pointer-events: none;
+}
+
 /* Ảnh sản phẩm: object-contain + padding; phóng to ~4.5% so với khung (giảm 5% so với 1.1) */
 .hero-slide-fg {
   object-fit: contain;
@@ -610,9 +610,27 @@
   display: grid;
   grid-template-columns: 0.9fr 1fr;
   gap: clamp(16px, 2.5vw, 40px);
-  align-items: start;
+  align-items: stretch;
   position: relative;
   z-index: 2;
+}
+
+/* Wrapper for grainy shadow on showcase */
+.cover-showcase-wrap {
+  position: relative;
+  z-index: 0;
+}
+
+.cover-showcase-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: rgba(10, 21, 96, 0.55);
+  transform: translate(-1.5%, 1.5%);
+  z-index: -1;
+  filter: url(#grainy) blur(0.8px);
+  pointer-events: none;
 }
 
 .cover-picker-showcase {
@@ -621,8 +639,7 @@
   border-radius: 16px;
   overflow: hidden;
   background: #fff;
-  aspect-ratio: 3 / 4;
-  box-shadow: -6px 6px 0px 0px rgba(10, 21, 96, 0.85);
+  height: 100%;
 }
 
 /* Blurred background layer — fills whitespace like hero carousel */
@@ -634,15 +651,17 @@
   object-fit: cover;
   transform: scale(1.12);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.05s ease 0.12s;
   filter: blur(22px);
   pointer-events: none;
   z-index: 1;
+  will-change: opacity;
 }
 
 .cover-showcase-bg.active {
   opacity: 0.65;
   z-index: 2;
+  transition: opacity 0.15s ease;
 }
 
 /* Foreground product image */
@@ -652,17 +671,31 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 5%;
+  object-position: center center;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.05s ease 0.12s;
   pointer-events: none;
   filter: drop-shadow(4px 8px 18px rgba(10, 21, 96, 0.28));
   z-index: 0;
+  will-change: opacity;
 }
 
 .cover-showcase-img.active {
   opacity: 1;
   z-index: 20;
+  transition: opacity 0.15s ease;
+}
+
+/* Sticker images — all prerendered, toggled via opacity */
+.cover-sticker-img {
+  opacity: 0;
+  transition: opacity 0.05s ease 0.12s;
+  will-change: opacity;
+}
+
+.cover-sticker-img.active {
+  opacity: 1;
+  transition: opacity 0.15s ease;
 }
 
 /* ── Options column ── */
@@ -674,19 +707,21 @@
   gap: clamp(6px, 0.8vw, 12px);
   position: relative;
   z-index: 5;
+  width: 80%;
 }
 
 .cover-option {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: clamp(8px, 1.1vw, 18px) clamp(14px, 2vw, 26px);
+  padding: clamp(5px, 0.7vw, 12px) clamp(14px, 2vw, 26px);
   border: 2px solid rgba(175, 165, 155, 0.38);
   border-radius: clamp(14px, 2.2vw, 26px);
   background: transparent;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   text-align: left;
   flex: none;
 }
@@ -697,25 +732,92 @@
 }
 
 .cover-option.active {
-  background: var(--opt-bg);
+  background: var(--opt-color);
   border-color: var(--opt-color);
+}
+
+.cover-option.active .cover-option-name,
+.cover-option.active .cover-option-desc {
+  color: #ffffff;
+  opacity: 1;
 }
 
 .cover-option-name {
   font-family: var(--font-main);
-  font-size: clamp(24px, 3.5vw, 50px);
+  font-size: clamp(17px, 2.45vw, 35px);
   font-weight: 700;
   color: var(--opt-color);
   line-height: 1.15;
+  transition: color 0.15s ease;
 }
 
 .cover-option-desc {
   font-family: var(--font-main);
-  font-size: clamp(15px, 2vw, 28px);
+  font-size: clamp(12px, 1.6vw, 22px);
   color: var(--opt-color);
   opacity: 0.85;
   line-height: 1.15;
   margin-top: 2px;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+/* Tick mark inside selected option */
+.cover-option-tick {
+  position: absolute;
+  right: clamp(8px, 1.2vw, 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(18px, 2vw, 28px);
+  height: clamp(18px, 2vw, 28px);
+  border-radius: 50%;
+  background: #ffffff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-option.active .cover-option-tick {
+  display: flex;
+}
+
+.cover-option-tick svg {
+  width: 60%;
+  height: 60%;
+  stroke: var(--opt-color);
+}
+
+/* ── Mobile cover-picker layout — single column ── */
+
+@media (max-width: 699px) {
+  .cover-picker {
+    padding-top: clamp(24px, 4vw, 48px);
+    padding-bottom: clamp(24px, 4vw, 48px);
+  }
+
+  .cover-picker-layout {
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+    padding-right: var(--hero-pad-right);
+  }
+
+  .cover-picker-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(12px, 3vw, 24px);
+    justify-items: center;
+  }
+
+  .cover-showcase-wrap {
+    width: min(85%, 340px);
+  }
+
+  .cover-picker-showcase {
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  .cover-picker-options {
+    width: 100%;
+    gap: clamp(5px, 1.2vw, 10px);
+  }
 }
 
 /* ── Stickers ── */
@@ -737,4 +839,14 @@
   width: clamp(90px, 13vw, 210px);
   right: 0;
   transform: translate(25%, -50%);
+}
+
+@media (max-width: 699px) {
+  .cover-sticker-left {
+    width: clamp(60px, 16vw, 100px);
+  }
+
+  .cover-sticker-right {
+    width: clamp(60px, 16vw, 100px);
+  }
 }

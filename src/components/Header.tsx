@@ -37,7 +37,7 @@ const Header = () => {
             src="/trang chủ icon.png"
             alt="Trang chủ"
             className="h-auto w-auto object-contain"
-            style={{ height: "var(--header-icon-h)" }}
+            style={{ height: "clamp(26px, 2.8vw, 50px)" }}
           />
         </a>
 

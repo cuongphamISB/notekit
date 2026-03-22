@@ -185,10 +185,12 @@ const HeroSection = () => {
               </button>
 
               <div
-                className="relative w-full"
+                className="hero-slide-wrap relative w-full"
                 style={{ aspectRatio: "1 / 1", pointerEvents: "none" }}
               >
-                <div className="absolute inset-0 overflow-hidden rounded-2xl border-[3px] border-[#0a1560] bg-white">
+                <div
+                  className="absolute inset-0 overflow-hidden rounded-2xl border-[3px] border-[#0a1560] bg-white"
+                >
                   {slides.map((src, i) => (
                     <img
                       key={`bg-${i}`}
