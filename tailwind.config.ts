@@ -14,8 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['SVN-Achiko', 'Patrick Hand', 'cursive'],
-        body: ['SVN-Achiko', 'Quicksand', 'Montserrat', 'sans-serif'],
+        main: ["SVN-Achiko", "Patrick Hand", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -62,9 +61,6 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        sketch: "255px 15px 225px 15px / 15px 225px 15px 255px",
-        "sketch-alt": "15px 255px 15px 225px / 225px 15px 255px 15px",
-        pill: "30px 88px 30px 88px / 88px 30px 88px 30px",
       },
       boxShadow: {
         soft: "3px 3px 0px 0px hsl(30 20% 80%)",
@@ -80,25 +76,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        wiggle: {
-          "0%, 100%": { transform: "rotate(-2deg)" },
-          "50%": { transform: "rotate(2deg)" },
-        },
-        float: {
-          "0%, 100%": { transform: "translateY(0) rotate(-2deg)" },
-          "50%": { transform: "translateY(-8px) rotate(2deg)" },
-        },
-        bounce: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        wiggle: "wiggle 2s ease-in-out infinite",
-        float: "float 3s ease-in-out infinite",
-        bounce: "bounce 0.5s ease-in-out infinite",
       },
     },
   },

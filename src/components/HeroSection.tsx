@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const carouselImages = [
+const slides = [
   "/mkt (ko nhãn)_result.webp",
   "/fin (ko nhãn)_result.webp",
   "/ibu (ko nhãn)_result.webp",
@@ -8,150 +8,172 @@ const carouselImages = [
   "/man (ko nhãn)_result.webp",
 ];
 
-const stars = [
-  { src: "/sao xanh lam.png", className: "top-[10%] right-[8%] w-8 md:w-12", delay: "0s" },
-  { src: "/sao màu hồng.png", className: "top-[25%] left-[5%] w-6 md:w-10", delay: "0.5s" },
-  { src: "/sao vàng.png", className: "bottom-[20%] right-[12%] w-7 md:w-11", delay: "1s" },
-  { src: "/sao tím nhạt.png", className: "bottom-[35%] left-[8%] w-5 md:w-8", delay: "1.5s" },
-  { src: "/sao tím đậm.png", className: "top-[50%] right-[3%] w-6 md:w-9", delay: "0.8s" },
+const decorativeStars = [
+  { src: "/sao xanh lam.png", style: { top: "8vh", right: "6vw", width: "3vw", minWidth: 20, maxWidth: 48 } },
+  { src: "/sao màu hồng.png", style: { top: "18vh", left: "4vw", width: "2.5vw", minWidth: 16, maxWidth: 40 } },
+  { src: "/sao vàng.png", style: { bottom: "22vh", right: "10vw", width: "2.8vw", minWidth: 18, maxWidth: 44 } },
+  { src: "/sao tím nhạt.png", style: { bottom: "35vh", left: "7vw", width: "2vw", minWidth: 14, maxWidth: 32 } },
+  { src: "/sao tím đậm.png", style: { top: "45vh", right: "3vw", width: "2.2vw", minWidth: 14, maxWidth: 36 } },
 ];
 
 const HeroSection = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [current, setCurrent] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
-  // Auto-advance carousel
+  // Auto-advance carousel every 3s
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    intervalRef.current = setInterval(() => {
+      setCurrent((p) => (p + 1) % slides.length);
     }, 3000);
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalRef.current);
   }, []);
 
-  // Track scroll for mask/parallax effect
+  // Scroll tracking for mask effect
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const parallaxOffset = Math.min(scrollY * 0.4, 300);
-  const contentOpacity = Math.max(1 - scrollY / 600, 0);
+  // Derived values for parallax / mask
+  const contentTranslate = Math.min(scrollY * 0.5, 400);
+  const contentOpacity = Math.max(1 - scrollY / 500, 0);
+  const maskProgress = Math.min(scrollY / 300, 1); // 0 → 1
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen pt-20 md:pt-24 pb-12 overflow-hidden"
-    >
-      {/* Decorative Stars - Floating */}
-      {stars.map((star, i) => (
+    <section className="relative min-h-screen overflow-hidden">
+      {/* ─── Scroll Mask Overlay ─── */}
+      {/* Four border panels that close inward as user scrolls, creating a "slot" effect */}
+      <div className="fixed inset-0 pointer-events-none z-40">
+        {/* Top panel */}
         <div
-          key={i}
-          className={`absolute ${star.className} pointer-events-none z-10 hidden md:block`}
+          className="absolute top-0 left-0 right-0"
           style={{
-            animation: `float-gentle 4s ease-in-out infinite`,
-            animationDelay: star.delay,
+            height: `${maskProgress * 30}vh`,
+            background: "linear-gradient(to bottom, #eef4f8 60%, transparent)",
+            backgroundImage: `
+              linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
+              linear-gradient(to bottom, #eef4f8 60%, transparent)
+            `,
+            backgroundSize: "10px 10px, 10px 10px, 100% 100%",
           }}
-        >
-          <img src={star.src} alt="" className="w-full h-auto object-contain drop-shadow-sm" />
-        </div>
-      ))}
-
-      {/* Sticker nhân vật - top right */}
-      <div className="absolute top-20 right-4 md:right-10 w-20 md:w-36 z-10 animate-bounce pointer-events-none">
-        <img
-          src="/sticker nhân vật.png"
-          alt="Sticker nhân vật"
-          className="w-full h-auto object-contain drop-shadow-md"
+        />
+        {/* Bottom panel */}
+        <div
+          className="absolute bottom-0 left-0 right-0"
+          style={{
+            height: `${maskProgress * 25}vh`,
+            background: "linear-gradient(to top, #eef4f8 60%, transparent)",
+            backgroundImage: `
+              linear-gradient(rgba(255,183,178,0.18) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,183,178,0.18) 1px, transparent 1px),
+              linear-gradient(to top, #eef4f8 60%, transparent)
+            `,
+            backgroundSize: "10px 10px, 10px 10px, 100% 100%",
+          }}
         />
       </div>
 
-      {/* Main Content with scroll parallax */}
+      {/* ─── Decorative Stars (vw/vh sizing) ─── */}
+      {decorativeStars.map((star, i) => (
+        <div
+          key={i}
+          className="sticker-slot hidden md:block"
+          style={{
+            ...star.style,
+            animation: `float-star ${3 + i * 0.5}s ease-in-out infinite`,
+            animationDelay: `${i * 0.4}s`,
+          }}
+        >
+          <img src={star.src} alt="" className="w-full h-auto" />
+        </div>
+      ))}
+
+      {/* ─── Sticker nhân vật — top right ─── */}
       <div
-        className="container mx-auto px-6 md:px-10 max-w-7xl relative z-20"
+        className="sticker-slot hidden md:block animate-bounce"
+        style={{ top: "10vh", right: "2vw", width: "8vw", minWidth: 60, maxWidth: 140 }}
+      >
+        <img src="/sticker nhân vật.png" alt="Sticker" className="w-full h-auto" />
+      </div>
+
+      {/* ─── Main Hero Content ─── */}
+      <div
+        className="relative z-20 mx-auto max-w-7xl px-6 md:px-10 pt-24 md:pt-28 pb-16"
         style={{
-          transform: `translateY(${parallaxOffset}px)`,
+          transform: `translateY(${contentTranslate}px)`,
           opacity: contentOpacity,
-          transition: "opacity 0.1s ease-out",
+          willChange: "transform, opacity",
         }}
       >
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-8rem)]">
-          {/* Left Column - Content Stack */}
-          <div className="flex flex-col items-start gap-5 md:gap-7">
-            {/* Two small icons */}
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[calc(100vh-10rem)]">
+          {/* ── Left Column ── */}
+          <div className="flex flex-col items-start gap-4">
+            {/* Row 1: Two small icons */}
             <div className="flex items-center gap-3">
-              <img
-                src="/icon chọn 1.png"
-                alt="Icon 1"
-                className="w-10 h-10 md:w-14 md:h-14 object-contain"
-              />
-              <img
-                src="/icon chọn 2.png"
-                alt="Icon 2"
-                className="w-10 h-10 md:w-14 md:h-14 object-contain"
-              />
+              <img src="/icon chọn 1.png" alt="" className="w-10 h-10 object-contain" />
+              <img src="/icon chọn 2.png" alt="" className="w-10 h-10 object-contain" />
             </div>
 
-            {/* Slogan Image */}
+            {/* Row 2: Slogan */}
             <img
               src="/slogan.png"
               alt="NOTEKIT Slogan"
-              className="w-full max-w-md md:max-w-lg object-contain"
+              className="w-full max-w-[500px] object-contain"
             />
 
-            {/* Mô tả sổ Image */}
+            {/* Row 3: Mô tả sổ */}
             <img
               src="/mô tả sổ.png"
-              alt="Mô tả sổ NOTEKIT"
-              className="w-full max-w-sm md:max-w-md object-contain"
+              alt="Mô tả sổ"
+              className="w-full max-w-[400px] object-contain mt-4"
             />
 
-            {/* CTA Button */}
+            {/* Row 4: CTA Button */}
             <button
               onClick={() => {
-                const builder = document.getElementById("builder");
-                builder?.scrollIntoView({ behavior: "smooth" });
+                const el = document.getElementById("builder");
+                el?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="transition-transform hover:scale-105 active:scale-95"
+              className="mt-4 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
             >
               <img
                 src="/CTA button.png"
                 alt="Lắp sổ ngay"
-                className="h-12 md:h-16 w-auto object-contain"
+                className="h-14 md:h-16 w-auto object-contain"
               />
             </button>
           </div>
 
-          {/* Right Column - Image Carousel */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative w-full max-w-md lg:max-w-lg mx-auto">
-              {/* Carousel Container */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-paper">
-                {carouselImages.map((src, index) => (
+          {/* ── Right Column: Carousel ── */}
+          <div className="flex items-center justify-center">
+            <div className="relative w-full max-w-md lg:max-w-lg">
+              {/* Carousel frame */}
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-white/50">
+                {slides.map((src, i) => (
                   <img
-                    key={index}
+                    key={i}
                     src={src}
-                    alt={`Notebook design ${index + 1}`}
+                    alt={`Notebook ${i + 1}`}
                     className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
-                      index === currentSlide
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-95"
+                      i === current ? "opacity-100 scale-100" : "opacity-0 scale-[1.04]"
                     }`}
                   />
                 ))}
               </div>
 
-              {/* Carousel Dots */}
-              <div className="flex items-center justify-center gap-2 mt-4">
-                {carouselImages.map((_, index) => (
+              {/* Dots */}
+              <div className="flex items-center justify-center gap-2 mt-5">
+                {slides.map((_, i) => (
                   <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
+                    key={i}
+                    onClick={() => setCurrent(i)}
                     className={`rounded-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? "w-6 h-2.5 bg-secondary"
-                        : "w-2.5 h-2.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                      i === current
+                        ? "w-7 h-2.5 bg-secondary"
+                        : "w-2.5 h-2.5 bg-foreground/20 hover:bg-foreground/40"
                     }`}
                   />
                 ))}
@@ -161,13 +183,13 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Mask - content slides behind this overlay as you scroll */}
-      <div
-        className="fixed inset-0 pointer-events-none z-40"
-        style={{
-          background: `linear-gradient(to top, #f8f9fc ${Math.min(scrollY / 5, 40)}%, transparent ${Math.min(scrollY / 3, 80)}%)`,
-        }}
-      />
+      {/* Float-star animation */}
+      <style>{`
+        @keyframes float-star {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-10px) rotate(3deg); }
+        }
+      `}</style>
     </section>
   );
 };

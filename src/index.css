@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NOTEKIT Design System - Notebook Style Redesign */
-
 /* SVN-Achiko Custom Font */
 @font-face {
   font-family: 'SVN-Achiko';
@@ -34,30 +32,18 @@
     --border: 30 20% 70%;
     --input: 30 20% 70%;
     --ring: 191 30% 75%;
-    --radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    --radius: 0.5rem;
 
     --shadow-soft: 3px 3px 0px 0px hsl(30 20% 80%);
     --shadow-soft-lg: 5px 5px 0px 0px hsl(30 20% 75%);
-    --shadow-paper: 2px 2px 8px rgba(0, 0, 0, 0.08);
-    --border-sketch: 2px solid hsl(30 20% 60%);
     --border-sketch-dark: 2.5px solid hsl(30 10% 35%);
 
-    --font-heading: 'SVN-Achiko', 'Patrick Hand', cursive;
-    --font-body: 'SVN-Achiko', 'Quicksand', 'Montserrat', sans-serif;
+    --font-main: 'SVN-Achiko', 'Patrick Hand', cursive;
 
     --pastel-blue: 191 30% 75%;
     --pastel-pink: 5 100% 85%;
     --pastel-orange: 27 100% 88%;
     --pastel-cream: 43 33% 97%;
-  }
-
-  .dark {
-    --background: 30 10% 12%;
-    --foreground: 43 33% 97%;
-    --card: 30 10% 15%;
-    --card-foreground: 43 33% 97%;
-    --primary: 191 30% 75%;
-    --primary-foreground: 30 10% 20%;
   }
 }
 
@@ -71,282 +57,43 @@
   }
 
   body {
-    @apply text-foreground;
-    font-family: var(--font-body);
+    font-family: var(--font-main);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Notebook lined paper background */
-    background-color: #f8f9fc !important;
+    color: hsl(var(--foreground));
+    /* Pastel white-blue base + pink grid overlay */
+    background-color: #eef4f8 !important;
     background-image:
-      /* Pink margin line */
-      linear-gradient(90deg, transparent 18%, rgba(255, 180, 180, 0.35) 18%, rgba(255, 180, 180, 0.35) 18.3%, transparent 18.3%),
-      /* Blue horizontal lines */
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 31px,
-        rgba(180, 210, 240, 0.4) 31px,
-        rgba(180, 210, 240, 0.4) 32px
-      ) !important;
-    background-size: 100% 32px !important;
+      /* Pink grid lines — 10x10 */
+      linear-gradient(rgba(255, 183, 178, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 183, 178, 0.18) 1px, transparent 1px) !important;
+    background-size: 10px 10px !important;
     background-attachment: fixed !important;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    letter-spacing: 0.02em;
-  }
-
-  p, span, a, button, input, label, div {
-    font-family: var(--font-body);
+  h1, h2, h3, h4, h5, h6, p, span, a, button, input, label {
+    font-family: var(--font-main);
   }
 }
 
 @layer components {
-  .scrapbook-box {
-    @apply bg-card;
-    border: var(--border-sketch-dark);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .scrapbook-box:hover {
-    transform: translate(-2px, -2px) rotate(-0.5deg);
-    box-shadow: var(--shadow-soft-lg);
-  }
-
-  .washi-btn {
-    @apply px-6 py-3 font-bold tracking-wide;
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 4px 25px 5px 20px / 25px 5px 20px 4px;
-    box-shadow: var(--shadow-soft);
-    transition: all 0.2s ease;
-    position: relative;
-    transform: rotate(-1deg);
-  }
-
-  .washi-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-    pointer-events: none;
-  }
-
-  .washi-btn:hover {
-    transform: translate(-2px, -2px) rotate(-2deg);
-    box-shadow: var(--shadow-soft-lg);
-  }
-
-  .washi-btn:active {
-    transform: translate(1px, 1px) rotate(0deg);
-    box-shadow: none;
-  }
-
-  .washi-btn-primary {
-    @apply washi-btn;
-    background: hsl(var(--pastel-pink));
-    color: hsl(30 10% 25%);
-  }
-
-  .washi-btn-secondary {
-    @apply washi-btn;
-    background: hsl(var(--pastel-blue));
-    color: hsl(30 10% 25%);
-  }
-
-  .washi-btn-accent {
-    @apply washi-btn;
-    background: hsl(var(--pastel-orange));
-    color: hsl(30 10% 25%);
-  }
-
-  .washi-btn-outline {
-    @apply washi-btn;
-    background: hsl(var(--background));
-    border: var(--border-sketch-dark);
-    color: hsl(30 10% 25%);
-  }
-
-  .sketch-border {
-    position: relative;
-    border: var(--border-sketch-dark);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
-
-  .sticker {
-    @apply inline-block px-4 py-2 font-bold text-sm;
-    font-family: var(--font-heading);
-    background: hsl(var(--pastel-orange));
-    border: var(--border-sketch-dark);
-    border-radius: 30px 88px 30px 88px / 88px 30px 88px 30px;
-    box-shadow: var(--shadow-soft);
-    transform: rotate(-3deg);
-    color: hsl(30 10% 25%);
-  }
-
-  .sticker-pink {
-    background: hsl(var(--pastel-pink));
-  }
-
-  .sticker-blue {
-    background: hsl(var(--pastel-blue));
-  }
-
-  .marker-underline {
-    position: relative;
-    display: inline;
-  }
-
-  .marker-underline::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 2px;
-    height: 10px;
-    background: hsl(var(--pastel-pink) / 0.5);
-    z-index: -1;
-    transform: skewX(-3deg);
-    border-radius: 2px;
-  }
-
-  .marker-underline-blue::after {
-    background: hsl(var(--pastel-blue) / 0.5);
-  }
-
-  .marker-underline-orange::after {
-    background: hsl(var(--pastel-orange) / 0.6);
-  }
-
-  .option-card {
-    @apply scrapbook-box cursor-pointer p-4;
-    transition: all 0.2s ease;
-  }
-
-  .option-card.selected {
-    background: hsl(var(--pastel-pink));
-    box-shadow: var(--shadow-soft-lg);
-    transform: translate(-2px, -2px) rotate(-1deg);
-  }
-
-  .paper-card {
-    @apply scrapbook-box p-6;
-    transition: all 0.25s ease;
-  }
-
-  .paper-card:hover {
-    transform: translate(-3px, -3px) rotate(-1.5deg);
-    box-shadow: var(--shadow-soft-lg);
-  }
-
+  /* Sticker slot for absolute-positioned decorations */
   .sticker-slot {
     position: absolute;
     pointer-events: none;
     z-index: 10;
-    transition: transform 0.3s ease;
-  }
-
-  .sticker-slot:hover {
-    transform: scale(1.1) rotate(5deg);
   }
 
   .sticker-slot img {
     max-width: 100%;
     height: auto;
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
-  }
-
-  .tape-strip {
-    position: relative;
-    background: hsl(var(--pastel-blue) / 0.7);
-    padding: 0.5rem 1.5rem;
-    transform: rotate(-2deg);
-    border-radius: 2px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-  }
-
-  .tape-strip::before,
-  .tape-strip::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
-  }
-
-  .tape-strip::before { left: 0; }
-  .tape-strip::after { right: 0; }
-
-  /* Scroll mask overlay */
-  .scroll-mask-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 30;
-    /* Notebook background that masks content scrolling behind */
-    background-color: #f8f9fc;
-    background-image:
-      linear-gradient(90deg, transparent 18%, rgba(255, 180, 180, 0.35) 18%, rgba(255, 180, 180, 0.35) 18.3%, transparent 18.3%),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 31px,
-        rgba(180, 210, 240, 0.4) 31px,
-        rgba(180, 210, 240, 0.4) 32px
-      );
-    background-size: 100% 32px;
-    /* Cut a viewport-sized hole in the center */
-    clip-path: polygon(
-      0% 0%, 100% 0%, 100% 100%, 0% 100%,
-      0% 0%, 5% 8%, 95% 8%, 95% 92%, 5% 92%, 5% 8%, 0% 0%
-    );
+    filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.12));
   }
 }
 
 @layer utilities {
-  .rotate-playful-1 { transform: rotate(-2deg); }
-  .rotate-playful-2 { transform: rotate(1.5deg); }
-  .rotate-playful-3 { transform: rotate(-1deg); }
-  .rotate-playful-4 { transform: rotate(2.5deg); }
-  
-  .text-heading {
-    font-family: var(--font-heading);
-  }
-  
-  .text-body {
-    font-family: var(--font-body);
-  }
-
   .bg-pastel-pink { background: hsl(var(--pastel-pink)); }
   .bg-pastel-blue { background: hsl(var(--pastel-blue)); }
   .bg-pastel-orange { background: hsl(var(--pastel-orange)); }
   .bg-pastel-cream { background: hsl(var(--pastel-cream)); }
-
-  .soft-glow:hover {
-    box-shadow: 0 0 15px hsl(var(--pastel-pink) / 0.4), var(--shadow-soft);
-  }
-
-  .border-sketch {
-    border: var(--border-sketch-dark);
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  }
-
-  /* Float animation for stickers */
-  @keyframes float-gentle {
-    0%, 100% { transform: translateY(0) rotate(var(--float-rotate, -3deg)); }
-    50% { transform: translateY(-12px) rotate(var(--float-rotate-alt, 3deg)); }
-  }
-
-  .animate-float-gentle {
-    animation: float-gentle 4s ease-in-out infinite;
-  }
 }

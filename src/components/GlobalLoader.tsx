@@ -20,16 +20,16 @@ const GlobalLoader = () => {
       className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
-      style={{ backgroundColor: "#f8f9fc" }}
+      style={{ backgroundColor: "#eef4f8" }}
     >
       <div className="animate-bounce">
         <img
           alt="Loading"
-          className="w-60 h-60 drop-shadow-lg object-contain"
+          className="w-48 h-48 object-contain drop-shadow-lg"
           src="/sticker nhân vật.png"
         />
       </div>
-      <p className="text-3xl md:text-4xl text-muted-foreground mt-6 animate-pulse">
+      <p className="text-2xl md:text-3xl mt-6 animate-pulse" style={{ color: "hsl(30 10% 45%)" }}>
         Đang lắp ráp...
       </p>
     </div>
