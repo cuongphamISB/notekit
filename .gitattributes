@@ -1,0 +1,13 @@
+# Chuẩn hóa xuống dòng — tránh warning LF/CRLF khi git add trên Windows
+* text=auto eol=lf
+
+# Binary — không đụng line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary

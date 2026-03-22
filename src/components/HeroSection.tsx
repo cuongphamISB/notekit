@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  type SetStateAction,
+  type CSSProperties,
+} from "react";
+import { flushSync } from "react-dom";
 import { CAROUSEL_SLIDE_URLS } from "@/constants/carouselSlides";
 import { cn } from "@/lib/utils";
 
@@ -26,12 +34,21 @@ const POST_CTA_DECO = [
   { src: "/sao xanh lam.png", w: "clamp(24px,3vw,40px)", delay: "0.5s" },
 ] as const;
 
+/** Tắt autoplay khi ≥30% panel bị che (≤70% diện tích còn trong viewport) */
+const SLIDE_PANEL_MIN_VISIBLE_RATIO = 0.7;
+
+/** Tự động: như cũ (3000 / 1.4 ms mỗi lần) */
+const HERO_AUTO_SLIDE_INTERVAL_MS = Math.round(3000 / 1.4);
+/** Một thời lượng cho cả autoplay và mũi tên — cùng độ mượt */
+const HERO_SLIDE_TRANSITION_MS = 360;
+
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
   const [manualMode, setManualMode] = useState(false);
+  const [scrollPaused, setScrollPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
-  const manualRef = useRef(false);
-  manualRef.current = manualMode;
+  const resumeAutoTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const slidePanelRef = useRef<HTMLDivElement>(null);
 
   const stopAutoPlay = useCallback(() => {
     clearInterval(timerRef.current);
@@ -41,44 +58,82 @@ const HeroSection = () => {
   const startAutoPlay = useCallback(() => {
     stopAutoPlay();
     timerRef.current = setInterval(() => {
-      if (manualRef.current) return;
       setCurrent((p) => (p + 1) % slides.length);
-    }, 3000);
+    }, HERO_AUTO_SLIDE_INTERVAL_MS);
   }, [stopAutoPlay]);
 
+  /** Mũi tên / chấm: flushSync để đổi index khớp frame (cùng CSS --hero-slide-ms với autoplay) */
+  const goToSlideInstant = useCallback((next: SetStateAction<number>) => {
+    flushSync(() => {
+      setCurrent(next);
+    });
+  }, []);
+
+  const clearResumeAutoTimer = useCallback(() => {
+    if (resumeAutoTimerRef.current !== undefined) {
+      clearTimeout(resumeAutoTimerRef.current);
+      resumeAutoTimerRef.current = undefined;
+    }
+  }, []);
+
+  /** Dừng autoplay ngay; sau 3s không bấm mũi tên/chấm thì bật lại */
+  const scheduleResumeAuto = useCallback(() => {
+    clearResumeAutoTimer();
+    setManualMode(true);
+    resumeAutoTimerRef.current = window.setTimeout(() => {
+      setManualMode(false);
+      resumeAutoTimerRef.current = undefined;
+    }, 3000);
+  }, [clearResumeAutoTimer]);
+
   useEffect(() => {
-    if (manualMode) {
+    if (manualMode || scrollPaused) {
       stopAutoPlay();
       return;
     }
     startAutoPlay();
     return () => stopAutoPlay();
-  }, [manualMode, startAutoPlay, stopAutoPlay]);
+  }, [manualMode, scrollPaused, startAutoPlay, stopAutoPlay]);
 
-  const enterManual = useCallback(() => {
-    if (!manualRef.current) {
-      manualRef.current = true;
-      setManualMode(true);
-    }
-    stopAutoPlay();
-  }, [stopAutoPlay]);
+  useEffect(
+    () => () => {
+      clearResumeAutoTimer();
+    },
+    [clearResumeAutoTimer]
+  );
+
+  useEffect(() => {
+    const el = slidePanelRef.current;
+    if (!el) return;
+
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setScrollPaused(entry.intersectionRatio <= SLIDE_PANEL_MIN_VISIBLE_RATIO);
+      },
+      { threshold: thresholds }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const goPrev = useCallback(() => {
-    enterManual();
-    setCurrent((p) => (p - 1 + slides.length) % slides.length);
-  }, [enterManual]);
+    scheduleResumeAuto();
+    goToSlideInstant((p) => (p - 1 + slides.length) % slides.length);
+  }, [scheduleResumeAuto, goToSlideInstant]);
 
   const goNext = useCallback(() => {
-    enterManual();
-    setCurrent((p) => (p + 1) % slides.length);
-  }, [enterManual]);
+    scheduleResumeAuto();
+    goToSlideInstant((p) => (p + 1) % slides.length);
+  }, [scheduleResumeAuto, goToSlideInstant]);
 
   const goTo = useCallback(
     (idx: number) => {
-      enterManual();
-      setCurrent(idx);
+      scheduleResumeAuto();
+      goToSlideInstant(idx);
     },
-    [enterManual]
+    [scheduleResumeAuto, goToSlideInstant]
   );
 
   return (
@@ -185,30 +240,36 @@ const HeroSection = () => {
               </button>
 
               <div
+                ref={slidePanelRef}
                 className="hero-slide-wrap relative w-full"
                 style={{ aspectRatio: "1 / 1", pointerEvents: "none" }}
               >
                 <div
-                  className="absolute inset-0 overflow-hidden rounded-2xl border-[3px] border-[#0a1560] bg-white"
+                  className="hero-slide-grain-host absolute inset-0 z-0 overflow-visible rounded-2xl border-[3px] border-[#0a1560] bg-white"
+                  style={
+                    {
+                      "--hero-slide-ms": `${HERO_SLIDE_TRANSITION_MS}ms`,
+                    } as CSSProperties
+                  }
                 >
-                  {slides.map((src, i) => (
-                    <img
-                      key={`bg-${i}`}
-                      src={src}
-                      alt=""
-                      aria-hidden
-                      decoding="async"
-                      loading="eager"
-                      fetchPriority={i === current ? "high" : "low"}
-                      className={cn(
-                        "absolute inset-0 h-full w-full scale-110 object-cover transition-opacity duration-300 ease-out pointer-events-none select-none",
-                        i === current ? "z-[2] opacity-65" : "z-0 opacity-0"
-                      )}
-                      style={{ filter: "blur(22px)" }}
-                      draggable={false}
-                    />
-                  ))}
-                </div>
+                  <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
+                    {slides.map((src, i) => (
+                      <img
+                        key={`bg-${i}`}
+                        src={src}
+                        alt=""
+                        aria-hidden
+                        decoding="async"
+                        loading="eager"
+                        fetchPriority={i === current ? "high" : "low"}
+                        className={cn(
+                          "hero-slide-bg-layer absolute inset-0 h-full w-full object-cover pointer-events-none select-none",
+                          i === current && "is-active"
+                        )}
+                        draggable={false}
+                      />
+                    ))}
+                  </div>
 
                 {slides.map((src, i) => (
                   <img
@@ -220,18 +281,13 @@ const HeroSection = () => {
                     fetchPriority={i === current ? "high" : "low"}
                     aria-hidden={i !== current}
                     className={cn(
-                      "hero-slide-fg absolute inset-0 h-full w-full object-contain transition-all duration-300 ease-out pointer-events-none",
-                      i === current
-                        ? "z-20 opacity-100"
-                        : "z-0 opacity-0"
+                      "hero-slide-fg-layer absolute inset-0 h-full w-full pointer-events-none",
+                      i === current && "is-active"
                     )}
-                    style={{
-                      filter: "drop-shadow(4px 8px 18px rgba(10,21,96,0.28))",
-                      padding: "4%",
-                    }}
                     draggable={false}
                   />
                 ))}
+                </div>
               </div>
 
               <button
@@ -253,7 +309,7 @@ const HeroSection = () => {
                   key={i}
                   type="button"
                   onClick={() => goTo(i)}
-                  className={`rounded-full transition-all duration-300 ${
+                  className={`hero-slide-pager-dot rounded-full ${
                     i === current
                       ? "h-2.5 w-7 bg-[#0a1560]"
                       : "h-2.5 w-2.5 bg-black/20 hover:bg-black/35"

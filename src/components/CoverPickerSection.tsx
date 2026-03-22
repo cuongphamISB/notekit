@@ -1,75 +1,9 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/contexts/CartContext";
+import { COVER_PRODUCTS } from "@/data/coverProducts";
 
-interface Product {
-  id: string;
-  name: string;
-  desc: string;
-  color: string;
-  bgSelected: string;
-  coverImg: string;
-  stickerLeft: string;
-  stickerRight: string;
-  mobileScale?: number;
-}
-
-const PRODUCTS: Product[] = [
-  {
-    id: "mkt",
-    name: "Marketing",
-    desc: "Viết insight khét, chốt camp mượt.",
-    color: "#6078C0",
-    bgSelected: "rgba(96,120,192,0.42)",
-    coverImg: "/mkt (ko nhãn)_result.webp",
-    stickerLeft: "/nam mkt.png",
-    stickerRight: "/nữ mkt.png",
-    mobileScale: 1,
-  },
-  {
-    id: "fin",
-    name: "Finance",
-    desc: "Flex nhẹ tư duy nghìn tỷ.",
-    color: "#9370B8",
-    bgSelected: "rgba(147,112,184,0.42)",
-    coverImg: "/fin (ko nhãn)_result.webp",
-    stickerLeft: "/nam fin.png",
-    stickerRight: "/nữ fin.png",
-    mobileScale: 0.78,
-  },
-  {
-    id: "ibu",
-    name: "International Business",
-    desc: "Hệ tư tưởng chốt deal toàn cầu.",
-    color: "#4D8650",
-    bgSelected: "rgba(77,134,80,0.42)",
-    coverImg: "/ibu (ko nhãn)_result.webp",
-    stickerLeft: "/nam ibu.png",
-    stickerRight: "/nữ ibu.png",
-    mobileScale: 1,
-  },
-  {
-    id: "acc",
-    name: "Accounting",
-    desc: "Trộm vía mọi con số đều cân.",
-    color: "#D48A3A",
-    bgSelected: "rgba(212,138,58,0.42)",
-    coverImg: "/accounting (ko nhãn)_result.webp",
-    stickerLeft: "/nam accounting.png",
-    stickerRight: "/nữ accounting.png",
-    mobileScale: 1,
-  },
-  {
-    id: "man",
-    name: "Business Management",
-    desc: "Sếp tương lai chuyên gánh team.",
-    color: "#7B6BA8",
-    bgSelected: "rgba(123,107,168,0.42)",
-    coverImg: "/man (ko nhãn)_result.webp",
-    stickerLeft: "/nam man.png",
-    stickerRight: "/nữ man.png",
-    mobileScale: 1,
-  },
-];
+const PRODUCTS = COVER_PRODUCTS;
 
 const SECTION_STARS = [
   { src: "/sao xanh lam.png", style: { top: "4%", left: "7%", width: "clamp(22px,4.2vw,68px)" } },
@@ -80,8 +14,26 @@ const SECTION_STARS = [
 ];
 
 const CoverPickerSection = () => {
-  const [selected, setSelected] = useState(0);
-  const product = PRODUCTS[selected];
+  const { selectedCoverIndex, setSelectedCoverIndex } = useCart();
+  const selected = selectedCoverIndex;
+  const setSelected = setSelectedCoverIndex;
+
+  /* Decode sẵn mọi ảnh bìa + sticker — đổi product liên tục không bị khựng decode */
+  useEffect(() => {
+    PRODUCTS.forEach((p) => {
+      for (const src of [p.coverImg, p.stickerLeft, p.stickerRight]) {
+        const img = new Image();
+        img.decoding = "async";
+        img.onload = () => {
+          if (typeof img.decode === "function") {
+            img.decode().catch(() => {});
+          }
+        };
+        img.onerror = () => {};
+        img.src = src;
+      }
+    });
+  }, []);
 
   return (
     <section className="cover-picker" id="cover-picker">
@@ -142,37 +94,39 @@ const CoverPickerSection = () => {
             </div>
           </div>
           <div className="cover-picker-showcase">
-            {/* Blurred backgrounds */}
-            <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "inherit" }}>
+            <div className="cover-showcase-clip">
+              {/* Blurred backgrounds */}
+              <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "inherit" }}>
+                {PRODUCTS.map((p, i) => (
+                  <img
+                    key={`bg-${p.id}`}
+                    src={p.coverImg}
+                    alt=""
+                    aria-hidden
+                    loading="eager"
+                    className={cn(
+                      "cover-showcase-bg",
+                      i === selected && "active"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Foreground product images */}
               {PRODUCTS.map((p, i) => (
                 <img
-                  key={`bg-${p.id}`}
+                  key={`fg-${p.id}`}
                   src={p.coverImg}
-                  alt=""
-                  aria-hidden
+                  alt={p.name}
                   loading="eager"
                   className={cn(
-                    "cover-showcase-bg",
+                    "cover-showcase-img",
                     i === selected && "active"
                   )}
+                  draggable={false}
                 />
               ))}
             </div>
-
-            {/* Foreground product images */}
-            {PRODUCTS.map((p, i) => (
-              <img
-                key={`fg-${p.id}`}
-                src={p.coverImg}
-                alt={p.name}
-                loading="eager"
-                className={cn(
-                  "cover-showcase-img",
-                  i === selected && "active"
-                )}
-                draggable={false}
-              />
-            ))}
           </div>
           <div className="cover-sticker-mobile-slot cover-sticker-mobile-slot--right md:hidden">
             <div className="cover-sticker-mobile-col" style={{ display: "grid" }}>

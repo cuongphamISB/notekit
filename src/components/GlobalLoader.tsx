@@ -6,6 +6,7 @@ const OTHER_PRELOAD = [
   "/slogan.png",
   "/mô tả sổ.png",
   "/CTA button.png",
+  "/CTA 2.png",
   "/sticker nhân vật.png",
   "/trang chủ icon.png",
   "/search icon 1.png",

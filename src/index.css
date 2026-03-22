@@ -208,6 +208,28 @@
   display: block;
 }
 
+/* Giỏ hàng (thay icon search): khi chưa có đơn — mờ; khi có đơn — rõ + badge */
+.header-cart-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.header-cart-link:not([data-cart-active]) .header-cart-icon {
+  opacity: 0.4;
+  filter: grayscale(0.4);
+}
+
+.header-cart-link[data-cart-active] .header-cart-icon {
+  opacity: 1;
+  filter: drop-shadow(0 1px 4px rgba(220, 38, 38, 0.35));
+}
+
+.header-cart-badge {
+  box-shadow: 0 0 0 2px #fff;
+}
+
 @media (max-width: 699px) {
   .header-home-link {
     display: none;
@@ -498,22 +520,51 @@
   animation: cta-float 3s ease-in-out infinite;
 }
 
-/* Grainy shadow for hero slide panel (bottom-right) */
+/* Hero slide — grain ngoài khung (web: trái + dưới; mobile: chỉ dưới) */
 .hero-slide-wrap {
   position: relative;
   z-index: 0;
 }
 
-.hero-slide-wrap::after {
+.hero-slide-grain-host {
+  --grain-depth: clamp(5px, 1.35vw, 11px);
+  --slide-ease: cubic-bezier(0.33, 0.88, 0.36, 1);
+  --hero-slide-ms: 360ms;
+}
+
+.hero-slide-grain-host::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 16px;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--grain-depth);
   background: rgba(10, 21, 96, 0.55);
-  transform: translate(1.5%, 1.5%);
-  z-index: -1;
+  border-radius: 0 0 12px 12px;
   filter: url(#grainy) blur(0.8px);
+  z-index: -1;
   pointer-events: none;
+}
+
+.hero-slide-grain-host::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--grain-depth);
+  transform: translateX(-100%);
+  background: rgba(10, 21, 96, 0.55);
+  border-radius: 12px 0 0 12px;
+  filter: url(#grainy) blur(0.8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (max-width: 699px) {
+  .hero-slide-grain-host::after {
+    display: none;
+  }
 }
 
 /* Ảnh sản phẩm: object-contain + padding; phóng to ~4.5% so với khung (giảm 5% so với 1.1) */
@@ -522,6 +573,76 @@
   object-position: center center;
   transform: scale(1.045);
   transform-origin: center center;
+}
+
+/* ═══ Hero carousel — chuyển slide mượt, vibe sổ / sticker ═══ */
+.hero-slide-bg-layer,
+.hero-slide-fg-layer {
+  transform-origin: center center;
+  transition:
+    opacity var(--hero-slide-ms, 360ms) var(--slide-ease),
+    transform var(--hero-slide-ms, 360ms) var(--slide-ease),
+    filter var(--hero-slide-ms, 360ms) ease-out;
+  will-change: opacity, transform;
+}
+
+.hero-slide-bg-layer.is-active {
+  z-index: 2;
+  opacity: 0.65;
+  transform: scale(1.1);
+  filter: blur(22px);
+}
+
+.hero-slide-bg-layer:not(.is-active) {
+  z-index: 0;
+  opacity: 0;
+  transform: scale(1.04);
+  filter: blur(22px) saturate(0.9);
+}
+
+/* Foreground: vào — bung nhẹ + thẳng; ra — thu + nghiêng chút như giấy */
+.hero-slide-fg-layer {
+  padding: 4%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.hero-slide-fg-layer.is-active {
+  z-index: 20;
+  opacity: 1;
+  transform: scale(1.045) rotate(0deg);
+  filter: drop-shadow(4px 8px 18px rgba(10, 21, 96, 0.28));
+}
+
+.hero-slide-fg-layer:not(.is-active) {
+  z-index: 0;
+  opacity: 0;
+  transform: scale(0.93) rotate(-0.7deg);
+  filter: drop-shadow(2px 5px 14px rgba(10, 21, 96, 0.14));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-grain-host {
+    --hero-slide-ms: 45ms;
+    --slide-ease: linear;
+  }
+
+  .hero-slide-fg-layer:not(.is-active) {
+    transform: scale(1.045);
+    filter: drop-shadow(2px 5px 12px rgba(10, 21, 96, 0.12));
+  }
+
+  .hero-slide-bg-layer:not(.is-active) {
+    transform: scale(1.1);
+  }
+}
+
+/* Chấm tròn dưới slide — cùng easing với ảnh */
+.hero-slide-pager-dot {
+  transition:
+    width 0.42s cubic-bezier(0.33, 0.88, 0.36, 1),
+    background-color 0.33s ease,
+    opacity 0.22s ease;
 }
 
 @media (max-width: 699px) {
@@ -604,6 +725,9 @@
   position: relative;
   padding-left: calc(var(--red-line-x) + 2vw);
   padding-right: var(--hero-pad-right);
+  /* Chuyển bìa: frame + sticker dùng chung */
+  --cover-swap-ms: 280ms;
+  --cover-swap-ease: cubic-bezier(0.33, 0.88, 0.36, 1);
 }
 
 .cover-picker-grid {
@@ -659,29 +783,62 @@
   --sticker-nudge: clamp(-4px, -2vw, -10px);
 }
 
-.cover-picker-showcase::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  background: rgba(10, 21, 96, 0.55);
-  transform: translate(-1.5%, 1.5%);
-  z-index: -1;
-  filter: url(#grainy) blur(0.8px);
-  pointer-events: none;
-}
-
+/* Grain ngoài khung product (web: trái + dưới; mobile: chỉ dưới) */
 .cover-picker-showcase {
   position: relative;
   z-index: 2;
   border: 3px solid #0a1560;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
   height: 100%;
+  --grain-depth: clamp(5px, 1.35vw, 11px);
 }
 
-/* Blurred background layer — fills whitespace like hero carousel */
+.cover-showcase-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cover-picker-showcase::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--grain-depth);
+  background: rgba(10, 21, 96, 0.55);
+  border-radius: 0 0 12px 12px;
+  filter: url(#grainy) blur(0.8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cover-picker-showcase::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--grain-depth);
+  transform: translateX(-100%);
+  background: rgba(10, 21, 96, 0.55);
+  border-radius: 12px 0 0 12px;
+  filter: url(#grainy) blur(0.8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (max-width: 699px) {
+  .cover-picker-showcase::after {
+    display: none;
+  }
+}
+
+/* Blurred background — crossfade mượt; chỉ animate opacity (blur cố định, tránh lag filter) */
 .cover-showcase-bg {
   position: absolute;
   inset: 0;
@@ -689,21 +846,21 @@
   height: 100%;
   object-fit: cover;
   transform: scale(1.12);
+  transform-origin: center center;
   opacity: 0;
-  transition: opacity 0.05s ease 0.12s;
   filter: blur(22px);
   pointer-events: none;
   z-index: 1;
+  transition: opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
   will-change: opacity;
 }
 
 .cover-showcase-bg.active {
   opacity: 0.65;
   z-index: 2;
-  transition: opacity 0.15s ease;
 }
 
-/* Foreground product image */
+/* Ảnh bìa trong frame — fade + bung nhẹ (vibe hero / sổ) */
 .cover-showcase-img {
   position: absolute;
   inset: 0;
@@ -711,31 +868,54 @@
   height: 100%;
   object-fit: contain;
   object-position: center center;
+  transform: scale(0.96);
+  transform-origin: center center;
   opacity: 0;
-  transition: opacity 0.05s ease 0.12s;
   pointer-events: none;
   filter: drop-shadow(4px 8px 18px rgba(10, 21, 96, 0.28));
   z-index: 0;
-  will-change: opacity;
+  transition:
+    opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out),
+    transform var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
+  will-change: opacity, transform;
 }
 
 .cover-showcase-img.active {
   opacity: 1;
+  transform: scale(1);
   z-index: 20;
-  transition: opacity 0.15s ease;
 }
 
-/* Sticker images — all prerendered, toggled via opacity */
+/* Sticker hai bên + mobile — cùng timing với frame */
 .cover-sticker-img {
   opacity: 0;
-  transition: opacity 0.05s ease 0.12s;
-  will-change: opacity;
-  transform: scale(var(--sticker-scale, 1));
+  transform: scale(calc(0.9 * var(--sticker-scale, 1)));
+  transform-origin: center center;
+  transition:
+    opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out),
+    transform var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
+  will-change: opacity, transform;
 }
 
 .cover-sticker-img.active {
   opacity: 1;
-  transition: opacity 0.15s ease;
+  transform: scale(var(--sticker-scale, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-picker-layout {
+    --cover-swap-ms: 55ms;
+    --cover-swap-ease: linear;
+  }
+
+  .cover-showcase-img:not(.active),
+  .cover-sticker-img:not(.active) {
+    transform: scale(1);
+  }
+
+  .cover-sticker-img:not(.active) {
+    transform: scale(var(--sticker-scale, 1));
+  }
 }
 
 /* ── Options column ── */
@@ -784,7 +964,7 @@
 
 .cover-option-name {
   font-family: var(--font-main);
-  font-size: clamp(20px, 2.94vw, 42px);
+  font-size: clamp(23px, 3.44vw, 50px);
   font-weight: 700;
   color: var(--opt-color);
   line-height: 1.15;
@@ -793,7 +973,7 @@
 
 .cover-option-desc {
   font-family: var(--font-main);
-  font-size: clamp(14px, 1.92vw, 26px);
+  font-size: clamp(16px, 2.25vw, 31px);
   color: var(--opt-color);
   opacity: 0.85;
   line-height: 1.15;
@@ -903,5 +1083,419 @@
 @media (max-width: 699px) {
   .cover-sticker-img {
     transform-origin: center center;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RUỘT GIẤY + PHỤ KIỆN
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.paper-inner-section {
+  position: relative;
+  width: 100%;
+  padding-top: clamp(28px, 4vw, 56px);
+  /* Bớt đệm đáy — CTA ngoài section nên kéo sát “coming soon” */
+  padding-bottom: clamp(8px, 1.5vw, 20px);
+}
+
+.paper-inner-title {
+  margin-bottom: clamp(16px, 2.5vw, 36px);
+}
+
+.paper-inner-layout {
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
+.paper-polaroid-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 4vw, 48px);
+  max-width: min(920px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.paper-polaroid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: center;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* Ô chưa chọn — mờ nhẹ để ô đang chọn nổi bật */
+.paper-polaroid:not(.paper-polaroid--selected) {
+  opacity: 0.58;
+}
+
+.paper-polaroid:not(.paper-polaroid--selected):hover,
+.paper-polaroid:not(.paper-polaroid--selected):focus-visible {
+  opacity: 0.88;
+}
+
+.paper-polaroid:hover {
+  transform: scale(1.02);
+}
+
+.paper-polaroid--selected:hover {
+  transform: scale(1.03);
+}
+
+.paper-polaroid:focus-visible {
+  outline: 3px solid rgba(129, 135, 217, 0.7);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+.paper-polaroid--selected .paper-polaroid-grain-host {
+  box-shadow:
+    0 0 0 4px rgba(129, 135, 217, 0.95),
+    0 0 0 8px rgba(129, 135, 217, 0.22),
+    0 12px 28px rgba(10, 21, 96, 0.12);
+}
+
+/* Tick góc — cùng vibe nút chọn bìa */
+.paper-polaroid-tick {
+  position: absolute;
+  top: clamp(8px, 1.5vw, 14px);
+  right: clamp(8px, 1.5vw, 14px);
+  width: clamp(30px, 4.5vw, 44px);
+  height: clamp(30px, 4.5vw, 44px);
+  border-radius: 50%;
+  background: rgba(129, 135, 217, 0.98);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(10, 21, 96, 0.18);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.paper-polaroid--selected .paper-polaroid-tick {
+  display: flex;
+}
+
+.paper-polaroid-tick svg {
+  width: 55%;
+  height: 55%;
+  stroke: #ffffff;
+}
+
+.paper-polaroid--selected .paper-polaroid-caption {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.18em;
+}
+
+/* Dòng tóm tắt rõ ràng dưới hai ô */
+.paper-selection-summary {
+  text-align: center;
+  margin-top: clamp(20px, 3.5vw, 36px);
+  margin-bottom: 0;
+  font-family: var(--font-main);
+  font-size: clamp(20px, 3vw, 34px);
+  line-height: 1.35;
+  color: rgba(129, 135, 217, 0.92);
+}
+
+.paper-selection-summary-label {
+  font-weight: 700;
+  opacity: 0.85;
+  text-transform: lowercase;
+}
+
+.paper-selection-summary-value {
+  font-weight: 800;
+  color: rgba(100, 108, 195, 1);
+}
+
+/* Polaroid + grain (web: trái + dưới; mobile: chỉ dưới) — cùng vibe cover picker */
+.paper-polaroid-grain-host {
+  position: relative;
+  width: 100%;
+  max-width: min(100%, 380px);
+  margin-inline: auto;
+  padding: clamp(10px, 1.8vw, 16px);
+  padding-bottom: clamp(18px, 3vw, 32px);
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: visible;
+  z-index: 0;
+  --grain-depth: clamp(5px, 1.35vw, 11px);
+}
+
+.paper-polaroid-grain-host::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--grain-depth);
+  background: rgba(10, 21, 96, 0.55);
+  border-radius: 0 0 10px 10px;
+  filter: url(#grainy) blur(0.8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.paper-polaroid-grain-host::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--grain-depth);
+  transform: translateX(-100%);
+  background: rgba(10, 21, 96, 0.55);
+  border-radius: 10px 0 0 10px;
+  filter: url(#grainy) blur(0.8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (max-width: 699px) {
+  .paper-polaroid-grain-host::after {
+    display: none;
+  }
+
+  .paper-polaroid-grid {
+    grid-template-columns: 1fr;
+    max-width: min(340px, 100%);
+  }
+}
+
+.paper-polaroid-preview {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(10, 21, 96, 0.08);
+}
+
+/* Giấy kẻ ngang — vibe sổ tay: nền kem, line xanh nhạt, mép đỏ */
+.paper-preview-lined {
+  background-color: #faf7f2;
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 8%,
+      rgba(210, 95, 85, 0.42) 8%,
+      rgba(210, 95, 85, 0.42) 8.6%,
+      transparent 8.6%
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 13px,
+      rgba(120, 155, 205, 0.38) 13px,
+      rgba(120, 155, 205, 0.38) 14px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 13.4px,
+      rgba(100, 140, 190, 0.12) 13.4px,
+      rgba(100, 140, 190, 0.12) 13.6px
+    );
+  transform: rotate(-0.35deg);
+}
+
+/* Giấy caro — ô hơi lệch tay (2 lớp grid offset nhẹ) */
+.paper-preview-grid {
+  background-color: #faf7f2;
+  background-image:
+    linear-gradient(rgba(95, 125, 175, 0.32) 0.6px, transparent 0.6px),
+    linear-gradient(90deg, rgba(95, 125, 175, 0.32) 0.6px, transparent 0.6px),
+    linear-gradient(rgba(130, 160, 200, 0.18) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, rgba(130, 160, 200, 0.18) 0.5px, transparent 0.5px);
+  background-size:
+    15px 15px,
+    15px 15px,
+    15px 15px,
+    15px 15px;
+  background-position:
+    0 0,
+    0 0,
+    2px 3px,
+    2px 3px;
+  transform: rotate(0.25deg);
+}
+
+.paper-polaroid-caption {
+  margin-top: clamp(12px, 2vw, 20px);
+  font-family: var(--font-main);
+  font-size: clamp(22px, 3.2vw, 38px);
+  color: rgba(129, 135, 217, 1);
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+.paper-accessories-block {
+  position: relative;
+  margin-top: clamp(40px, 6vw, 80px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
+.paper-accessories-title {
+  margin-bottom: clamp(8px, 1.5vw, 20px);
+  /* Block đã có padding trùng với cover-picker-title — tránh cộng dồn */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.paper-accessories-soon {
+  text-align: center;
+  font-family: var(--font-main);
+  font-size: clamp(28px, 5.5vw, 56px);
+  font-weight: 700;
+  font-style: italic;
+  color: rgba(165, 168, 185, 0.55);
+  letter-spacing: 0.03em;
+  padding: clamp(12px, 2vw, 28px) 0 clamp(2px, 0.6vw, 8px);
+  line-height: 1.2;
+  /* Nghiêng lên (đầu phải cao hơn) — giống ảnh mẫu */
+  transform: rotate(-5.5deg);
+  transform-origin: 50% 50%;
+}
+
+@media (max-width: 699px) {
+  .paper-inner-layout,
+  .paper-accessories-block {
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CTA ĐẶT HÀNG (cuối trang)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.order-cta-section {
+  position: relative;
+  width: 100%;
+  /* Sát “coming soon” hơn; đáy trang vừa phải */
+  padding: clamp(6px, 1.5vw, 18px) var(--hero-pad-right) clamp(28px, 5vw, 64px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+}
+
+.order-cta-inner {
+  width: 100%;
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 16px);
+}
+
+/* Web: padding trái gần line đỏ hơn (+1vw thôi) để điểm giữa CTA trùng dải line đỏ → mép phải */
+@media (min-width: 700px) {
+  .order-cta-section {
+    padding-left: calc(var(--red-line-x) + 1vw);
+    padding-right: var(--hero-pad-right);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .order-cta-inner {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Nút = toàn bộ ảnh CTA 2.png (giữ nguyên thiết kế của bạn) */
+.order-cta-img-hit {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.order-cta-img-hit:hover {
+  transform: scale(1.03);
+  filter: brightness(1.04);
+}
+
+.order-cta-img-hit:active {
+  transform: scale(0.98);
+}
+
+.order-cta-img-hit:focus-visible {
+  outline: 3px solid rgba(129, 135, 217, 0.85);
+  outline-offset: 6px;
+}
+
+.order-cta-img {
+  display: block;
+  width: min(100%, 640px);
+  height: auto;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.order-cta-feedback {
+  margin: 0;
+  min-height: 1.4em;
+  text-align: center;
+  font-family: var(--font-main);
+  font-size: clamp(15px, 2.2vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vw, 12px);
+}
+
+.order-cta-feedback-main {
+  display: block;
+  font-weight: 700;
+  color: rgba(129, 135, 217, 0.95);
+  line-height: 1.35;
+  max-width: 36em;
+}
+
+/* Tên bìa + loại ruột — màu từ ACCOUNTING_BOX_COLOR (inline) */
+.order-cta-feedback-accent {
+  font-weight: 800;
+}
+
+.order-cta-feedback-hint {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92em;
+  color: rgba(100, 108, 130, 0.82);
+  line-height: 1.35;
+  max-width: 36em;
+}
+
+@media (max-width: 699px) {
+  .order-cta-section {
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+    display: block;
+  }
+
+  .order-cta-inner {
+    max-width: none;
   }
 }

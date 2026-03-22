@@ -1,8 +1,9 @@
 import { useCart } from "@/contexts/CartContext";
+import { GOOGLE_FORM_ORDER_VIEW_URL } from "@/constants/checkout";
 import { useEffect, useState } from "react";
 
 const Header = () => {
-  const { cartCount } = useCart();
+  const { cartCount, clearCart } = useCart();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -49,35 +50,54 @@ const Header = () => {
             gap: "clamp(6px, 1vw, 18px)",
           }}
         >
-          <button
-            type="button"
-            aria-label="Tìm kiếm"
-            className="bg-transparent p-0 transition-transform duration-150 hover:scale-105"
+          {/* Trang trí — cùng vị trí như trước, không mở tìm kiếm */}
+          <span
+            className="header-search-deco inline-flex shrink-0 select-none"
+            aria-hidden
           >
             <img
               src="/search icon 1.png"
-              alt="Tìm kiếm"
+              alt=""
               className="h-auto w-auto object-contain"
               style={{ height: "var(--header-icon-h)" }}
+              draggable={false}
             />
-          </button>
+          </span>
 
           <div className="relative">
-            <button
-              type="button"
-              aria-label="Giỏ hàng"
-              className="bg-transparent p-0 transition-transform duration-150 hover:scale-[1.03]"
+            <a
+              href={GOOGLE_FORM_ORDER_VIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cart-active={cartCount > 0 ? "" : undefined}
+              className="header-cart-link bg-transparent p-0 transition-transform duration-150 hover:scale-[1.03]"
+              aria-label={
+                cartCount > 0
+                  ? `Giỏ hàng — ${cartCount} đơn — mở biểu mẫu đặt hàng`
+                  : "Giỏ hàng — chưa có đơn, cuộn tới nút cuối trang để thêm"
+              }
+              onClick={(e) => {
+                if (cartCount === 0) {
+                  e.preventDefault();
+                  document
+                    .getElementById("order-cta")
+                    ?.scrollIntoView({ behavior: "smooth", block: "center" });
+                } else {
+                  clearCart();
+                }
+              }}
             >
               <img
                 src="/giỏ hàng icon.png"
-                alt="Giỏ hàng"
-                className="h-auto w-auto object-contain"
+                alt=""
+                aria-hidden
+                className="header-cart-icon h-auto w-auto object-contain"
                 style={{ height: "clamp(26px, 2.8vw, 50px)" }}
               />
-            </button>
+            </a>
             {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                {cartCount}
+              <span className="header-cart-badge absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">
+                {cartCount > 9 ? "9+" : cartCount}
               </span>
             )}
           </div>
