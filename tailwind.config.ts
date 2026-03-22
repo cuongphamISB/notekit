@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Patrick Hand', 'cursive'],
-        body: ['Quicksand', 'Montserrat', 'sans-serif'],
+        heading: ['SVN-Achiko', 'Patrick Hand', 'cursive'],
+        body: ['SVN-Achiko', 'Quicksand', 'Montserrat', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
