@@ -825,7 +825,28 @@
 
 .cover-showcase-placeholder-icon {
   font-size: clamp(32px, 5vw, 56px);
-  animation: cover-placeholder-bounce 1.5s ease-in-out infinite;
+}
+
+/* Mobile: point down (options are below) */
+.cover-showcase-placeholder-icon--mobile {
+  display: inline-block;
+  animation: cover-placeholder-bounce-down 1.5s ease-in-out infinite;
+}
+
+.cover-showcase-placeholder-icon--desktop {
+  display: none;
+}
+
+/* Desktop: point right (options are to the right) */
+@media (min-width: 700px) {
+  .cover-showcase-placeholder-icon--mobile {
+    display: none;
+  }
+
+  .cover-showcase-placeholder-icon--desktop {
+    display: inline-block;
+    animation: cover-placeholder-bounce-right 1.5s ease-in-out infinite;
+  }
 }
 
 .cover-showcase-placeholder-text {
@@ -837,9 +858,14 @@
   padding: 0 16px;
 }
 
-@keyframes cover-placeholder-bounce {
+@keyframes cover-placeholder-bounce-down {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(8px); }
+}
+
+@keyframes cover-placeholder-bounce-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
 }
 
 .cover-picker-showcase::before {

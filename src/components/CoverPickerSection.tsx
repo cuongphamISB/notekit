@@ -85,9 +85,10 @@ const CoverPickerSection = () => {
                   hasSelection && "hidden"
                 )}
               >
-                <span className="cover-showcase-placeholder-icon">👆</span>
+                <span className="cover-showcase-placeholder-icon cover-showcase-placeholder-icon--mobile">👇</span>
+                <span className="cover-showcase-placeholder-icon cover-showcase-placeholder-icon--desktop">👉</span>
                 <span className="cover-showcase-placeholder-text">
-                  Chọn một mẫu bìa bên dưới
+                  Chọn một mẫu bìa nha ^^
                 </span>
               </div>
 
