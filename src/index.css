@@ -805,8 +805,10 @@
   --sticker-nudge: clamp(20px, 35%, 60px);
 }
 
+/* Sticker nữ (cột phải): thêm 10% về phía giữa (translateX % theo chiều rộng cột) */
 .cover-sticker-mobile-slot--right .cover-sticker-mobile-col {
   --sticker-nudge: clamp(-60px, -35%, -20px);
+  transform: translateX(calc(var(--sticker-nudge) - 10%));
 }
 
 /* Grain ngoài khung product (web: trái + dưới; mobile: chỉ dưới) */
