@@ -122,6 +122,15 @@ const CartDrawer = () => {
                   {orders.length} sản phẩm
                 </span>
               </div>
+              <p
+                className="rounded-lg border border-[#0a1560]/15 bg-white/90 px-3 py-2.5 text-sm leading-snug"
+                style={{ color: "hsl(220 18% 38%)" }}
+              >
+                <span className="font-semibold" style={{ color: "#0a1560" }}>
+                  Giao hàng dự kiến:
+                </span>{" "}
+                3–5 ngày làm việc sau khi xác nhận đơn.
+              </p>
               <button
                 type="button"
                 onClick={handleOrder}

@@ -288,6 +288,16 @@ const HeroSection = () => {
                   />
                 ))}
                 </div>
+
+                {/* Giá — góc dưới-phải khung slide, đè lên ảnh carousel, không đè cột chữ bên trái */}
+                <div className="hero-price-badge pointer-events-none">
+                  <img
+                    src="/giá.png"
+                    alt="Giá sản phẩm"
+                    className="h-auto w-full object-contain"
+                    draggable={false}
+                  />
+                </div>
               </div>
 
               <button

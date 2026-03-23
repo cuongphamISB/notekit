@@ -19,6 +19,7 @@ const ALL_PAGE_IMAGES: readonly string[] = [
   "/mô tả sổ.png",
   "/CTA button.webp",
   "/sticker nhân vật.webp",
+  "/giá.png",
 
   // Carousel (also used in cover picker showcase)
   ...CAROUSEL_SLIDE_URLS,
