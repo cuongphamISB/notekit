@@ -791,6 +791,8 @@
 .cover-sticker-mobile-slot--right {
   justify-content: flex-start;
   padding-left: clamp(2px, 1vw, 6px);
+  /* Chừa mép màn hình — giảm sticker bị “cắt” bởi viền phải */
+  padding-right: clamp(4px, 1.5vw, 14px);
 }
 
 /* Không dùng min(100%, …): cột 1fr hai bên frame rất hẹp → 100% luôn thắng clamp, sticker không to lên được */
@@ -805,10 +807,9 @@
   --sticker-nudge: clamp(20px, 35%, 60px);
 }
 
-/* Sticker nữ (cột phải): thêm 10% về phía giữa (translateX % theo chiều rộng cột) */
+/* Sticker nữ (cột phải): kéo về phía bìa, không dùng translateX lồng calc (dễ lệch với scale ảnh) */
 .cover-sticker-mobile-slot--right .cover-sticker-mobile-col {
-  --sticker-nudge: clamp(-60px, -35%, -20px);
-  transform: translateX(calc(var(--sticker-nudge) - 10%));
+  --sticker-nudge: clamp(-72px, -42%, -24px);
 }
 
 /* Grain ngoài khung product (web: trái + dưới; mobile: chỉ dưới) */
@@ -1124,9 +1125,10 @@
     overflow: visible;
   }
 
+  /* Khung bìa ~75vw thay vì 85vw: hai cột 1fr đủ rộng cho sticker (trước đây track hẹp → ~50% sticker tràn mép) */
   .cover-showcase-wrap {
     display: grid;
-    grid-template-columns: 1fr min(85vw, 340px) 1fr;
+    grid-template-columns: 1fr min(75vw, 312px) 1fr;
     align-items: center;
     width: 100%;
     max-width: 100%;
@@ -1138,7 +1140,7 @@
     aspect-ratio: 1 / 1;
     height: auto;
     width: 100%;
-    max-width: min(85vw, 340px);
+    max-width: min(75vw, 312px);
     margin-inline: auto;
   }
 
@@ -1180,6 +1182,11 @@
 @media (max-width: 699px) {
   .cover-sticker-img {
     transform-origin: center center;
+  }
+
+  /* Scale hướng về phía bìa, bớt tràn ra viền phải (mục tiêu ~20% mép ẩn thay vì ~50%) */
+  .cover-sticker-mobile-slot--right .cover-sticker-img {
+    transform-origin: right center;
   }
 }
 
