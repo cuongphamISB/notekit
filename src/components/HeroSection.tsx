@@ -163,7 +163,7 @@ const HeroSection = () => {
 
         <div className="hero-sticker-desktop">
           <img
-            src="/sticker nhân vật.png"
+            src="/sticker nhân vật.webp"
             alt="Character sticker"
             className="h-auto w-full object-contain"
             style={{ filter: "drop-shadow(2px 3px 6px rgba(0,0,0,0.12))" }}
@@ -195,7 +195,7 @@ const HeroSection = () => {
               >
                 <span className="hero-cta-anim inline-block">
                   <img
-                    src="/CTA button.png"
+                    src="/CTA button.webp"
                     alt="Tạo nên cuốn sổ của riêng bạn"
                     className="hero-cta hero-cta-scale-mobile h-auto object-contain"
                     draggable={false}
@@ -220,7 +220,7 @@ const HeroSection = () => {
             <div className="relative">
               <div className="hero-sticker-mobile">
                 <img
-                  src="/sticker nhân vật.png"
+                  src="/sticker nhân vật.webp"
                   alt="Character sticker"
                   className="h-auto w-full object-contain"
                   style={{ filter: "drop-shadow(2px 3px 6px rgba(0,0,0,0.12))" }}

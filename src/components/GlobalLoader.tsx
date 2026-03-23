@@ -1,30 +1,50 @@
 import { useState, useEffect } from "react";
-import { preloadCarouselSlides, preloadImages } from "@/lib/preloadSlides";
+import { preloadImage } from "@/lib/preloadSlides";
 import { COVER_PRODUCTS } from "@/data/coverProducts";
+import { CAROUSEL_SLIDE_URLS } from "@/constants/carouselSlides";
 
-const OTHER_PRELOAD = [
+/**
+ * Every image URL used across the entire page.
+ * Single source of truth — loader won't dismiss until all are decoded.
+ */
+const ALL_PAGE_IMAGES: readonly string[] = [
+  // Header
   "/LOGO.webp",
-  "/slogan.png",
-  "/mô tả sổ.png",
-  "/CTA button.png",
-  "/CTA 2.png",
-  "/sticker nhân vật.png",
   "/trang chủ icon.png",
   "/search icon 1.png",
   "/giỏ hàng icon.png",
+
+  // Hero
+  "/slogan.png",
+  "/mô tả sổ.png",
+  "/CTA button.webp",
+  "/sticker nhân vật.webp",
+
+  // Carousel (also used in cover picker showcase)
+  ...CAROUSEL_SLIDE_URLS,
+
+  // Cover product stickers
+  ...COVER_PRODUCTS.flatMap((p) => [p.stickerLeft, p.stickerRight]),
+
+  // Stars (small but avoid any flash)
   "/sao xanh lam.png",
   "/sao vàng.png",
   "/sao màu hồng.png",
+  "/sao tím đậm.png",
+
+  // Order CTA
+  "/CTA 2.webp",
 ];
 
-const COVER_PRELOAD = COVER_PRODUCTS.flatMap((p) => [
-  p.coverImg,
-  p.stickerLeft,
-  p.stickerRight,
-]);
+const UNIQUE_IMAGES = [...new Set(ALL_PAGE_IMAGES)];
 
 const MAX_WAIT_MS = 3000;
 const MIN_VISIBLE_MS = 600;
+
+function preloadAllFonts(): Promise<void> {
+  if (!document.fonts?.ready) return Promise.resolve();
+  return document.fonts.ready.then(() => undefined);
+}
 
 const GlobalLoader = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -36,14 +56,13 @@ const GlobalLoader = () => {
     const minDelay = new Promise<void>((r) => setTimeout(r, MIN_VISIBLE_MS));
     const timeout = new Promise<void>((r) => setTimeout(r, MAX_WAIT_MS));
 
-    const allPreloads = Promise.all([
-      preloadCarouselSlides(),
-      preloadImages(OTHER_PRELOAD),
-      preloadImages(COVER_PRELOAD),
+    const allAssets = Promise.all([
+      ...UNIQUE_IMAGES.map(preloadImage),
+      preloadAllFonts(),
       minDelay,
     ]);
 
-    Promise.race([allPreloads, timeout]).then(() => {
+    Promise.race([allAssets, timeout]).then(() => {
       if (cancelled) return;
       setIsFading(true);
       setTimeout(() => {
@@ -69,7 +88,7 @@ const GlobalLoader = () => {
         <img
           alt="Loading"
           className="w-48 h-48 object-contain drop-shadow-lg"
-          src="/sticker nhân vật.png"
+          src="/sticker nhân vật.webp"
         />
       </div>
       <p

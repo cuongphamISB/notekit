@@ -4,7 +4,7 @@ import { ACCOUNTING_BOX_COLOR, COVER_PRODUCTS } from "@/data/coverProducts";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /** Ảnh CTA gốc trong public (có khoảng trắng trong tên file) */
-const CTA_ORDER_IMAGE = "/CTA 2.png";
+const CTA_ORDER_IMAGE = "/CTA 2.webp";
 
 function paperLabel(kind: PaperKind): string {
   return kind === "lined" ? "giấy kẻ ngang" : "giấy caro";

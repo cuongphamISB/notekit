@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SVN-Achiko Custom Font */
+/* SVN-Achiko Custom Font — block during loader, fonts.ready gates visibility */
 @font-face {
   font-family: 'SVN-Achiko';
   src: url('/SVN-Achiko.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @layer base {
@@ -777,11 +777,11 @@
 }
 
 .cover-sticker-mobile-slot--left .cover-sticker-mobile-col {
-  --sticker-nudge: clamp(4px, 2vw, 10px);
+  --sticker-nudge: clamp(20px, 35%, 60px);
 }
 
 .cover-sticker-mobile-slot--right .cover-sticker-mobile-col {
-  --sticker-nudge: clamp(-4px, -2vw, -10px);
+  --sticker-nudge: clamp(-60px, -35%, -20px);
 }
 
 /* Grain ngoài khung product (web: trái + dưới; mobile: chỉ dưới) */
@@ -1109,18 +1109,18 @@
   position: absolute;
   top: 50%;
   pointer-events: none;
-  z-index: 1;
+  z-index: 50;
 }
 
 .cover-sticker-left {
   width: clamp(90px, 13vw, 210px);
-  left: calc(var(--red-line-x) / 2);
+  left: calc(var(--red-line-x) / 2 + 7%);
   transform: translate(-50%, -50%);
 }
 
 .cover-sticker-right {
   width: clamp(90px, 13vw, 210px);
-  right: 0;
+  right: 7%;
   transform: translate(25%, -50%);
 }
 
