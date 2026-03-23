@@ -584,6 +584,7 @@
     transform var(--hero-slide-ms, 360ms) var(--slide-ease),
     filter var(--hero-slide-ms, 360ms) ease-out;
   will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 
 .hero-slide-bg-layer.is-active {
@@ -595,7 +596,7 @@
 
 .hero-slide-bg-layer:not(.is-active) {
   z-index: 0;
-  opacity: 0;
+  opacity: 0.001;
   transform: scale(1.04);
   filter: blur(22px) saturate(0.9);
 }
@@ -616,7 +617,7 @@
 
 .hero-slide-fg-layer:not(.is-active) {
   z-index: 0;
-  opacity: 0;
+  opacity: 0.001;
   transform: scale(0.93) rotate(-0.7deg);
   filter: drop-shadow(2px 5px 14px rgba(10, 21, 96, 0.14));
 }
@@ -803,6 +804,44 @@
   z-index: 1;
 }
 
+.cover-showcase-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+  border-radius: inherit;
+  transition: opacity 0.3s ease-out;
+}
+
+.cover-showcase-placeholder.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cover-showcase-placeholder-icon {
+  font-size: clamp(32px, 5vw, 56px);
+  animation: cover-placeholder-bounce 1.5s ease-in-out infinite;
+}
+
+.cover-showcase-placeholder-text {
+  font-family: var(--font-main);
+  font-size: clamp(13px, 1.8vw, 18px);
+  font-weight: 600;
+  color: hsl(220 20% 50%);
+  text-align: center;
+  padding: 0 16px;
+}
+
+@keyframes cover-placeholder-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 .cover-picker-showcase::before {
   content: "";
   position: absolute;
@@ -838,7 +877,8 @@
   }
 }
 
-/* Blurred background — crossfade mượt; chỉ animate opacity (blur cố định, tránh lag filter) */
+/* Blurred background — crossfade mượt; chỉ animate opacity (blur cố định, tránh lag filter)
+   opacity: 0.001 (not 0) keeps decoded image data in GPU memory across scroll */
 .cover-showcase-bg {
   position: absolute;
   inset: 0;
@@ -847,12 +887,13 @@
   object-fit: cover;
   transform: scale(1.12);
   transform-origin: center center;
-  opacity: 0;
+  opacity: 0.001;
   filter: blur(22px);
   pointer-events: none;
   z-index: 1;
   transition: opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
   will-change: opacity;
+  backface-visibility: hidden;
 }
 
 .cover-showcase-bg.active {
@@ -860,7 +901,8 @@
   z-index: 2;
 }
 
-/* Ảnh bìa trong frame — fade + bung nhẹ (vibe hero / sổ) */
+/* Ảnh bìa trong frame — fade + bung nhẹ (vibe hero / sổ)
+   opacity: 0.001 prevents browser from discarding decoded pixels on scroll */
 .cover-showcase-img {
   position: absolute;
   inset: 0;
@@ -870,7 +912,7 @@
   object-position: center center;
   transform: scale(0.96);
   transform-origin: center center;
-  opacity: 0;
+  opacity: 0.001;
   pointer-events: none;
   filter: drop-shadow(4px 8px 18px rgba(10, 21, 96, 0.28));
   z-index: 0;
@@ -878,6 +920,7 @@
     opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out),
     transform var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
   will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 
 .cover-showcase-img.active {
@@ -888,13 +931,14 @@
 
 /* Sticker hai bên + mobile — cùng timing với frame */
 .cover-sticker-img {
-  opacity: 0;
+  opacity: 0.001;
   transform: scale(calc(0.9 * var(--sticker-scale, 1)));
   transform-origin: center center;
   transition:
     opacity var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out),
     transform var(--cover-swap-ms, 280ms) var(--cover-swap-ease, ease-out);
   will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 
 .cover-sticker-img.active {

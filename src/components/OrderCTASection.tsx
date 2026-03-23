@@ -24,6 +24,10 @@ const OrderCTASection = () => {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleAdd = useCallback(() => {
+    if (selectedCoverIndex === null) {
+      document.getElementById("cover-picker")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     addCurrentOrderToCart();
     const cover =
       COVER_PRODUCTS[selectedCoverIndex]?.name ?? "đã chọn";

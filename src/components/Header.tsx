@@ -21,7 +21,7 @@ const Header = () => {
           aria-label="Trang chủ"
         >
           <img
-            src="/LOGO.png"
+            src="/LOGO.webp"
             alt="NOTEKIT"
             className="header-logo-img object-contain"
           />

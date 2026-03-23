@@ -18,7 +18,7 @@ export interface CartOrder {
 interface CartContextType {
   cartCount: number;
   orders: CartOrder[];
-  selectedCoverIndex: number;
+  selectedCoverIndex: number | null;
   setSelectedCoverIndex: (index: number) => void;
   paperKind: PaperKind;
   setPaperKind: (kind: PaperKind) => void;
@@ -34,10 +34,11 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<CartOrder[]>([]);
-  const [selectedCoverIndex, setSelectedCoverIndex] = useState(0);
+  const [selectedCoverIndex, setSelectedCoverIndex] = useState<number | null>(null);
   const [paperKind, setPaperKind] = useState<PaperKind>("lined");
 
   const addCurrentOrderToCart = useCallback(() => {
+    if (selectedCoverIndex === null) return;
     setOrders((prev) => [
       ...prev,
       {

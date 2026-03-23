@@ -189,7 +189,7 @@ const HeroSection = () => {
               <button
                 type="button"
                 onClick={() =>
-                  document.getElementById("builder")?.scrollIntoView({ behavior: "smooth" })
+                  document.getElementById("cover-picker")?.scrollIntoView({ behavior: "smooth" })
                 }
                 className="hero-cta-btn cursor-pointer bg-transparent p-0 transition-transform duration-200 hover:scale-105 active:scale-95"
               >

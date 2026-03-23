@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 import { COVER_PRODUCTS } from "@/data/coverProducts";
@@ -17,23 +16,7 @@ const CoverPickerSection = () => {
   const { selectedCoverIndex, setSelectedCoverIndex } = useCart();
   const selected = selectedCoverIndex;
   const setSelected = setSelectedCoverIndex;
-
-  /* Decode sẵn mọi ảnh bìa + sticker — đổi product liên tục không bị khựng decode */
-  useEffect(() => {
-    PRODUCTS.forEach((p) => {
-      for (const src of [p.coverImg, p.stickerLeft, p.stickerRight]) {
-        const img = new Image();
-        img.decoding = "async";
-        img.onload = () => {
-          if (typeof img.decode === "function") {
-            img.decode().catch(() => {});
-          }
-        };
-        img.onerror = () => {};
-        img.src = src;
-      }
-    });
-  }, []);
+  const hasSelection = selected !== null;
 
   return (
     <section className="cover-picker" id="cover-picker">
@@ -95,6 +78,19 @@ const CoverPickerSection = () => {
           </div>
           <div className="cover-picker-showcase">
             <div className="cover-showcase-clip">
+              {/* Placeholder when nothing selected */}
+              <div
+                className={cn(
+                  "cover-showcase-placeholder",
+                  hasSelection && "hidden"
+                )}
+              >
+                <span className="cover-showcase-placeholder-icon">👆</span>
+                <span className="cover-showcase-placeholder-text">
+                  Chọn một mẫu bìa bên dưới
+                </span>
+              </div>
+
               {/* Blurred backgrounds */}
               <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "inherit" }}>
                 {PRODUCTS.map((p, i) => (
@@ -104,6 +100,8 @@ const CoverPickerSection = () => {
                     alt=""
                     aria-hidden
                     loading="eager"
+                    decoding="async"
+                    fetchPriority={i === selected ? "high" : "low"}
                     className={cn(
                       "cover-showcase-bg",
                       i === selected && "active"
@@ -119,6 +117,8 @@ const CoverPickerSection = () => {
                   src={p.coverImg}
                   alt={p.name}
                   loading="eager"
+                  decoding="async"
+                  fetchPriority={i === selected ? "high" : "low"}
                   className={cn(
                     "cover-showcase-img",
                     i === selected && "active"

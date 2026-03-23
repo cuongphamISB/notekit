@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { preloadCarouselSlides } from "@/lib/preloadSlides";
+import { preloadCarouselSlides, preloadImages } from "@/lib/preloadSlides";
+import { COVER_PRODUCTS } from "@/data/coverProducts";
 
 const OTHER_PRELOAD = [
-  "/LOGO.png",
+  "/LOGO.webp",
   "/slogan.png",
   "/mô tả sổ.png",
   "/CTA button.png",
@@ -16,18 +17,14 @@ const OTHER_PRELOAD = [
   "/sao màu hồng.png",
 ];
 
-const preloadOther = () =>
-  Promise.all(
-    OTHER_PRELOAD.map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const img = new Image();
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-          img.src = src;
-        })
-    )
-  ).then(() => undefined);
+const COVER_PRELOAD = COVER_PRODUCTS.flatMap((p) => [
+  p.coverImg,
+  p.stickerLeft,
+  p.stickerRight,
+]);
+
+const MAX_WAIT_MS = 3000;
+const MIN_VISIBLE_MS = 600;
 
 const GlobalLoader = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -36,20 +33,23 @@ const GlobalLoader = () => {
   useEffect(() => {
     let cancelled = false;
 
-    const minDelay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+    const minDelay = new Promise<void>((r) => setTimeout(r, MIN_VISIBLE_MS));
+    const timeout = new Promise<void>((r) => setTimeout(r, MAX_WAIT_MS));
 
-    Promise.all([
+    const allPreloads = Promise.all([
       preloadCarouselSlides(),
-      preloadOther(),
-      minDelay(600),
-    ])
-      .then(() => {
-        if (cancelled) return;
-        setIsFading(true);
-        setTimeout(() => {
-          if (!cancelled) setIsVisible(false);
-        }, 450);
-      });
+      preloadImages(OTHER_PRELOAD),
+      preloadImages(COVER_PRELOAD),
+      minDelay,
+    ]);
+
+    Promise.race([allPreloads, timeout]).then(() => {
+      if (cancelled) return;
+      setIsFading(true);
+      setTimeout(() => {
+        if (!cancelled) setIsVisible(false);
+      }, 450);
+    });
 
     return () => {
       cancelled = true;
