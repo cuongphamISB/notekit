@@ -538,10 +538,16 @@
   filter: drop-shadow(2px 3px 8px rgba(10, 21, 96, 0.22));
 }
 
+/* Web: kéo về phía cột CTA (trái) bằng left âm — không dùng translateX vì + rotate sẽ thành dịch chéo/xuống */
 @media (min-width: 700px) {
   .hero-price-badge {
-    width: clamp(72px, 11vw, 128px);
-    transform: translate(clamp(10%, 2.5vw, 16%), clamp(10%, 2.5vw, 16%));
+    right: auto;
+    /* ~15% bề ngang badge ≈ khoảng 12–18px; kéo thêm về phía CTA */
+    left: clamp(-72px, -10vw, -24px);
+    bottom: clamp(8px, 2%, 18px);
+    width: clamp(68px, 9.5vw, 118px);
+    transform-origin: bottom left;
+    transform: scale(1.5) rotate(30deg);
   }
 }
 
@@ -1189,6 +1195,31 @@
 
 .paper-inner-title {
   margin-bottom: clamp(16px, 2.5vw, 36px);
+}
+
+/* Khoảng cách nhỏ trước dòng “100 trang” */
+.paper-inner-title--with-note {
+  margin-bottom: clamp(6px, 1vw, 12px);
+}
+
+/* Ghi chú ruột sổ — cùng màu chữ “đang chọn” (.paper-selection-summary-label) */
+.paper-page-count-note {
+  font-family: var(--font-main);
+  text-align: center;
+  margin: 0 auto clamp(18px, 2.8vw, 34px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+  max-width: min(40rem, 100%);
+  box-sizing: border-box;
+  font-size: clamp(14px, 2vw, 19px);
+  line-height: 1.5;
+  font-weight: 700;
+  color: rgba(129, 135, 217, 0.92);
+  opacity: 0.85;
+}
+
+.paper-page-count-note strong {
+  font-weight: 800;
 }
 
 .paper-inner-layout {

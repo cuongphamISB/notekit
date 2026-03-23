@@ -28,7 +28,12 @@ const PaperAndAccessoriesSection = () => {
         </div>
       ))}
 
-      <h2 className="cover-picker-title paper-inner-title">chọn ruột giấy</h2>
+      <h2 className="cover-picker-title paper-inner-title paper-inner-title--with-note">
+        chọn ruột giấy
+      </h2>
+      <p className="paper-page-count-note">
+        Mỗi bộ ruột sổ gồm <strong>100 trang</strong> nha ^^
+      </p>
 
       <div className="paper-inner-layout">
         <div className="paper-polaroid-grid">
