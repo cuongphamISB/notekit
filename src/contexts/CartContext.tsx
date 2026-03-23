@@ -22,12 +22,15 @@ interface CartContextType {
   setSelectedCoverIndex: (index: number) => void;
   paperKind: PaperKind;
   setPaperKind: (kind: PaperKind) => void;
-  /** Thêm đơn theo bìa + ruột giấy đang chọn (nút CTA cuối trang) */
   addCurrentOrderToCart: () => void;
-  /** Giữ tương thích BuilderSection — cùng hành vi với addCurrentOrderToCart */
   addToCart: () => void;
+  removeOrder: (index: number) => void;
   removeFromCart: () => void;
   clearCart: () => void;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -36,6 +39,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<CartOrder[]>([]);
   const [selectedCoverIndex, setSelectedCoverIndex] = useState<number | null>(null);
   const [paperKind, setPaperKind] = useState<PaperKind>("lined");
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addCurrentOrderToCart = useCallback(() => {
     if (selectedCoverIndex === null) return;
@@ -51,6 +55,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = addCurrentOrderToCart;
 
+  const removeOrder = useCallback((index: number) => {
+    setOrders((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
   const removeFromCart = useCallback(() => {
     setOrders((prev) => prev.slice(0, -1));
   }, []);
@@ -58,6 +66,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const clearCart = useCallback(() => {
     setOrders([]);
   }, []);
+
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+  const toggleCart = useCallback(() => setIsCartOpen((p) => !p), []);
 
   const value = useMemo(
     () => ({
@@ -69,8 +81,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       setPaperKind,
       addCurrentOrderToCart,
       addToCart,
+      removeOrder,
       removeFromCart,
       clearCart,
+      isCartOpen,
+      openCart,
+      closeCart,
+      toggleCart,
     }),
     [
       orders,
@@ -78,8 +95,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       paperKind,
       addCurrentOrderToCart,
       addToCart,
+      removeOrder,
       removeFromCart,
       clearCart,
+      isCartOpen,
+      openCart,
+      closeCart,
+      toggleCart,
     ]
   );
 
