@@ -202,11 +202,19 @@ const BrandStorySection = () => {
 
         {/* ── V2: Mở lối tự do — scattered cover thumbnails (add/remove/reorder) ── */}
         <div className="bs-card bs-value-card bs-card--rotate-pos">
-          {/* 3 covers fanned out to show freedom to mix & match */}
+          {/* 3 covers fanned out to show freedom to mix & match, plus floating binder rings */}
           <div className="bs-cover-scatter" aria-hidden>
+            {/* Covers */}
             <img src="/mkt (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--1" draggable={false} alt="" />
             <img src="/ibu (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--2" draggable={false} alt="" />
             <img src="/fin (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--3" draggable={false} alt="" />
+            
+            {/* Rings */}
+            <img src="/còng hồng.webp" className="bs-scatter-ring bs-scatter-ring--1" draggable={false} alt="" />
+            <img src="/còng xanh lá.webp" className="bs-scatter-ring bs-scatter-ring--2" draggable={false} alt="" />
+            <img src="/còng tím.webp" className="bs-scatter-ring bs-scatter-ring--3" draggable={false} alt="" />
+            <img src="/còng cam.webp" className="bs-scatter-ring bs-scatter-ring--4" draggable={false} alt="" />
+            <img src="/còg xanh dương.webp" className="bs-scatter-ring bs-scatter-ring--5" draggable={false} alt="" />
           </div>
 
           <div className="bs-value-text">

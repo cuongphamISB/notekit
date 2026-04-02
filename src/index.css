@@ -1701,13 +1701,13 @@
 
 /* ── Row wrappers ── */
 .bs-full-row {
-  max-width: min(920px, 100%);
+  max-width: min(830px, 90%);
   margin-inline: auto;
   margin-bottom: clamp(28px, 4vw, 52px);
 }
 
 .bs-sticky-row {
-  max-width: min(920px, 100%);
+  max-width: min(830px, 90%);
   margin-inline: auto;
   margin-bottom: clamp(8px, 2vw, 20px);
 }
@@ -1926,10 +1926,10 @@
 /* ── Value card grid: 2×2 desktop, 1-col mobile ── */
 .bs-values-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(24px, 3.5vw, 52px);
-  max-width: min(920px, 100%);
-  margin-inline: auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 3.5vw, 60px);
+  max-width: min(830px, 90%);
+  margin: 0 auto;
 }
 
 /* Each value card — slightly off-white base, distinct from pure-white background.
@@ -2140,10 +2140,11 @@
     font-size: 34px;
   }
 
-  /* Make row wrappers slightly squeezed so rotation doesn't cause overflow */
+  /* Make row wrappers match the grid width (100%) so they center properly */
   .bs-full-row, .bs-sticky-row {
-    margin-inline: 4px;
+    margin-inline: auto;
     margin-bottom: 20px;
+    max-width: 100%;
   }
 
   .bs-card {
@@ -2178,7 +2179,7 @@
     grid-template-columns: 1fr;
     gap: 32px;
     max-width: 100%;
-    margin-inline: 4px;
+    margin-inline: auto;
   }
 
   /* Reduce rotations slightly on mobile so elements don't overflow the narrow column */
@@ -2267,6 +2268,12 @@
   filter: drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.14));
 }
 
+/* Kích thước thực của ảnh nhân vật (trừ Finance) có nhiều viền trong suốt hơn, 
+   nên phóng to lên để chiều cao bằng với cặp Finance (khung thứ 2) */
+.bs-char-pair-frame:not(:nth-child(2)) .bs-char-sticker {
+  width: clamp(92px, 16.5vw, 185px);
+}
+
 /* ── Shared card text ── */
 .bs-value-text {
   flex: 1;
@@ -2304,7 +2311,8 @@
 
 .bs-scatter-cover {
   position: absolute;
-  width: clamp(90px, 15vw, 164px);
+  /* Phóng to bìa sổ một tí để lấp đầy không gian */
+  width: clamp(100px, 16.5vw, 172px);
   height: auto;
   object-fit: contain;
   border: 2.5px solid #0a1560;
@@ -2313,9 +2321,34 @@
   box-shadow: 3px 5px 14px rgba(10, 21, 96, 0.18);
 }
 
-.bs-scatter-cover--1 { left: 4%;  top: 0;   transform: rotate(-9deg); z-index: 1; }
-.bs-scatter-cover--2 { left: 30%; top: 18px; transform: rotate(2deg);  z-index: 3; }
-.bs-scatter-cover--3 { left: 57%; top: -6px; transform: rotate(8deg);  z-index: 2; }
+.bs-scatter-cover--1 { left: 4%;  top: 10px; transform: rotate(-9deg); z-index: 1; }
+.bs-scatter-cover--2 { left: 28%; top: 26px; transform: rotate(2deg);  z-index: 3; }
+.bs-scatter-cover--3 { left: 50%; top: 0px;  transform: rotate(8deg);  z-index: 2; }
+
+/* Decorative floating rings */
+.bs-scatter-ring {
+  position: absolute;
+  /* Ẩn hoàn toàn còng trên bản Web theo yêu cầu mới nhất */
+  display: none;
+  width: clamp(18px, 3.2vw, 40px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
+  pointer-events: none;
+  animation: floatRing 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatRing {
+  0% { transform: translateY(0px) rotate(var(--r)); }
+  100% { transform: translateY(-8px) rotate(calc(var(--r) + 4deg)); }
+}
+
+/* Đưa phần lớn còng lấp ló phía sau sổ (z-index: 0) và nằm trọn trong vùng an toàn để tuyệt đối không đè text */
+.bs-scatter-ring--1 { left: 2%; top: 4%; --r: 15deg; z-index: 0; animation-delay: 0s; }
+.bs-scatter-ring--2 { left: 30%; bottom: 6%; --r: -35deg; z-index: 0; filter: blur(0.6px) drop-shadow(1px 2px 3px rgba(0,0,0,0.1)); animation-delay: 1.2s; }
+.bs-scatter-ring--3 { right: 2%; top: 10%; --r: 65deg; z-index: 4; animation-delay: -2s; }
+.bs-scatter-ring--4 { left: 48%; top: 0%; --r: -15deg; z-index: 0; animation-delay: 0.8s; }
+.bs-scatter-ring--5 { right: 12%; bottom: 8%; --r: 42deg; z-index: 4; width: clamp(22px, 3.8vw, 48px); animation-delay: -1.5s; }
 
 /* ── Mobile ── */
 @media (max-width: 699px) {
@@ -2330,10 +2363,11 @@
     font-size: 34px;
   }
 
-  /* Make row wrappers slightly squeezed so rotation doesn't cause overflow */
+  /* Fix matching width for top rows to center completely */
   .bs-full-row, .bs-sticky-row {
-    margin-inline: 4px;
+    margin-inline: auto;
     margin-bottom: 20px;
+    max-width: 100%;
   }
 
   .bs-card {
@@ -2377,14 +2411,27 @@
   .bs-values-grid > .bs-card:nth-child(4) { transform: rotate(1.5deg) translate(0px, 0px); }
 
   .bs-cover-scatter {
-    min-height: 140px;
+    min-height: 195px; /* Tăng khoảng không để tuyệt đối không đè text */
   }
   .bs-scatter-cover {
-    width: 86px;
+    width: 110px;
   }
-  .bs-scatter-cover--1 { left: 5%; transform: rotate(-8deg); }
-  .bs-scatter-cover--2 { left: 35%; top: 12px; transform: rotate(2deg); }
-  .bs-scatter-cover--3 { left: 63%; top: -2px; transform: rotate(7deg); }
+  /* Dịch toàn bộ qua phải để căn giữa card */
+  .bs-scatter-cover--1 { left: 12%; top: 8px; transform: rotate(-8deg); z-index: 1; }
+  .bs-scatter-cover--2 { left: 36%; top: 18px; transform: rotate(2deg); z-index: 3; }
+  .bs-scatter-cover--3 { left: 58%; top: 2px; transform: rotate(7deg); z-index: 2; }
+
+  /* Mở lại còng trên Mobile */
+  .bs-scatter-ring {
+    display: block;
+  }
+  
+  /* Kéo còng vào bên trong textbox trên Mobile nhưng dạt ra viền tránh đè lấp sổ */
+  .bs-scatter-ring--1 { left: 4%; top: -2%; }
+  .bs-scatter-ring--2 { left: 28%; bottom: -8%; }
+  .bs-scatter-ring--3 { right: 2%; top: 50%; }
+  .bs-scatter-ring--4 { left: 55%; top: -12%; }
+  .bs-scatter-ring--5 { right: 18%; bottom: -2%; }
 
   .bs-char-pair {
     min-height: 140px;
