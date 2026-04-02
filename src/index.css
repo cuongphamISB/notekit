@@ -1634,3 +1634,834 @@
     max-width: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BRAND STORY — transparent background, paper flows through uninterrupted
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Newspaper rule in brand-story section — adds a full-bleed visually distinct
+   "new page" divider above the section so it clearly breaks from purchasing flow.
+   Uses the same line-blue + line-red variables as the body background. */
+.brand-story-section {
+  position: relative;
+  width: 100%;
+  /* Extra top padding gives room for the tilde to float above the heading */
+  padding-top: clamp(56px, 8vw, 108px);
+  padding-bottom: clamp(32px, 5vw, 72px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+}
+
+/* Section transition marker — replaced ~~~ with a clear 'cut here' dashed line */
+.brand-story-section::before {
+  content: '✂️';
+  position: absolute;
+  top: calc(-1 * clamp(16px, 2.5vw, 24px));
+  left: calc(var(--red-line-x) + 2vw);
+  font-size: clamp(24px, 3.5vw, 34px);
+  color: rgba(100, 108, 195, 0.9);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+  transform: rotate(-10deg);
+}
+
+.brand-story-section::after {
+  content: '';
+  position: absolute;
+  /* Centered to the scissor blade height */
+  top: calc(-1 * clamp(16px, 2.5vw, 24px) + clamp(12px, 1.7vw, 17px)); 
+  /* Line starts just after the scissors */
+  left: calc(var(--red-line-x) + 2vw + clamp(30px, 4vw, 44px)); 
+  right: var(--hero-pad-right);
+  border-top: 3.5px dashed rgba(100, 108, 195, 0.45);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Push heading below the tilde marker */
+.brand-story-section > h2.brand-story-heading {
+  padding-top: clamp(8px, 1.5vw, 20px);
+  position: relative;
+  z-index: 1;
+}
+
+/* Section heading — identical to .cover-picker-title */
+.brand-story-heading {
+  text-align: center;
+  font-family: var(--font-main);
+  font-size: clamp(38px, 5.5vw, 74px);
+  color: rgba(129, 135, 217, 1);
+  margin-bottom: clamp(32px, 5vw, 64px);
+  font-weight: normal;
+  line-height: 1.15;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ── Row wrappers ── */
+.bs-full-row {
+  max-width: min(920px, 100%);
+  margin-inline: auto;
+  margin-bottom: clamp(28px, 4vw, 52px);
+}
+
+.bs-sticky-row {
+  max-width: min(920px, 100%);
+  margin-inline: auto;
+  margin-bottom: clamp(8px, 2vw, 20px);
+}
+
+/* ── Base card ── */
+.bs-card {
+  position: relative;
+  padding: clamp(20px, 2.8vw, 36px);
+  border-radius: 4px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.bs-card:hover {
+  transform: rotate(0deg) scale(1.012) !important;
+  box-shadow: 4px 8px 22px rgba(10, 21, 96, 0.14) !important;
+}
+
+/* scrapbook sticker tilts — torn card has its own transform baked in */
+.bs-card--rotate-neg { transform: rotate(-2deg); }
+.bs-card--rotate-pos { transform: rotate(2deg); }
+
+/* ── BLOCK 1: Narrative card — cream journal page / index card feel ──
+   Warm paper tone + faint red margin stripe + dog-ear corner fold               */
+.bs-card--torn {
+  background-color: hsl(44, 65%, 95%);
+  /* Faint red margin line — echoes the notebook's left red rule */
+  border-left: 3.5px solid rgba(200, 75, 75, 0.30);
+  /* Punchy asymmetric corners: sharp one side, round the other for cut-index-card look */
+  border-radius: 4px 24px 20px 4px / 24px 4px 4px 20px;
+  padding-top: clamp(24px, 3.2vw, 44px);
+  padding-bottom: clamp(24px, 3.2vw, 44px);
+  /* Cream halo ring then deep shadow — looks physically lifted off the page */
+  box-shadow:
+    0 0 0 3px hsl(44, 65%, 95%),
+    6px 10px 28px rgba(10, 21, 96, 0.20),
+    -1px -2px 6px rgba(10, 21, 96, 0.06);
+  transform: rotate(-2.4deg);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Dog-ear page corner fold — top-right corner shows the 'back' of the paper */
+.bs-card--torn::before {
+  display: block;  /* override previous display:none */
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(26px, 4vw, 42px);
+  height: clamp(26px, 4vw, 42px);
+  /* Diagonal gradient: transparent bottom-left triangle shows fold back in warm beige */
+  background: linear-gradient(
+    225deg,
+    rgba(170, 155, 120, 0.45) 50%,
+    transparent 50%
+  );
+  z-index: 5;
+  pointer-events: none;
+  /* Match top-right card border-radius */
+  border-radius: 0 24px 0 0;
+}
+
+/* Sticker nhân vật floated right inside torn card */
+.bs-narrative-sticker {
+  float: right;
+  width: clamp(72px, 12vw, 140px);
+  margin-left: clamp(12px, 2vw, 24px);
+  margin-bottom: 8px;
+  filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.12));
+  pointer-events: none;
+}
+
+/* Tape strips — palette matches buying section accent colours */
+.bs-tape {
+  position: absolute;
+  width: clamp(56px, 8vw, 100px);
+  height: clamp(18px, 2.4vw, 28px);
+  border-radius: 2px;
+  /* subtle grain edge like carousel frame */
+  box-shadow: 0 1px 3px rgba(10,21,96,0.13), inset 0 0 0 1px rgba(255,255,255,0.28);
+}
+
+/* Left: lavender-blue matching .cover-option active tones */
+.bs-tape--blue {
+  background: rgba(107, 126, 195, 0.52);
+  border: 1px solid rgba(96, 120, 192, 0.28);
+}
+
+/* Right: pastel-pink matching star/sticker decorations */
+.bs-tape--pink {
+  background: rgba(217, 138, 178, 0.52);
+  border: 1px solid rgba(200, 110, 155, 0.28);
+}
+
+.bs-tape--left  { top: -11px; left: 11%;  transform: rotate(-5.5deg); }
+.bs-tape--right { top: -11px; right: 11%; transform: rotate(6deg); }
+
+/* Narrative body text — 'đang chọn' label palette, consistent with bs-card-body */
+.bs-narrative-body {
+  font-family: var(--font-main);
+  font-size: clamp(14px, 1.85vw, 17px);
+  line-height: 1.82;
+  color: rgba(129, 135, 217, 0.78);
+  font-weight: normal;
+}
+
+/* ── BLOCK 2: Product prop card — lavender Post-it, keyhole hole-punch top ── */
+.bs-card--sticky {
+  background-color: hsl(240, 50%, 94%);
+  border-radius: 4px 16px 20px 8px / 16px 4px 8px 20px;
+  box-shadow:
+    0 0 0 2px hsl(240, 50%, 94%),
+    6px 10px 28px rgba(10, 21, 96, 0.18),
+    -1px -2px 6px rgba(10, 21, 96, 0.04);
+  transform: rotate(-2deg) skewX(-0.6deg);
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+
+  /*
+   ── KEYHOLE BINDER-PUNCH MASK ─────────────────────────────────────────
+   Shape per tile (width = hole-pitch, height = 100%):
+
+        ┌─────────────┐   y=0 (card top)
+        │ ═══  ═══ ══ │   lavender bridge between slots (visible) ✓
+        │  ║   ║   ║  │   narrow transparent slot going upward   ✓
+        │ ═╬═ ═╬═ ═╬═ │   thin strip: visible paper above circles
+        │ (○) (○) (○) │   transparent circles (notebook shows)   ✓
+        │             │   card content (fully visible)            ✓
+        └─────────────┘
+
+   Two mask layers (both pitch × 100% tiles, repeat-x):
+     L1 = circle  : transparent inside circle, white elsewhere
+     L2 = slot    : transparent inside narrow ellipse (top→circle-center), white elsewhere
+
+   mask-composite: intersect  →  α_result = α_L1 × α_L2
+     At circle : L1=0, L2=1 → 0 transparent ✓
+     At slot   : L1=1, L2=0 → 0 transparent ✓
+     At bridge : L1=1, L2=1 → 1 visible    ✓
+     At body   : L1=1, L2=1 → 1 visible    ✓
+   ───────────────────────────────────────────────────────────────────── */
+  --hole-r:      clamp(9px, 1.3vw, 13px);
+  --slot-r:      clamp(3px, 0.45vw, 5px);
+  --hole-center: calc(var(--hole-r) + clamp(5px, 0.7vw, 8px));
+  --hole-pitch:  clamp(36px, 5vw, 52px);
+  padding-top:   clamp(28px, 4vw, 40px);
+
+  /*
+   Three mask layers:
+   L1 (top)  = linear-gradient edge guard: white on left+right margins,
+               transparent in middle → forces plain card at both corners,
+               overriding any holes near edges (source-over composite).
+   L2        = circle holes  (intersect with L3 → keyhole shape)
+   L3 (base) = slot ellipses (base layer)
+  */
+  -webkit-mask-image:
+    linear-gradient(to right,
+      white calc(var(--hole-pitch) / 2), transparent calc(var(--hole-pitch) / 2),
+      transparent calc(100% - var(--hole-pitch) / 2), white calc(100% - var(--hole-pitch) / 2)),
+    radial-gradient(circle var(--hole-r) at 50% var(--hole-center),
+      transparent 100%, white 100%),
+    radial-gradient(ellipse var(--slot-r) var(--hole-center) at 50% 0%,
+      transparent 100%, white 100%);
+  -webkit-mask-size:      100% 100%, var(--hole-pitch) 100%, var(--hole-pitch) 100%;
+  -webkit-mask-repeat:    no-repeat, repeat-x, repeat-x;
+  -webkit-mask-position:  0 0, calc(var(--hole-pitch) / 2) 0, calc(var(--hole-pitch) / 2) 0;
+  -webkit-mask-composite: source-over, source-in;
+
+  mask-image:
+    linear-gradient(to right,
+      white calc(var(--hole-pitch) / 2), transparent calc(var(--hole-pitch) / 2),
+      transparent calc(100% - var(--hole-pitch) / 2), white calc(100% - var(--hole-pitch) / 2)),
+    radial-gradient(circle var(--hole-r) at 50% var(--hole-center),
+      transparent 100%, white 100%),
+    radial-gradient(ellipse var(--slot-r) var(--hole-center) at 50% 0%,
+      transparent 100%, white 100%);
+  mask-size:      100% 100%, var(--hole-pitch) 100%, var(--hole-pitch) 100%;
+  mask-repeat:    no-repeat, repeat-x, repeat-x;
+  mask-position:  0 0, calc(var(--hole-pitch) / 2) 0, calc(var(--hole-pitch) / 2) 0;
+  mask-composite: source-over, intersect;
+}
+
+
+
+/* ::before no longer needed — holes are cut directly via mask-image on the card */
+.bs-card--sticky::before {
+  display: none;
+}
+
+/* /slogan.png watermark behind sticky text */
+.bs-slogan-watermark {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: clamp(80px, 18%, 160px);
+  opacity: 0.08;
+  pointer-events: none;
+  filter: grayscale(1);
+  user-select: none;
+}
+
+/* Push-pin removed (was part of old sticky-note aesthetic) */
+
+
+/* ── Values sub-heading ── */
+.bs-values-lead {
+  font-family: var(--font-main);
+  font-size: clamp(20px, 2.8vw, 32px);
+  color: rgba(129, 135, 217, 0.85);
+  text-align: center;
+  margin: clamp(40px, 6vw, 80px) auto clamp(20px, 3vw, 40px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* ── Value card grid: 2×2 desktop, 1-col mobile ── */
+.bs-values-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3.5vw, 52px);
+  max-width: min(920px, 100%);
+  margin-inline: auto;
+}
+
+/* Each value card — slightly off-white base, distinct from pure-white background.
+   Colorful washi-tape header via ::before replaces the confusing thin border-top.
+   overflow: visible so the tape can extend above the card's top edge. */
+.bs-value-card {
+  background-color: #fafafa;
+  border: 1.5px solid rgba(129, 135, 217, 0.12);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vw, 20px);
+  box-shadow:
+    3px 6px 16px rgba(10, 21, 96, 0.10),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* V1 + V3 backgrounds neutral (carousel/char-pair already have strong internal visuals) */
+.bs-values-grid > .bs-card:nth-child(1) {
+  transform: rotate(-2.5deg) translate(0px, 3px);
+  background-color: #fafafa; /* neutral off-white */
+}
+.bs-values-grid > .bs-card:nth-child(2) {
+  transform: rotate(1.2deg) translate(3px, -4px);
+  background-color: #fdf8fd; /* warm purple-white tint */
+}
+.bs-values-grid > .bs-card:nth-child(3) {
+  transform: rotate(-0.8deg) translate(-2px, 5px);
+  background-color: #fafafa; /* neutral off-white */
+}
+.bs-values-grid > .bs-card:nth-child(4) {
+  transform: rotate(3.2deg) translate(2px, -2px);
+  background-color: #fdfaf6; /* warm amber-white tint */
+}
+
+/* Corner-fold ::after on each value card — sits inside card bounds (no gap).
+   Uses dog-ear shape: top-right corner rounded to match card, diagonal cut inward. */
+.bs-value-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(22px, 3.2vw, 34px);
+  height: clamp(22px, 3.2vw, 34px);
+  /* bottom-left = circular cut; top-right = card corner rounding */
+  border-radius: 0 10px 0 100%;
+  z-index: 2;
+  /* Slight inner shadow for fold depth */
+  box-shadow: -2px 2px 4px rgba(10, 21, 96, 0.12);
+}
+
+/* Corner fold accent colors — V1 blue-purple, V2 purple, V3 green, V4 orange */
+.bs-values-grid > .bs-card:nth-child(1)::after { background: rgba(96, 120, 192, 0.60); }
+.bs-values-grid > .bs-card:nth-child(2)::after { background: rgba(147, 112, 184, 0.55); }
+.bs-values-grid > .bs-card:nth-child(3)::after { background: rgba(77, 134, 80, 0.52); }
+.bs-values-grid > .bs-card:nth-child(4)::after { background: rgba(212, 138, 58, 0.58); }
+
+/* ── V1: Mini cover carousel ── */
+.bs-mini-carousel {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.bs-mini-slide-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: visible;
+  /* Halve the grain-depth from the inherited hero-slide-grain-host default */
+  --grain-depth: clamp(2.5px, 0.7vw, 5.5px);
+}
+
+.bs-mini-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* ── V2: Paper swatches ── */
+.bs-paper-swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(8px, 1.5vw, 16px);
+  flex-shrink: 0;
+}
+
+/* Override paper-polaroid-grain-host max-width (380px) so swatches fill column */
+.bs-paper-swatch-frame {
+  max-width: none !important;
+  width: 100%;
+  padding: 6px 6px 14px !important;
+  margin-inline: 0 !important;
+}
+
+.bs-paper-swatch-frame--lined { transform: rotate(-2.5deg); }
+.bs-paper-swatch-frame--grid  { transform: rotate(2.5deg);  }
+
+.bs-paper-swatch-preview {
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+  width: 100%;
+}
+
+.bs-swatch-label {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-main);
+  font-size: clamp(13px, 1.6vw, 17px);
+  color: rgba(129, 135, 217, 0.9);
+  text-align: center;
+  line-height: 1;
+}
+
+/* ── V3: Character sticker pair — larger to fill card visual area ── */
+.bs-char-pair {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  min-height: clamp(140px, 24vw, 260px);
+}
+
+.bs-char-pair-frame {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 12px);
+  padding: clamp(6px, 1.2vw, 14px);
+  grid-area: 1 / 1;
+  opacity: 0.001;
+  transition: opacity 0.3s cubic-bezier(0.33, 0.88, 0.36, 1);
+  will-change: opacity;
+}
+
+.bs-char-pair-frame.is-active {
+  opacity: 1;
+}
+
+.bs-char-sticker {
+  width: clamp(72px, 13vw, 148px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.14));
+}
+
+/* ── Shared card text ── */
+.bs-value-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* subtitle (card-title) */
+.bs-card-title {
+  font-family: var(--font-main);
+  font-size: clamp(22px, 3vw, 36px);
+  color: rgba(100, 108, 195, 1);
+  margin-bottom: clamp(4px, 0.7vw, 8px);
+  line-height: 1.2;
+  font-weight: normal;
+}
+
+/* body text */
+.bs-card-body {
+  font-family: var(--font-main);
+  font-size: clamp(14px, 1.8vw, 17px);
+  line-height: 1.72;
+  color: rgba(129, 135, 217, 0.78);
+  font-weight: normal;
+}
+
+/* ── V2 (new): Scattered cover thumbnails — larger fills whitespace ── */
+.bs-cover-scatter {
+  position: relative;
+  width: 100%;
+  min-height: clamp(150px, 26vw, 280px);
+  flex-shrink: 0;
+}
+
+.bs-scatter-cover {
+  position: absolute;
+  width: clamp(90px, 15vw, 164px);
+  height: auto;
+  object-fit: contain;
+  border: 2.5px solid #0a1560;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 3px 5px 14px rgba(10, 21, 96, 0.18);
+}
+
+.bs-scatter-cover--1 { left: 4%;  top: 0;   transform: rotate(-9deg); z-index: 1; }
+.bs-scatter-cover--2 { left: 30%; top: 18px; transform: rotate(2deg);  z-index: 3; }
+.bs-scatter-cover--3 { left: 57%; top: -6px; transform: rotate(8deg);  z-index: 2; }
+
+/* ── Mobile ── */
+@media (max-width: 699px) {
+  .brand-story-section {
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+
+  .brand-story-heading {
+    margin-bottom: 24px;
+    font-size: 34px;
+  }
+
+  /* Make row wrappers slightly squeezed so rotation doesn't cause overflow */
+  .bs-full-row, .bs-sticky-row {
+    margin-inline: 4px;
+    margin-bottom: 20px;
+  }
+
+  .bs-card {
+    padding: 18px 14px;
+  }
+
+  .bs-card--torn {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  /* Tapes on mobile — keep them close */
+  .bs-tape {
+    width: 48px;
+    height: 16px;
+    top: -8px;
+  }
+  .bs-tape--left  { left: 8%; transform: rotate(-4deg); }
+  .bs-tape--right { right: 8%; transform: rotate(5deg); }
+
+  .bs-narrative-sticker {
+    width: 64px;
+    margin-left: 12px;
+  }
+
+  .bs-values-lead {
+    font-size: 20px;
+    margin: 40px auto 20px;
+  }
+
+  .bs-values-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 100%;
+    margin-inline: 4px;
+  }
+
+  /* Reduce rotations slightly on mobile so elements don't overflow the narrow column */
+  .bs-values-grid > .bs-card:nth-child(1) { transform: rotate(-1.5deg) translate(0px, 2px); }
+  .bs-values-grid > .bs-card:nth-child(2) { transform: rotate(1deg) translate(0px, 0px); }
+  .bs-values-grid > .bs-card:nth-child(3) { transform: rotate(-0.5deg) translate(0px, 2px); }
+  .bs-values-grid > .bs-card:nth-child(4) { transform: rotate(1.5deg) translate(0px, 0px); }
+
+  /* Mở lối tự do - covers overlap closer */
+  .bs-cover-scatter {
+    min-height: 140px;
+  }
+  .bs-scatter-cover {
+    width: 86px;
+  }
+  .bs-scatter-cover--1 { left: 5%; transform: rotate(-8deg); }
+  .bs-scatter-cover--2 { left: 35%; top: 12px; transform: rotate(2deg); }
+  .bs-scatter-cover--3 { left: 63%; top: -2px; transform: rotate(7deg); }
+
+  /* Chẳng còn đắn đo - characters */
+  .bs-char-pair {
+    min-height: 140px;
+  }
+  .bs-char-sticker {
+    width: 80px;
+  }
+
+  /* CTA Centering fix - use 1.5vw to precisely match mobile padding offset */
+  .bs-end-cta {
+    margin-top: 50px;
+    margin-left: calc(-1 * (var(--red-line-x) + 1.5vw));
+    padding-left: calc(var(--hero-pad-right) + 1.5vw);
+  }
+}
+
+@media (min-width: 700px) {
+  /* Ensure paper swatch frames don't inherit mobile max-width from .paper-polaroid-grid */
+  .bs-paper-swatch-frame {
+    max-width: none !important;
+  }
+  
+  /* Desktop Section-end CTA centering */
+  .bs-end-cta {
+    margin-top: clamp(40px, 6vw, 80px);
+    /* Break out of the section's left padding (red-line inset) */
+    margin-left: calc(-1 * (var(--red-line-x) + 2vw));
+    margin-right: calc(-1 * var(--hero-pad-right));
+    display: flex;
+    justify-content: center;
+    padding-left: var(--hero-pad-right);
+    padding-right: var(--hero-pad-right);
+    /* Shift right to compensate for red-line visual imbalance
+       (content starts ~8.5vw from left vs a small pad on right) */
+    transform: translateX(clamp(24px, 4vw, 52px));
+  }
+}
+
+/* ── V3: Character sticker pair — larger to fill card visual area ── */
+.bs-char-pair {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  min-height: clamp(140px, 24vw, 260px);
+}
+
+.bs-char-pair-frame {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 12px);
+  padding: clamp(6px, 1.2vw, 14px);
+  grid-area: 1 / 1;
+  opacity: 0.001;
+  transition: opacity 0.3s cubic-bezier(0.33, 0.88, 0.36, 1);
+  will-change: opacity;
+}
+
+.bs-char-pair-frame.is-active {
+  opacity: 1;
+}
+
+.bs-char-sticker {
+  width: clamp(72px, 13vw, 148px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.14));
+}
+
+/* ── Shared card text ── */
+.bs-value-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* subtitle (card-title — e.g. 'Chẳng còn đắn đo') = 'màu đậm của giấy kẻ ngang' */
+.bs-card-title {
+  font-family: var(--font-main);
+  font-size: clamp(22px, 3vw, 36px);
+  color: rgba(100, 108, 195, 1);
+  margin-bottom: clamp(4px, 0.7vw, 8px);
+  line-height: 1.2;
+  font-weight: normal;
+}
+
+/* body text = 'đang chọn' label color */
+.bs-card-body {
+  font-family: var(--font-main);
+  font-size: clamp(14px, 1.8vw, 17px);
+  line-height: 1.72;
+  color: rgba(129, 135, 217, 0.78);
+  font-weight: normal;
+}
+
+/* ── V2 (new): Scattered cover thumbnails — larger fills whitespace ── */
+.bs-cover-scatter {
+  position: relative;
+  width: 100%;
+  min-height: clamp(150px, 26vw, 280px);
+  flex-shrink: 0;
+}
+
+.bs-scatter-cover {
+  position: absolute;
+  width: clamp(90px, 15vw, 164px);
+  height: auto;
+  object-fit: contain;
+  border: 2.5px solid #0a1560;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 3px 5px 14px rgba(10, 21, 96, 0.18);
+}
+
+.bs-scatter-cover--1 { left: 4%;  top: 0;   transform: rotate(-9deg); z-index: 1; }
+.bs-scatter-cover--2 { left: 30%; top: 18px; transform: rotate(2deg);  z-index: 3; }
+.bs-scatter-cover--3 { left: 57%; top: -6px; transform: rotate(8deg);  z-index: 2; }
+
+/* ── Mobile ── */
+@media (max-width: 699px) {
+  .brand-story-section {
+    padding-left: calc(var(--red-line-x) + 1.5vw);
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+
+  .brand-story-heading {
+    margin-bottom: 24px;
+    font-size: 34px;
+  }
+
+  /* Make row wrappers slightly squeezed so rotation doesn't cause overflow */
+  .bs-full-row, .bs-sticky-row {
+    margin-inline: 4px;
+    margin-bottom: 20px;
+  }
+
+  .bs-card {
+    padding: 18px 14px;
+  }
+
+  .bs-card--torn {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  /* Tapes on mobile — keep them close */
+  .bs-tape {
+    width: 48px;
+    height: 16px;
+    top: -8px;
+  }
+  .bs-tape--left  { left: 8%; transform: rotate(-4deg); }
+  .bs-tape--right { right: 8%; transform: rotate(5deg); }
+
+  .bs-narrative-sticker {
+    width: 64px;
+    margin-left: 12px;
+  }
+
+  .bs-values-lead {
+    font-size: 20px;
+    margin: 40px auto 20px;
+  }
+
+  .bs-values-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 100%;
+    margin-inline: 4px;
+  }
+
+  .bs-values-grid > .bs-card:nth-child(1) { transform: rotate(-1.5deg) translate(0px, 2px); }
+  .bs-values-grid > .bs-card:nth-child(2) { transform: rotate(1deg) translate(0px, 0px); }
+  .bs-values-grid > .bs-card:nth-child(3) { transform: rotate(-0.5deg) translate(0px, 2px); }
+  .bs-values-grid > .bs-card:nth-child(4) { transform: rotate(1.5deg) translate(0px, 0px); }
+
+  .bs-cover-scatter {
+    min-height: 140px;
+  }
+  .bs-scatter-cover {
+    width: 86px;
+  }
+  .bs-scatter-cover--1 { left: 5%; transform: rotate(-8deg); }
+  .bs-scatter-cover--2 { left: 35%; top: 12px; transform: rotate(2deg); }
+  .bs-scatter-cover--3 { left: 63%; top: -2px; transform: rotate(7deg); }
+
+  .bs-char-pair {
+    min-height: 140px;
+  }
+  .bs-char-sticker {
+    width: 80px;
+  }
+
+  .bs-end-cta {
+    margin-top: 50px;
+    margin-left: calc(-1 * (var(--red-line-x) + 1.5vw));
+    padding-left: calc(var(--hero-pad-right) + 1.5vw);
+  }
+}
+
+@media (min-width: 700px) {
+  .bs-paper-swatch-frame {
+    max-width: none !important;
+  }
+  
+  .bs-end-cta {
+    margin-top: clamp(40px, 6vw, 80px);
+    margin-left: calc(-1 * (var(--red-line-x) + 2vw));
+    margin-right: calc(-1 * var(--hero-pad-right));
+    display: flex;
+    justify-content: center;
+    padding-left: var(--hero-pad-right);
+    padding-right: var(--hero-pad-right);
+    transform: translateX(clamp(24px, 4vw, 52px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-card           { transition: none; }
+  .bs-card:hover     { transform: none !important; }
+  .bs-char-pair-frame { transition: none; }
+}
+
+/* ── Brand story section-end CTA ── */
+.bs-end-cta {
+  margin-top: clamp(40px, 6vw, 80px);
+  /* Break out of the section's left padding (red-line inset) */
+  margin-left: calc(-1 * (var(--red-line-x) + 2vw));
+  margin-right: calc(-1 * var(--hero-pad-right));
+  display: flex;
+  justify-content: center;
+  padding-left: var(--hero-pad-right);
+  padding-right: var(--hero-pad-right);
+  /* Shift right to compensate for red-line visual imbalance
+     (content starts ~8.5vw from left vs a small pad on right) */
+  transform: translateX(clamp(24px, 4vw, 52px));
+}
+
+.bs-end-cta-btn {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.bs-end-cta-btn:hover  { transform: scale(1.04); filter: brightness(1.04); }
+.bs-end-cta-btn:active { transform: scale(0.97); }
+
+.bs-end-cta-btn:focus-visible {
+  outline: 3px solid rgba(129, 135, 217, 0.85);
+  outline-offset: 6px;
+}
+
+.bs-end-cta-img {
+  display: block;
+  width: min(100%, 560px);
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
