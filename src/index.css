@@ -247,10 +247,12 @@
 /* Mobile: padding đối xứng + logo căn giữa viewport (absolute), icon bên phải — không lệch do flex-1 */
 @media (max-width: 699px) {
   .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     position: relative;
-    display: block;
-    padding-left: var(--hero-pad-right);
-    padding-right: var(--hero-pad-right);
+    padding-left: 15px;
+    padding-right: max(env(safe-area-inset-right, 0px), var(--hero-pad-right));
     min-height: 100%;
     height: 100%;
   }
@@ -316,16 +318,14 @@
   }
 
   .header-logo-zone {
-    position: absolute;
-    left: 15px;
-    top: 50%;
+    position: static;
     z-index: 30;
     width: max-content;
     min-width: 0;
-    max-width: min(78vw, 260px);
+    max-width: 32vw;
     height: auto;
     max-height: calc(var(--header-h) - 4px);
-    transform: translateY(-50%);
+    transform: none;
     justify-content: flex-start;
     align-items: center;
     padding-left: 0;
@@ -349,11 +349,11 @@
   }
 
   .header-actions {
-    position: absolute;
-    right: max(env(safe-area-inset-right, 0px), var(--hero-pad-right));
-    top: 50%;
+    position: static;
+    margin-left: auto;
     z-index: 20;
-    transform: translateY(-50%);
+    transform: none;
+    flex-shrink: 0;
   }
 }
 
@@ -2353,7 +2353,8 @@
 /* ── Mobile ── */
 @media (max-width: 699px) {
   .brand-story-section {
-    padding-left: calc(var(--red-line-x) + 1.5vw);
+    padding-left: calc(var(--red-line-x) + 3.5vw); /* Đẩy xa line đỏ thêm */
+    padding-right: 3vw; /* Thêm padding lề phải để chống tràn màng hình */
     padding-top: 60px;
     padding-bottom: 40px;
   }
@@ -2361,17 +2362,22 @@
   .brand-story-heading {
     margin-bottom: 24px;
     font-size: 34px;
+    text-align: center;
   }
 
   /* Fix matching width for top rows to center completely */
   .bs-full-row, .bs-sticky-row {
     margin-inline: auto;
     margin-bottom: 20px;
-    max-width: 100%;
+    max-width: 95%; /* Thu nhỏ 5% */
   }
 
   .bs-card {
     padding: 18px 14px;
+  }
+
+  .bs-card--sticky {
+    padding-top: 36px; /* Đẩy chữ "Có NoRa..." xuống để không cấn vào lỗ keyhole */
   }
 
   .bs-card--torn {
@@ -2396,13 +2402,14 @@
   .bs-values-lead {
     font-size: 20px;
     margin: 40px auto 20px;
+    text-align: center;
   }
 
   .bs-values-grid {
     grid-template-columns: 1fr;
     gap: 32px;
-    max-width: 100%;
-    margin-inline: 4px;
+    max-width: 95%; /* Thu nhỏ 5% */
+    margin-inline: auto; /* Căn giữa hoàn toàn */
   }
 
   .bs-values-grid > .bs-card:nth-child(1) { transform: rotate(-1.5deg) translate(0px, 2px); }
@@ -2512,3 +2519,102 @@
   user-select: none;
   pointer-events: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NAVIGATION TABS (MINIMAL LINES)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.nav-tabs-container {
+  display: flex;
+  gap: clamp(9px, 1.35vw, 22px); /* Giảm khoảng cách giữa 2 chữ ~10% */
+  height: 100%;
+  align-items: center; /* Center horizontally in the header */
+}
+
+.nav-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(60, 60, 65, 0.65);
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: clamp(17px, 2vw, 22px); /* Tăng 20% so với gốc 14-18px */
+  white-space: nowrap;
+  transition: color 0.25s ease;
+  padding: 0 0.25em 0 0.6em; /* Scale không khoảng cách (pacing) theo fontSize trên mọi device */
+}
+
+.nav-tab.active {
+  color: rgba(10, 21, 96, 0.95);
+  font-weight: bold;
+}
+
+.nav-tab:hover:not(.active) {
+  color: rgba(10, 21, 96, 0.7);
+}
+
+/* Base line indicator on the left for BOTH items (giữ cân đối) */
+.nav-tab::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 3px; /* Tăng 20% so với gốc 2.5px */
+  height: 1.1em; /* Theo khung chữ */
+  border-radius: 4px;
+  background-color: rgba(160, 160, 170, 0.25); /* Faint baseline in inactive state */
+  transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease;
+}
+
+/* Active line colors and expansion */
+.nav-tab.active::before {
+  background-color: var(--tab-color);
+  width: 5.5px; /* Tăng 20% so với gốc 4.5px */ 
+}
+
+.nav-tab:hover:not(.active)::before {
+  background-color: var(--tab-color);
+  width: 3.6px;
+  opacity: 0.6;
+}
+
+.nav-tab-blue {
+  --tab-color: rgba(129, 135, 217, 1); /* Màu của "Chọn bìa" */
+}
+
+.nav-tab-pink {
+  --tab-color: #D48A3A; /* Màu của "Accounting" */
+}
+
+@media (max-width: 699px) {
+  .nav-tabs-container {
+    /* Đặt kế bên Logo bằng luồng Flex tiêu chuẩn chống đè tuyệt đối */
+    position: static;
+    transform: none;
+    margin-left: clamp(8px, 2vw, 16px);
+    height: auto;
+    gap: 10px; /* Giảm gap trên mobile 10% */
+    z-index: 25;
+    background-color: transparent;
+    border-bottom: none;
+    backdrop-filter: none;
+  }
+  .nav-tab {
+    font-size: 13px; /* Tăng 20% so với gốc 11px */
+    /* Padding tự động scale theo em như web layout */
+  }
+  
+  /* Thon gọn line trên mobile */
+  .nav-tab::before {
+    width: 2px !important;
+  }
+  .nav-tab.active::before {
+    width: 3.5px !important;
+  }
+  .nav-tab:hover:not(.active)::before {
+    width: 2.5px !important;
+  }
+}
+

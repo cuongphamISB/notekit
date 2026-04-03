@@ -1,4 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { CAROUSEL_SLIDE_URLS } from "@/constants/carouselSlides";
 
@@ -37,6 +38,7 @@ const AUTO_INTERVAL_MS = 2200;
 /* ════════════════════════════════════════════════════════════════ */
 const BrandStorySection = () => {
   const [active, setActive] = useState(0);
+  const navigate = useNavigate();
 
   /* Auto-cycle — drives both mini carousel (V1) and char pair (V3) */
   useEffect(() => {
@@ -296,11 +298,14 @@ const BrandStorySection = () => {
           type="button"
           className="bs-end-cta-btn"
           aria-label="Tạo nên cuốn sổ của riêng bạn — cuộn lên chọn bìa"
-          onClick={() =>
-            document
-              .getElementById("cover-picker")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
+          onClick={() => {
+            const el = document.getElementById("cover-picker");
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+              navigate("/goc-chon-so", { state: { scrollTo: "cover-picker" } });
+            }
+          }}
         >
           <img
             src="/CTA button.webp"

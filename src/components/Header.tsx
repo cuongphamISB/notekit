@@ -1,6 +1,8 @@
 import { useCart } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import NavigationTabs from "./NavigationTabs";
 
 const Header = () => {
   const { cartCount, openCart } = useCart();
@@ -16,8 +18,8 @@ const Header = () => {
     <>
       <header className="header-bar" data-scrolled={scrolled || undefined}>
         <div className="header-inner">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="header-logo-zone flex h-full shrink-0 items-center justify-center px-0.5"
             aria-label="Trang chủ"
           >
@@ -26,22 +28,11 @@ const Header = () => {
               alt="NOTEKIT"
               className="header-logo-img object-contain"
             />
-          </a>
+          </Link>
 
           <div className="shrink-0" style={{ width: "1vw" }} />
 
-          <a
-            href="/"
-            className="header-home-link shrink-0 transition-transform duration-150 hover:scale-[1.03]"
-            aria-label="Trang chủ"
-          >
-            <img
-              src="/trang chủ icon.png"
-              alt="Trang chủ"
-              className="h-auto w-auto object-contain"
-              style={{ height: "clamp(26px, 2.8vw, 50px)" }}
-            />
-          </a>
+          <NavigationTabs />
 
           <div className="flex-1" />
 
