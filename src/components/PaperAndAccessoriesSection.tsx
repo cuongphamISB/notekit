@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
+import StickerPickerSection from "@/components/StickerPickerSection";
 
 type PaperKind = "lined" | "grid";
 
@@ -7,8 +8,6 @@ const SECTION_STARS = [
   { src: "/sao xanh lam.png", style: { top: "8%", left: "5%", width: "clamp(20px,3.8vw,62px)" } },
   { src: "/sao màu hồng.png", style: { top: "3%", right: "10%", width: "clamp(24px,4.2vw,70px)" } },
   { src: "/sao vàng.png", style: { bottom: "18%", left: "6%", width: "clamp(22px,3.8vw,60px)" } },
-  { src: "/sao tím đậm.png", style: { bottom: "8%", right: "8%", width: "clamp(20px,3.4vw,56px)" } },
-  { src: "/sao xanh lam.png", style: { top: "48%", right: "4%", width: "clamp(18px,3vw,48px)" } },
 ] as const;
 
 const ACCESSORIES_STARS = [
@@ -96,15 +95,7 @@ const PaperAndAccessoriesSection = () => {
         </p>
       </div>
 
-      <div className="paper-accessories-block" id="accessories">
-        {ACCESSORIES_STARS.map((s, i) => (
-          <div key={`a-${i}`} className="sticker-slot" style={s.style}>
-            <img src={s.src} alt="" aria-hidden className="h-auto w-full object-contain" />
-          </div>
-        ))}
-        <h2 className="cover-picker-title paper-inner-title paper-accessories-title">chọn phụ kiện</h2>
-        <p className="paper-accessories-soon">coming soon....</p>
-      </div>
+      <StickerPickerSection />
     </section>
   );
 };

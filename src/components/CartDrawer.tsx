@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
 import { COVER_PRODUCTS } from "@/data/coverProducts";
+import { STICKER_PRODUCTS } from "@/data/stickerProducts";
 import { buildPrefillUrl } from "@/constants/checkout";
 
 function paperLabel(kind: "lined" | "grid"): string {
@@ -88,6 +89,14 @@ const CartDrawer = () => {
                         >
                           {paperLabel(order.paper)}
                         </p>
+                        {order.stickerIndex !== null && order.stickerIndex !== undefined && (
+                          <p
+                            className="mt-0.5 text-sm leading-snug"
+                            style={{ color: STICKER_PRODUCTS[order.stickerIndex]?.color ?? "hsl(220 15% 50%)" }}
+                          >
+                            🪄 Sticker: {STICKER_PRODUCTS[order.stickerIndex]?.name}
+                          </p>
+                        )}
                       </div>
                       <button
                         type="button"

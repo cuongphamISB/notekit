@@ -12,6 +12,7 @@ export type PaperKind = "lined" | "grid";
 export interface CartOrder {
   coverIndex: number;
   paper: PaperKind;
+  stickerIndex: number | null;
   addedAt: number;
 }
 
@@ -22,6 +23,8 @@ interface CartContextType {
   setSelectedCoverIndex: (index: number) => void;
   paperKind: PaperKind;
   setPaperKind: (kind: PaperKind) => void;
+  selectedStickerIndex: number | null;
+  setSelectedStickerIndex: (index: number | null) => void;
   addCurrentOrderToCart: () => void;
   addToCart: () => void;
   removeOrder: (index: number) => void;
@@ -39,6 +42,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<CartOrder[]>([]);
   const [selectedCoverIndex, setSelectedCoverIndex] = useState<number | null>(null);
   const [paperKind, setPaperKind] = useState<PaperKind>("lined");
+  const [selectedStickerIndex, setSelectedStickerIndex] = useState<number | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addCurrentOrderToCart = useCallback(() => {
@@ -48,10 +52,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       {
         coverIndex: selectedCoverIndex,
         paper: paperKind,
+        stickerIndex: selectedStickerIndex,
         addedAt: Date.now(),
       },
     ]);
-  }, [selectedCoverIndex, paperKind]);
+  }, [selectedCoverIndex, paperKind, selectedStickerIndex]);
 
   const addToCart = addCurrentOrderToCart;
 
@@ -79,6 +84,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       setSelectedCoverIndex,
       paperKind,
       setPaperKind,
+      selectedStickerIndex,
+      setSelectedStickerIndex,
       addCurrentOrderToCart,
       addToCart,
       removeOrder,
@@ -93,6 +100,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       orders,
       selectedCoverIndex,
       paperKind,
+      selectedStickerIndex,
       addCurrentOrderToCart,
       addToCart,
       removeOrder,

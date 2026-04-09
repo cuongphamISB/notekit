@@ -1507,6 +1507,283 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   CHỌN STICKER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sticker-picker-block {
+  margin-top: clamp(36px, 5.5vw, 72px);
+  padding-left: calc(var(--red-line-x) + 2vw);
+  padding-right: var(--hero-pad-right);
+  padding-bottom: clamp(12px, 2vw, 28px);
+}
+
+/* ── Grid: 5 cards in a row on desktop, column on mobile ── */
+.sticker-picker-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.4vw, 20px);
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Each sticker card ── */
+.sticker-pick-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1vw, 12px);
+  flex: 1 1 0;
+  min-width: 0;
+  padding: clamp(10px, 1.4vw, 18px) clamp(8px, 1vw, 14px) clamp(8px, 1vw, 14px);
+  border: 2px solid rgba(175, 165, 155, 0.35);
+  border-radius: clamp(14px, 2vw, 24px);
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+  /* Same easing as cover picker */
+  --sp-swap-ms: 220ms;
+  --sp-swap-ease: cubic-bezier(0.33, 0.88, 0.36, 1);
+  transition:
+    background var(--sp-swap-ms) var(--sp-swap-ease),
+    border-color var(--sp-swap-ms) var(--sp-swap-ease),
+    transform var(--sp-swap-ms) var(--sp-swap-ease),
+    box-shadow var(--sp-swap-ms) var(--sp-swap-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.sticker-pick-card:hover {
+  border-color: var(--sp-color);
+  transform: translateY(-3px) scale(1.025);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.sticker-pick-card:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.sticker-pick-card--selected {
+  background: var(--sp-bg);
+  border-color: var(--sp-color);
+  border-width: 2.5px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--sp-color) 25%, transparent),
+    0 8px 28px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.sticker-pick-card--selected:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+/* ── Blurred background layer (mirrors .cover-showcase-bg) ── */
+.sticker-pick-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sticker-pick-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  transform: scale(1.18);
+  transform-origin: center bottom;
+  opacity: 0;
+  filter: blur(18px) saturate(1.2);
+  transition: opacity var(--sp-swap-ms, 220ms) var(--sp-swap-ease, cubic-bezier(0.33, 0.88, 0.36, 1));
+  will-change: opacity;
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+.sticker-pick-card:hover .sticker-pick-bg-img {
+  opacity: 0.28;
+}
+
+.sticker-pick-card--selected .sticker-pick-bg-img {
+  opacity: 0.45;
+}
+
+
+/* ── Sticker image wrapper — sits above blur layer ── */
+.sticker-pick-img-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.sticker-pick-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(2px 4px 10px rgba(0, 0, 0, 0.13));
+  transition: transform 0.22s cubic-bezier(0.33, 0.88, 0.36, 1), filter 0.22s ease;
+  transform-origin: center bottom;
+}
+
+.sticker-pick-card:hover .sticker-pick-img {
+  transform: scale(1.06) translateY(-3px);
+  filter: drop-shadow(3px 6px 14px rgba(0, 0, 0, 0.2));
+}
+
+.sticker-pick-card--selected .sticker-pick-img {
+  transform: scale(1.08) translateY(-4px);
+  filter: drop-shadow(3px 7px 16px rgba(0, 0, 0, 0.22));
+}
+
+/* ── Card name label — sits above blur layer ── */
+.sticker-pick-name {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-main);
+  font-size: clamp(13px, 1.5vw, 20px);
+  font-weight: 600;
+  color: var(--sp-color);
+  line-height: 1.2;
+  text-align: center;
+  word-break: break-word;
+  transition: opacity 0.15s ease;
+}
+
+.sticker-pick-card:not(.sticker-pick-card--selected) .sticker-pick-name {
+  opacity: 0.75;
+}
+
+.sticker-pick-card--selected .sticker-pick-name {
+  font-weight: 800;
+  opacity: 1;
+}
+
+/* ── Tick badge (top-right corner of card) ── */
+.sticker-pick-tick {
+  position: absolute;
+  top: clamp(6px, 1vw, 10px);
+  right: clamp(6px, 1vw, 10px);
+  width: clamp(20px, 2.2vw, 28px);
+  height: clamp(20px, 2.2vw, 28px);
+  border-radius: 50%;
+  background: var(--sp-color);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sticker-pick-card--selected .sticker-pick-tick {
+  display: flex;
+}
+
+.sticker-pick-tick svg {
+  width: 58%;
+  height: 58%;
+  stroke: #ffffff;
+}
+
+/* ── Selection summary line ── */
+.sticker-pick-summary {
+  text-align: center;
+  margin-top: clamp(16px, 2.5vw, 28px);
+  margin-bottom: 0;
+  font-family: var(--font-main);
+  font-size: clamp(18px, 2.5vw, 30px);
+  line-height: 1.35;
+  color: rgba(129, 135, 217, 0.92);
+  min-height: 1.5em;
+}
+
+.sticker-pick-summary-label {
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.sticker-pick-summary-label--none {
+  opacity: 0.45;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.sticker-pick-summary-value {
+  font-weight: 800;
+}
+
+/* ── Mobile: horizontal row (same as desktop), compact cards to fit 5 in one row ── */
+@media (max-width: 699px) {
+  .sticker-picker-block {
+    padding-left: calc(var(--red-line-x) + 1vw);
+    padding-right: clamp(8px, 2vw, 16px);
+    margin-top: clamp(28px, 5vw, 52px);
+  }
+
+  .sticker-picker-grid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: clamp(5px, 1.5vw, 10px);
+    max-width: 100%;
+    margin-inline: 0;
+  }
+
+  .sticker-pick-card {
+    /* portrait column card, same as desktop */
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(4px, 1.2vw, 8px);
+    padding: clamp(6px, 1.5vw, 10px) clamp(4px, 1vw, 8px) clamp(5px, 1.3vw, 8px);
+  }
+
+  .sticker-pick-img-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    flex-shrink: 0;
+  }
+
+  .sticker-pick-name {
+    font-size: clamp(10px, 2.8vw, 14px);
+    text-align: center;
+    flex: none;
+  }
+
+  .sticker-pick-tick {
+    top: clamp(4px, 1vw, 7px);
+    right: clamp(4px, 1vw, 7px);
+    width: clamp(16px, 3.5vw, 22px);
+    height: clamp(16px, 3.5vw, 22px);
+  }
+
+  .sticker-pick-card:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  .sticker-pick-card--selected {
+    transform: translateY(-2px);
+  }
+
+  .sticker-pick-card--selected:hover {
+    transform: translateY(-3px) scale(1.025);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    CTA ĐẶT HÀNG (cuối trang)
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1605,7 +1882,7 @@
 .order-cta-feedback-main {
   display: block;
   font-weight: 700;
-  color: rgba(129, 135, 217, 0.95);
+  color: rgba(129, 135, 217, 0.85);
   line-height: 1.35;
   max-width: 36em;
 }
