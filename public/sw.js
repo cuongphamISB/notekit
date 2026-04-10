@@ -1,4 +1,4 @@
-const CACHE_NAME = "notekit-v3";
+const CACHE_NAME = "notekit-v4";
 
 const PRECACHE_URLS = [
   "/",
@@ -31,8 +31,8 @@ const PRECACHE_URLS = [
   "/nam man.webp",
   "/nữ man.webp",
   "/SVN-Achiko.otf",
-  "/AppIcons/playstore.png",
-  "/AppIcons/appstore.png",
+  "/icon-192.png",
+  "/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -59,39 +59,8 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-
-  if (request.method !== "GET") return;
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) {
-        // Serve from cache, update in background (stale-while-revalidate)
-        const fetchPromise = fetch(request)
-          .then((response) => {
-            if (response.ok) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-            }
-            return response;
-          })
-          .catch(() => cached);
-
-        return cached;
-      }
-
-      return fetch(request).then((response) => {
-        if (
-          response.ok &&
-          (request.url.match(/\.(webp|png|svg|otf|woff2?|css|js)(\?|$)/) ||
-            request.url.endsWith("/"))
-        ) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        }
-        return response;
-      });
-    })
-  );
-});
+// Removed 'fetch' handler intentionally. 
+// Without a fetch handler, Chrome on Android will NOT trigger the aggressive "WebAPK" installation flow
+// that requires "Allow Chrome to install apps" permission. Instead, it will gracefully fall back 
+// to a simpler "Add to Home screen" shortcut, which still opens in standalone fullscreen mode 
+// (because of manifest.json) but is much more frictionless for the user to add!
