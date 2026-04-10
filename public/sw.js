@@ -1,4 +1,4 @@
-const CACHE_NAME = "notekit-v2";
+const CACHE_NAME = "notekit-v3";
 
 const PRECACHE_URLS = [
   "/",
@@ -31,8 +31,8 @@ const PRECACHE_URLS = [
   "/nam man.webp",
   "/nữ man.webp",
   "/SVN-Achiko.otf",
-  "/icon-192.png",
-  "/icon-512.png",
+  "/AppIcons/playstore.png",
+  "/AppIcons/appstore.png",
 ];
 
 self.addEventListener("install", (event) => {
