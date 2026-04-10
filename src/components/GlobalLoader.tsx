@@ -86,13 +86,11 @@ const GlobalLoader = () => {
       style={{ backgroundColor: "#eef4f8" }}
     >
       <div className="animate-bounce">
-        {!window.matchMedia('(display-mode: standalone)').matches && !(window.navigator as any).standalone && (
-          <img
-            alt="Loading"
-            className="w-48 h-48 object-contain drop-shadow-lg"
-            src="/sticker nhân vật.webp"
-          />
-        )}
+        <img
+          alt="Loading"
+          className="w-48 h-48 object-contain drop-shadow-lg"
+          src="/sticker nhân vật.webp"
+        />
       </div>
       <p
         className="text-2xl md:text-3xl mt-6 animate-pulse"
