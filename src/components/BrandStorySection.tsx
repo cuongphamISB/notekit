@@ -207,9 +207,9 @@ const BrandStorySection = () => {
           {/* 3 covers fanned out to show freedom to mix & match, plus floating binder rings */}
           <div className="bs-cover-scatter" aria-hidden>
             {/* Covers */}
-            <img src="/mkt (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--1" draggable={false} alt="" />
-            <img src="/ibu (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--2" draggable={false} alt="" />
-            <img src="/fin (ko nhãn)_result.webp" className="bs-scatter-cover bs-scatter-cover--3" draggable={false} alt="" />
+            <img src="/mkt_result.webp" className="bs-scatter-cover bs-scatter-cover--1" draggable={false} alt="" />
+            <img src="/ibu_result.webp" className="bs-scatter-cover bs-scatter-cover--2" draggable={false} alt="" />
+            <img src="/fin_result.webp" className="bs-scatter-cover bs-scatter-cover--3" draggable={false} alt="" />
             
             {/* Rings */}
             <img src="/còng hồng.webp" className="bs-scatter-ring bs-scatter-ring--1" draggable={false} alt="" />

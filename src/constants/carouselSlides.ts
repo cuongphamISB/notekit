@@ -1,8 +1,8 @@
 /** Carousel slide URLs — single source for preload + Hero */
 export const CAROUSEL_SLIDE_URLS = [
-  "/mkt (ko nhãn)_result.webp",
-  "/fin (ko nhãn)_result.webp",
-  "/ibu (ko nhãn)_result.webp",
-  "/accounting (ko nhãn)_result.webp",
-  "/man (ko nhãn)_result.webp",
+  "/mkt_result.webp",
+  "/fin_result.webp",
+  "/ibu_result.webp",
+  "/accounting_result.webp",
+  "/man_result.webp",
 ] as const;

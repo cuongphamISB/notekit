@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import BrandStory from "./pages/BrandStory";
 import NotFound from "./pages/NotFound";
@@ -11,6 +11,10 @@ import GlobalLoader from "@/components/GlobalLoader";
 
 const queryClient = new QueryClient();
 
+// Detect Electron environment (set by preload.js)
+const isElectron = !!(window as any).electronAPI?.isElectron;
+const Router = isElectron ? HashRouter : BrowserRouter;
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
@@ -18,7 +22,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <GlobalLoader />
-        <BrowserRouter>
+        <Router>
           <Routes>
             <Route path="/goc-chon-so" element={<Index />} />
             <Route path="/note-ra-la-ro" element={<BrandStory />} />
@@ -26,10 +30,11 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+        </Router>
       </TooltipProvider>
     </CartProvider>
   </QueryClientProvider>
 );
 
 export default App;
+

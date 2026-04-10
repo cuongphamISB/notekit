@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "com.notekit.nora",
+  "productName": "NORA",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "public/favicon.ico"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "public/app-icon.png",
+    "signDlls": false,
+    "sign": null
+  },
+  "portable": {
+    "artifactName": "NORA-portable.exe"
+  }
+}

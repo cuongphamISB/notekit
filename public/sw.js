@@ -1,4 +1,4 @@
-const CACHE_NAME = "notekit-v1";
+const CACHE_NAME = "notekit-v2";
 
 const PRECACHE_URLS = [
   "/",
@@ -15,11 +15,11 @@ const PRECACHE_URLS = [
   "/sao vàng.png",
   "/sao màu hồng.png",
   "/sao tím đậm.png",
-  "/mkt (ko nhãn)_result.webp",
-  "/fin (ko nhãn)_result.webp",
-  "/ibu (ko nhãn)_result.webp",
-  "/accounting (ko nhãn)_result.webp",
-  "/man (ko nhãn)_result.webp",
+  "/mkt_result.webp",
+  "/fin_result.webp",
+  "/ibu_result.webp",
+  "/accounting_result.webp",
+  "/man_result.webp",
   "/nam mkt.webp",
   "/nữ mkt.webp",
   "/nam fin.webp",
@@ -31,6 +31,8 @@ const PRECACHE_URLS = [
   "/nam man.webp",
   "/nữ man.webp",
   "/SVN-Achiko.otf",
+  "/icon-192.png",
+  "/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {

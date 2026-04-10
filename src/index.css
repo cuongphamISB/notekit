@@ -2895,3 +2895,15 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   HIDDEN SCROLLBAR — scroll works, bar invisible (Electron mobile app)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 500px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
+}
+
