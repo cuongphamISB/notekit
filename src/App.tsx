@@ -8,6 +8,7 @@ import BrandStory from "./pages/BrandStory";
 import NotFound from "./pages/NotFound";
 import { CartProvider } from "@/contexts/CartContext";
 import GlobalLoader from "@/components/GlobalLoader";
+import InstallPrompt from "@/components/InstallPrompt";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <GlobalLoader />
+        <InstallPrompt />
         <Router>
           <Routes>
             <Route path="/goc-chon-so" element={<Index />} />
