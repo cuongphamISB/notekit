@@ -1,4 +1,4 @@
-const CACHE_NAME = "notekit-v4";
+const CACHE_NAME = "notekit-v5";
 
 const PRECACHE_URLS = [
   "/",
