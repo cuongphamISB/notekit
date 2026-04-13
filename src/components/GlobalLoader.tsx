@@ -39,8 +39,8 @@ const ALL_PAGE_IMAGES: readonly string[] = [
 
 const UNIQUE_IMAGES = [...new Set(ALL_PAGE_IMAGES)];
 
-const MAX_WAIT_MS = 3000;
-const MIN_VISIBLE_MS = 600;
+const MAX_WAIT_MS = 4000;
+const MIN_VISIBLE_MS = 400; // Reduced for faster PWA load
 
 function preloadAllFonts(): Promise<void> {
   if (!document.fonts?.ready) return Promise.resolve();
@@ -50,25 +50,41 @@ function preloadAllFonts(): Promise<void> {
 const GlobalLoader = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    let loadedCount = 0;
+    const totalAssets = UNIQUE_IMAGES.length + 1; // +1 for fonts
+
+    const updateProgress = () => {
+      loadedCount++;
+      if (!cancelled) {
+        setProgress(Math.floor((loadedCount / totalAssets) * 100));
+      }
+    };
+
+    // Prepare individual promises to track their completion
+    const imagePromises = UNIQUE_IMAGES.map((url) => 
+      preloadImage(url).then(updateProgress).catch(updateProgress) // Count even if it fails
+    );
+
+    const fontPromise = preloadAllFonts().then(updateProgress).catch(updateProgress);
 
     const minDelay = new Promise<void>((r) => setTimeout(r, MIN_VISIBLE_MS));
     const timeout = new Promise<void>((r) => setTimeout(r, MAX_WAIT_MS));
 
-    const allAssets = Promise.all([
-      ...UNIQUE_IMAGES.map(preloadImage),
-      preloadAllFonts(),
-      minDelay,
-    ]);
+    const allAssets = Promise.all([...imagePromises, fontPromise, minDelay]);
 
     Promise.race([allAssets, timeout]).then(() => {
       if (cancelled) return;
-      setIsFading(true);
+      setProgress(100); // Ensure it hits 100%
       setTimeout(() => {
-        if (!cancelled) setIsVisible(false);
-      }, 450);
+        if (!cancelled) setIsFading(true);
+        setTimeout(() => {
+          if (!cancelled) setIsVisible(false);
+        }, 400); // reduced fade time
+      }, 150); // slight pause at 100%
     });
 
     return () => {
@@ -80,24 +96,34 @@ const GlobalLoader = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-400 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
       style={{ backgroundColor: "#eef4f8" }}
     >
-      <div className="animate-bounce">
+      <div className={progress < 100 ? "animate-bounce" : "scale-110 transition-transform duration-300"}>
         <img
           alt="Loading"
           className="w-48 h-48 object-contain drop-shadow-lg"
           src="/sticker nhân vật.webp"
         />
       </div>
+      
       <p
-        className="text-2xl md:text-3xl mt-6 animate-pulse"
+        className={`text-xl md:text-2xl mt-6 font-medium ${progress < 100 ? "animate-pulse" : ""}`}
         style={{ color: "hsl(30 10% 45%)" }}
       >
-        Đang lắp ráp...
+        {progress < 100 ? "Đang lắp ráp hệ thống..." : "Hoàn tất lắp ráp!"}
       </p>
+
+      {/* Progress Bar Container */}
+      <div className="w-64 h-3 bg-slate-200 rounded-full mt-4 overflow-hidden border border-slate-300/50 shadow-inner">
+        <div 
+          className="h-full bg-blue-500 rounded-full transition-all duration-300 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <p className="text-sm mt-2 text-slate-500 font-semibold">{progress}%</p>
     </div>
   );
 };
